@@ -1,1 +1,2 @@
-# cmpe272assignment
+# CMPE272 Assignement - aMAZE Group
+
