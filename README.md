@@ -20,14 +20,18 @@ Team members:
     docker build -t cmpe272assignment -f docker/Dockerfile .
 ```
 
-..2. To Run 
- Interactive mode
+## To Run the docker image
+1. Interactive mode
+```bash
     docker run -it --rm cmpe272assignment
- Run the server with local files. 
+```
+2. Run the server with local files. 
     From the docker dir: 
+```bash
         docker run  --rm -v `pwd`/..:/root/app/ -p 80:80/tcp cmpe272assignment
         Run the server with prepackaged application files. 
         docker run  --rm  -p 80:80/tcp cmpe272assignment
+```
 
 # Git Cheatsheat
 - http://www.cheat-sheets.org/saved-copy/git-cheat-sheet.pdf
