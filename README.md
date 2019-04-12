@@ -36,4 +36,4 @@ Team members:
 
 # Git Cheatsheat
 - http://www.cheat-sheets.org/saved-copy/git-cheat-sheet.pdf
-http://www.cheat-sheets.org/saved-copy/git-cheat-sheet.pdf
+
