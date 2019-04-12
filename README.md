@@ -27,7 +27,7 @@ Team members:
 2. Run the server with local files.
 ```bash
         cd <gitroot>/ 
-        docker run  --rm -v `pwd`/server/:/root/app/server/ -p 80:80/tcp cmpe272assignment
+        docker run  --rm -v `pwd`/server:/root/app/server -p 80:80/tcp cmpe272assignment
 ```
 3. Run the server with prepackaged application files. 
 ```bash
