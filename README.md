@@ -12,9 +12,14 @@ Team members:
 
 ## Build instructions
 1. Install git and Sync code to your local machine. (to <gitroot>)
+2. Create clone of the repository.	
 	git clone https://github.com/nabinthomas/cmpe272assignment.git
-2. Install docker
-3. Build docker image
+  	chmod 700 README.md
+	git checkout -b cmpe272assignment_binu
+	git push origin cmpe272assignment_binu
+
+3. Install docker
+4. Build docker image
 ```bash
     cd <gitroot>/ 
     docker build -t cmpe272assignment -f docker/Dockerfile .
