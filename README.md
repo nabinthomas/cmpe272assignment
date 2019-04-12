@@ -16,8 +16,14 @@ Team members:
 	git clone https://github.com/nabinthomas/cmpe272assignment.git
   	chmod 700 README.md
 	git checkout -b cmpe272assignment_binu
+	#following will create the branch and push in changes
 	git push origin cmpe272assignment_binu
-
+	#after modifying any file do the following command to update 
+	git add -u 
+	#commit the changes
+	git commit -m "message"
+	#push it back to your branch 
+	git push origin cmpe272assignment_binu 
 3. Install docker
 4. Build docker image
 ```bash
