@@ -14,7 +14,6 @@ Team members:
 1. Install git and Sync code to your local machine. (to <gitroot>)
 2. Install docker
 3. Build docker image
-..1. To build the docker image.
 ```bash
     cd <gitroot>/ 
     docker build -t cmpe272assignment -f docker/Dockerfile .
@@ -25,10 +24,10 @@ Team members:
 ```bash
     docker run -it --rm cmpe272assignment
 ```
-2. Run the server with local files. 
-    From the docker dir: 
+2. Run the server with local files.
 ```bash
-        docker run  --rm -v `pwd`/..:/root/app/ -p 80:80/tcp cmpe272assignment
+        cd <gitroot>/ 
+        docker run  --rm -v `pwd`/server/:/root/app/server/ -p 80:80/tcp cmpe272assignment
         Run the server with prepackaged application files. 
         docker run  --rm  -p 80:80/tcp cmpe272assignment
 ```
