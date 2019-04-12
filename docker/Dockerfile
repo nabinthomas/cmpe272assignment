@@ -9,8 +9,13 @@ FROM ubuntu:bionic
 
 WORKDIR /root/
 
+RUN apt-get update
+RUN apt-get install -y python3
+RUN apt-get install -y python3-pip
+RUN pip3 install flask
+
 #COPY ./server/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+#RUN pip3 install --no-cache-dir -r requirements.txt
 #COPY . . 
 CMD ["/bin/bash"]
 
