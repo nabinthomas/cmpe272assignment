@@ -28,7 +28,9 @@ Team members:
 ```bash
         cd <gitroot>/ 
         docker run  --rm -v `pwd`/server/:/root/app/server/ -p 80:80/tcp cmpe272assignment
-        Run the server with prepackaged application files. 
+```
+3. Run the server with prepackaged application files. 
+```bash
         docker run  --rm  -p 80:80/tcp cmpe272assignment
 ```
 
