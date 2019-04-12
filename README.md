@@ -16,7 +16,7 @@ Team members:
 3. Build docker image
 ```bash
     cd <gitroot>/ 
-    docker build -t cmpe272assignment -f docker/Dockerfile .
+    docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
 ```
 ## Modifying files with Git branches
 1. Create clone of the repository.	
@@ -41,16 +41,21 @@ Team members:
 ## To Run the docker image
 1. Interactive mode
 ```bash
-    docker run -it --rm cmpe272assignment
+    docker run -it --rm amazeteam/cmpe272assignment
 ```
 2. Run the server with local files.
 ```bash
         cd <gitroot>/ 
-        docker run  --rm -v `pwd`/server:/root/app/server -p 80:80/tcp cmpe272assignment
+        docker run  --rm -v `pwd`/server:/root/app/server -p 80:80/tcp amazeteam/cmpe272assignment
 ```
 3. Run the server with prepackaged application files. 
 ```bash
-        docker run  --rm  -p 80:80/tcp cmpe272assignment
+        docker run  --rm  -p 80:80/tcp amazeteam/cmpe272assignment
+```
+
+## To push the docker image to docker hub
+```bash
+docker push amazeteam/cmpe272assignment
 ```
 
 # Git Cheatsheat
