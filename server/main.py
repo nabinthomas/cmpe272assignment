@@ -20,7 +20,7 @@ def mainPage():
     else:
         greet = "Good Night "
 
-    return render_template('template.html', my_time=now, my_greet=greet, my_string="Welcome to aMAZE.com!", my_title="aMAZE.com Online Book Store",\
+    return render_template('template.html', my_time=now, my_greet=greet, my_string="Welcome to Team aMAZE!", my_title="aMAZE.com Online Book Store",\
             my_list=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"])
 
 if __name__ == '__main__':
