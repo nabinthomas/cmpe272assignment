@@ -21,6 +21,7 @@ RUN apt-get update
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 RUN pip3 install flask
+RUN pip3 install pytz
 
 #Expose ports
 EXPOSE 80/tcp
