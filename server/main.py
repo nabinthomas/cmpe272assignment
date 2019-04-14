@@ -1,6 +1,7 @@
 ## @package Main entry point for Web server.
   
 import datetime
+import pytz
 from flask import Flask, render_template
 
 ## Create the App
@@ -9,7 +10,7 @@ app = Flask(__name__)
 @app.route('/')
 ## Handle request for default page. 
 def mainPage():
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(pytz.pdt)
     cur_hour = now.hour
     if cur_hour < 12:
         greet = "Good Morning "
