@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/')
 ## Handle request for default page. 
 def mainPage():
-    now = datetime.datetime.now(pytz.pdt)
+    now = datetime.datetime.now(pytz.timezone('US/Pacific'))
     cur_hour = now.hour
     if cur_hour < 12:
         greet = "Good Morning "
