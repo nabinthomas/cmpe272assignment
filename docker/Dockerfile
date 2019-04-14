@@ -28,7 +28,7 @@ EXPOSE 80/tcp
 #RUN pip3 install --no-cache-dir -r requirements.txt
 
 #COPY The app folders. 
-ADD server /root/app/server
+COPY server /root/app/server
 
 #Default command to start the server
 CMD ["python3", "app/server/main.py"]
