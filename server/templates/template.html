@@ -29,8 +29,8 @@
     </div>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script>
-    	var myDate = new Date();
-    	var hrs = myDate.getHours();
+    	var dateTimeNow = new Date();
+    	var hrs = dateTimeNow.getHours();
     	var greet;
 
     	if (hrs < 12)
@@ -40,7 +40,7 @@
     	else if (hrs >= 17 && hrs <= 24)
         	greet = 'Good Evening';
     	document.getElementById('lblGreetings').innerHTML ='<b>' + greet + '</b>';
-      document.getElementById('clientTime').innerHTML ='<b>' + myDate + '</b>';
+      document.getElementById('clientTime').innerHTML ='<b>' + dateTimeNow + '</b>';
     </script>
 
   </body>
