@@ -1,16 +1,16 @@
 
 # Build: 
 ## cd <gitroot>/ 
-##  docker build -t cmpe272assignment -f docker/Dockerfile .
+##  docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
 
 # To Run 
 ## Interactive mode
-### docker run -it --rm cmpe272assignment
+### docker run -it --rm amazeteam/cmpe272assignment
 ## Run the server with local files. 
 ### From the docker dir: 
-### docker run  --rm -v `pwd`/..:/root/app/ -p 80:80/tcp cmpe272assignment
+### docker run  --rm -v `pwd`/..:/root/app/ -p 80:80/tcp amazeteam/cmpe272assignment
 ## Run the server with prepackaged application files. 
-### docker run  --rm  -p 80:80/tcp cmpe272assignment
+### docker run  --rm  -p 80:80/tcp amazeteam/cmpe272assignment
 
 FROM ubuntu:bionic
 
