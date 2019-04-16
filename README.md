@@ -10,7 +10,8 @@ Team members:
 
 ## Status
 
-1. Assignment 1 - In progress
+1. Assignment 1 - Submitted
+2. Assginment 2 - In progress.
 
 ## Build instructions
 1. Install git and Sync code to your local machine. (to <gitroot>)
