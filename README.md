@@ -43,7 +43,7 @@ Team members:
 ## To Run the docker image
 1. Interactive mode
 ```bash
-    docker run -it --rm amazeteam/cmpe272assignment
+    docker run -it --rm amazeteam/cmpe272assignment bash
 ```
 2. Run the server with local files.
 ```bash

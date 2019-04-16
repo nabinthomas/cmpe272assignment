@@ -5,7 +5,7 @@
 
 # To Run 
 ## Interactive mode
-### docker run -it --rm amazeteam/cmpe272assignment
+### docker run -it --rm amazeteam/cmpe272assignment bash
 ## Run the server with local files. 
 ### From the docker dir: 
 ### docker run  --rm -v `pwd`/..:/root/app/ -p 80:80/tcp amazeteam/cmpe272assignment
@@ -20,6 +20,7 @@ WORKDIR /root/
 RUN apt-get update
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
+RUN apt-get install -y mongodb mongodb-server mongo-tools
 RUN pip3 install flask
 RUN pip3 install pytz
 
