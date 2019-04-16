@@ -50,12 +50,12 @@ Team members:
 2. Run the server with local files.
 ```bash
         cd <gitroot>/ 
-        docker run  --rm -v `pwd`/..:/root/app/ -v `pwd`/../database:/data/db  -p 80:80/tcp amazeteam/cmpe272assignment
+        docker run --rm -v `pwd`/..:/root/app/ -v `pwd`/../database:/data/db  -p 80:80/tcp amazeteam/cmpe272assignment
 ```
 3. Run the server with prepackaged application files. 
 ```bash
         cd <gitroot>/ 
-        docker run  --rm  -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
+        docker run --rm  -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
 ```
 **Note**: _The database dir is kept outside the docker image to make sure the data is persistent across docker runs. For testing, a different database directory may be used to avoid corrupting real data._ 
 ## To push the docker image to docker hub
