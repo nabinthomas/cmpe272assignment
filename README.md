@@ -10,7 +10,9 @@ Team members:
 
 ## Status
 
-1. Assignment 1 - Submitted
+1. Assignment 1 - Submitted. 
+	* Docker hub image: amazeteam/cmpe272assignment:1.0
+	* Github tag 1.0
 2. Assginment 2 - In progress.
 
 ## Build instructions
@@ -45,17 +47,17 @@ Team members:
 1. Interactive mode
 ```bash
     cd <gitroot>/ 
-    docker run -it --rm -v `pwd`/../database:/data/db amazeteam/cmpe272assignment bash
+    docker run -it --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment bash
 ```
 2. Run the server with local files.
 ```bash
         cd <gitroot>/ 
-        docker run --rm -v `pwd`/..:/root/app/ -v `pwd`/../database:/data/db  -p 80:80/tcp amazeteam/cmpe272assignment
+        docker run --rm -p 80:80/tcp -v `pwd`/..:/root/app/ -v `pwd`/../database:/data/db  -p 80:80/tcp amazeteam/cmpe272assignment
 ```
 3. Run the server with prepackaged application files. 
 ```bash
         cd <gitroot>/ 
-        docker run --rm  -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
+        docker run --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
 ```
 **Note**: _The database dir is kept outside the docker image to make sure the data is persistent across docker runs. For testing, a different database directory may be used to avoid corrupting real data._ 
 ## To push the docker image to docker hub
@@ -63,10 +65,17 @@ Team members:
 docker push amazeteam/cmpe272assignment
 ```
 ## To deploy docker on aws ec2 instance (linux 2 ami)
+### To run the latest version from dockerhub
 ```bash
 sudo service docker start
-nohup sudo docker run --rm -p 80:80/tcp amazeteam/cmpe272assignment:1.0
-
+nohup sudo docker run --rm -p 80:80/tcp amazeteam/cmpe272assignment
+```
+### To run a specific version from dockerhub
+```bash
+sudo service docker start
+nohup sudo docker run --rm -p 80:80/tcp amazeteam/cmpe272assignment:version
+```
+**Note**: _Replace version with the right tag to run._
 # Git Cheatsheat
 - http://www.cheat-sheets.org/saved-copy/git-cheat-sheet.pdf
 

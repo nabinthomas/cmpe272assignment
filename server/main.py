@@ -13,10 +13,10 @@ def mainPage():
     now = datetime.datetime.now(pytz.timezone('US/Pacific'));
 
     return render_template('template.html', 
-			my_time=now, 
-			my_string="Welcome to Team aMAZE!", 
-			my_title="aMAZE.com Online Book Store",
-            my_list=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
+			serverTime=now, 
+			pageWelcomeMessage="Welcome to Team aMAZE!", 
+			pageTitle="aMAZE.com Online Book Store",
+            teamMembers=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
 
 if __name__ == '__main__':
         ## Start the http server
