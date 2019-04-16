@@ -52,7 +52,7 @@ Team members:
 2. Run the server with local files.
 ```bash
         cd <gitroot>/ 
-        docker run --rm -p 80:80/tcp -v `pwd`/..:/root/app/ -v `pwd`/../database:/data/db  -p 80:80/tcp amazeteam/cmpe272assignment
+        docker run --rm -p 80:80/tcp -v `pwd`/..:/root/app/ -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup amazeteam/cmpe272assignment
 ```
 3. Run the server with prepackaged application files. 
 ```bash
