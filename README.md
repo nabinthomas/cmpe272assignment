@@ -61,6 +61,10 @@ Team members:
 ```bash
 docker push amazeteam/cmpe272assignment
 ```
+## To deploy docker on aws ec2 instance (linux 2 ami)
+```bash
+sudo service docker start
+nohup sudo docker run --rm -p 80:80/tcp amazeteam/cmpe272assignment:1.0
 
 # Git Cheatsheat
 - http://www.cheat-sheets.org/saved-copy/git-cheat-sheet.pdf
