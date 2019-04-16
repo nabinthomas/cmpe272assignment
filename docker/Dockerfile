@@ -27,8 +27,6 @@ RUN pip3 install pytz
 #Expose ports
 EXPOSE 80/tcp
 
-#RUN pip3 install --no-cache-dir -r requirements.txt
-
 #COPY The app folders. 
 COPY server /root/app/server
 
