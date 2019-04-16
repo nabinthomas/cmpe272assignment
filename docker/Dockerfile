@@ -28,7 +28,8 @@ EXPOSE 80/tcp
 
 #COPY The app folders. 
 COPY server /root/app/server
+COPY setup setup
 
-#Default command to start the server
-CMD ["python3", "app/server/main.py"]
+#Default command to start the servers
+CMD ["/bin/bash", "setup/startservers.sh"]
 
