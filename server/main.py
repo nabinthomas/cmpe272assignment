@@ -1,4 +1,5 @@
-## @package Main entry point for Web server.
+""" @package Main entry point for Web server.
+"""
   
 import datetime
 import pytz
@@ -10,8 +11,10 @@ from pymongo import MongoClient
 app = Flask(__name__)
 
 @app.route('/mongo')
-## Handle request for default page. 
 def mongo():
+    """ Handle request for page to dump mongodb. 
+    @todo This need to be restricted to unit tests. 
+    """
     myclient = MongoClient()
     mydb = myclient["test"]
 
@@ -41,8 +44,9 @@ def mongo():
     
 
 @app.route('/')
-## Handle request for default page. 
 def mainPage():
+    """ Handle request for default page. 
+    """
     now = datetime.datetime.now(pytz.timezone('US/Pacific'));
 
     return render_template('template.html', 

@@ -1,4 +1,3 @@
-
 # Build: 
 ## cd <gitroot>/ 
 ##  docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
@@ -31,7 +30,7 @@ EXPOSE 80/tcp
 #COPY The app folders. 
 COPY server /root/app/server
 COPY setup setup
-COPY data data
+#COPY data data
 COPY test test
 
 
