@@ -29,18 +29,19 @@ Team members:
 	git clone https://github.com/nabinthomas/cmpe272assignment.git
   	chmod 700 README.md
 ```
-2. Make modifications to the files as needed. 
+2. Checkout branch and push changes back to the branch. 
 ```bash
-	#Make sure you get the latest before doing any modification
-	git pull
+	git checkout -b cmpe272assignment_binu
+	#following will create the branch and push in changes
+	git push origin cmpe272assignment_binu
 	#after modifying any file do the following command to update 
 	git add -u 
 	#commit the changes
 	git commit -m "message"
 	#push it back to your branch 
-	git push origin master 
+	git push origin cmpe272assignment_binu 
 ```
-
+3. Now open a pull request from this branch to the main branch using github. 
 
 ## To Run the docker image
 1. Interactive mode
@@ -51,7 +52,7 @@ Team members:
 2. Run the server with local files.
 ```bash
         cd <gitroot>/ 
-        docker run --rm -p 80:80/tcp -v `pwd`/..:/root/app/ -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup amazeteam/cmpe272assignment
+        docker run --rm -p 80:80/tcp -v `pwd`/server:/root/app/server -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup amazeteam/cmpe272assignment
 ```
 3. Run the server with prepackaged application files. 
 ```bash

@@ -14,6 +14,7 @@ app = Flask(__name__)
 def mongo():
     """ Handle request for page to dump mongodb. 
     @todo This need to be restricted to unit tests. 
+    @todo Formatting to be changed to use template
     """
     myclient = MongoClient()
     mydb = myclient["test"]
@@ -28,9 +29,24 @@ def mongo():
 
     ret = ret + "<h1> Customers </h1>"
     mycol = mydb["customers"]
-    for x in mycol.find():
-        print(x)
-        ret = ret + str(x)
+    ret = ret + ("<table border=2>")
+    for row in mycol.find({}, {"_id":0}):
+        ret = ret + ("<tr>")
+        for key in row.keys():
+            if (key != "_id"):
+                header = "<th>" + key + "</th>"
+                ret = ret + (header)
+        ret = ret + ("</tr>")
+        break;
+
+    for row in mycol.find({}, {"_id":0}):
+        ret = ret + ("<tr>")
+        for key in row.keys():
+            dataline = "<td>" + str(row[key]) + "</td>"
+            ret = ret + (dataline)
+        ret = ret + ("</tr>")
+    ret = ret + "</table>"
+
 
     mycol = mydb["orders"]
     ret = ret + "<h1> Orders </h1>"
