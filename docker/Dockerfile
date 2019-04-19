@@ -32,4 +32,3 @@ COPY setup setup
 
 #Default command to start the servers
 CMD ["/bin/bash", "setup/startservers.sh"]
-
