@@ -22,6 +22,8 @@ RUN apt-get install -y python3-pip
 RUN apt-get install -y mongodb mongodb-server mongo-tools
 RUN pip3 install flask
 RUN pip3 install pytz
+# pymongo  for connecting to mongodb
+RUN pip3 install pymongo
 
 #Expose ports
 EXPOSE 80/tcp
@@ -29,6 +31,9 @@ EXPOSE 80/tcp
 #COPY The app folders. 
 COPY server /root/app/server
 COPY setup setup
+COPY data data
+COPY test test
+
 
 #Default command to start the servers
 CMD ["/bin/bash", "setup/startservers.sh"]
