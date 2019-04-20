@@ -65,7 +65,7 @@ def mainPage():
     """
     now = datetime.datetime.now(pytz.timezone('US/Pacific'));
 
-    return render_template('template.html', 
+    return render_template('default.html', 
 			serverTime=now, 
 			pageWelcomeMessage="Welcome to Team aMAZE!", 
 			pageTitle="aMAZE.com Online Book Store",
