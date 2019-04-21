@@ -1,0 +1,10 @@
+{
+    "Title" : "string",
+    "Author" : "jsonarray",
+    "Genre" : "string",
+    "Page" : "number",
+    "Publisher" : "string",
+    "Price" : "float",
+    "Inventory" : "number",
+    "ISBN-13" : "string"
+}

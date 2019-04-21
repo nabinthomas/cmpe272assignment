@@ -6,11 +6,27 @@ import csv
 import json
 import pymongo
 
-if(len(sys.argv) == 2):
+if(len(sys.argv) == 3):
+    with open(sys.argv[2], 'r') as schemafile:
+        schema = json.load(schemafile)
+        print (schema)
     with open(sys.argv[1], 'r') as csvfile:
         reader = csv.DictReader(csvfile)
-        print(reader.keys)
         for row in reader:
             #print (json.dumps(row ))
-            for x in row:
-                print(x.key, x.value);
+            entry = {}
+            for key, value in row.items():
+                print(key, value);
+                print (schema[key])
+                # if string type
+                if (schema[key] == "string"):
+                    entry[key] = str(value);
+                elif (schema[key] == "number"):
+                    entry[key] = int(value);
+                elif (schema[key] == "float"):
+                    entry[key] = float(value);
+                elif (schema[key] == "jsonarray"):
+                    entry[key] = value;
+                # if number type
+                # if array type. 
+            print(entry)
