@@ -1,0 +1,5 @@
+{
+    "customerId" : "number",
+    "email" : "string",
+    "name" : "string"
+}
