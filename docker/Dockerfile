@@ -33,6 +33,9 @@ COPY setup setup
 #COPY data data
 COPY test test
 
+ENTRYPOINT [ "/bin/bash", "setup/startservers.sh" ]
+
+
 
 #Default command to start the servers
-CMD ["/bin/bash", "setup/startservers.sh"]
+CMD ["/bin/bash"]
