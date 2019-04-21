@@ -16,8 +16,8 @@ if(len(sys.argv) == 3):
             #print (json.dumps(row ))
             entry = {}
             for key, value in row.items():
-                print(key, value);
-                print (schema[key])
+                #print(key, value);
+                #print (schema[key])
                 # if string type
                 if (schema[key] == "string"):
                     entry[key] = str(value);
@@ -26,7 +26,8 @@ if(len(sys.argv) == 3):
                 elif (schema[key] == "float"):
                     entry[key] = float(value);
                 elif (schema[key] == "jsonarray"):
-                    entry[key] = value;
-                # if number type
+                    entry[key] = eval(value);
+                else:
+                    print("Parse error ", key, value);
                 # if array type. 
             print(entry)
