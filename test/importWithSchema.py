@@ -6,7 +6,12 @@ import csv
 import json
 import pymongo
 
-if(len(sys.argv) == 3):
+client = pymongo.MongoClient()
+db = client['test']
+
+if(len(sys.argv) == 4):
+    collectionname = sys.argv[3]
+    db[collectionname].drop()
     with open(sys.argv[2], 'r') as schemafile:
         schema = json.load(schemafile)
         print (schema)
@@ -31,3 +36,4 @@ if(len(sys.argv) == 3):
                     print("Parse error ", key, value);
                 # if array type. 
             print(entry)
+            db[collectionname].insert_one(entry)
