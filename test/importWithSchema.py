@@ -1,5 +1,5 @@
 
-## Python test code for experimentation. This will need to be deleted later during deployment.
+## Import a csv file to a mongodb collection, based on the schema specified as json file. 
 
 import sys
 import csv
