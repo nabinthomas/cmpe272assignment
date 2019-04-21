@@ -10,6 +10,7 @@ if(len(sys.argv) == 2):
     with open(sys.argv[1], 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            print(row)
             data = {}
             for x in row:
                 if(row[x].find(",") != -1) :

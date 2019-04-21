@@ -15,4 +15,5 @@ python3 csvTomongo.py orders.csv
 cd ..
 #Start the web server
 #This should be started at the end
-python3 app/server/main.py 
+python3 app/server/main.py  &
+bash 
