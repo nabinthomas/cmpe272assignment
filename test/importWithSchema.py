@@ -23,7 +23,6 @@ if(len(sys.argv) == 4):
             for key, value in row.items():
                 #print(key, value);
                 #print (schema[key])
-                # if string type
                 if (schema[key] == "string"):
                     entry[key] = str(value);
                 elif (schema[key] == "number"):
