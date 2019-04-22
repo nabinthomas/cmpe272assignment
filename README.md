@@ -13,7 +13,10 @@ Team members:
 1. Assignment 1 - Submitted. 
 	* Docker hub image: amazeteam/cmpe272assignment:1.0
 	* Github tag 1.0
-2. Assginment 2 - In progress.
+2. Assginment 2 - Submitted. 
+	* Docker hub image: amazeteam/cmpe272assignment:2.0
+	* Github tag 2.0
+2. Assginment 3 - In Progress. 
 
 ## Build instructions
 1. Install git and Sync code to your local machine. (to <gitroot>)
