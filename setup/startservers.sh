@@ -7,10 +7,12 @@ service mongodb start
 
 #import test data to mongodb from csv after converting to json
 cd test
-python3 csvTomongo.py books.csv 
-python3 csvTomongo.py customers.csv 
-python3 csvTomongo.py orders.csv  
-
+#python3 csvTomongo.py books.csv 
+#python3 csvTomongo.py customers.csv 
+#python3 csvTomongo.py orders.csv  
+mongoimport --drop customers.json
+mongoimport --drop books.json
+mongoimport --drop orders.json
 
 cd ..
 #Start the web server
