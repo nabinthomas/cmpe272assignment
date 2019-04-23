@@ -1,4 +1,4 @@
-{  
+[ {
     "OrderID" : 1 , 
     "CustomerId" : 1, 
      "Items" :
@@ -17,7 +17,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" : 2 , 
@@ -38,7 +38,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" : 3 , 
@@ -58,7 +58,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" :4 , 
@@ -79,7 +79,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" : 5 , 
@@ -99,7 +99,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" : 6 , 
@@ -120,7 +120,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" : 7 , 
@@ -140,7 +140,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" : 8 , 
@@ -161,7 +161,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" :9 , 
@@ -181,7 +181,7 @@
     
              }, 
         "PaymentType": "Cash On Delivery"
-    }
+    },
     
     {  
     "OrderID" : 10 , 
@@ -203,4 +203,5 @@
              }, 
         "PaymentType": "Coupon"
     }
+]
     
