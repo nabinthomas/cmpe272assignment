@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ## Entry point for Docker image. 
-## Command options supported: 
-## unittest - Runs the unit tests
-## bash - Runs the bash shell
-## startserver - Runs the servers (DB and web servers)
+##      Command options supported: 
+##          unittest - Runs the unit tests
+##          bash - Runs the bash shell
+##          startserver - Runs the servers (DB and web servers)
 
 echo `pwd`
 #echo "$#"
