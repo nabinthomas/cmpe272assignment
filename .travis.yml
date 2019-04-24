@@ -9,4 +9,4 @@ before_install:
 
 script:
   - docker --version
-  - docker run --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
+  - docker run --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment unittest
