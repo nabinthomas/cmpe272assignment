@@ -33,9 +33,9 @@ COPY setup setup
 #COPY data data
 COPY test test
 
-ENTRYPOINT [ "/bin/bash", "setup/startservers.sh" ]
+# Main entry point for the docker image
+ENTRYPOINT [ "/bin/bash", "setup/entrypoint.sh" ]
 
-
-
-#Default command to start the servers
-CMD ["/bin/bash"]
+# see ../setup/entrypoint.sh for other possible commands. 
+# Default command is to start the servers
+CMD ["startserver"]
