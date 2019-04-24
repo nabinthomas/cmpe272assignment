@@ -1,3 +1,6 @@
 #!/bin/bash
 
-exit -1
+
+# If failed
+# exit -1
+# endif
