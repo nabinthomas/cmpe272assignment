@@ -4,6 +4,7 @@ services:
   - docker
 
 before_install:
+  - docker pull amazeteam/cmpe272assignment
   - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
 
 script:
