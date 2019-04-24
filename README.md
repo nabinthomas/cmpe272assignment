@@ -62,6 +62,11 @@ Team members:
         cd <gitroot>/ 
         docker run --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
 ```
+4. Run the unit tests
+```bash
+        cd <gitroot>/ 
+        docker run --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment unittest
+```
 **Note**: _The database dir is kept outside the docker image to make sure the data is persistent across docker runs. For testing, a different database directory may be used to avoid corrupting real data._ 
 ## To push the docker image to docker hub
 ```bash
