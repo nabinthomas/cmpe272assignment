@@ -12,15 +12,18 @@ jobs:
     - stage: docker_image_unit_test_and_push
       script: 
         - docker --version
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
         - docker run --rm amazeteam/cmpe272assignment unittest
-        - docker push amazeteam/cmpe272assignment
-        - docker logout
+        if: branch = master
+          script:
+            - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            - docker push amazeteam/cmpe272assignment
+            - docker logout
 
     - stage: do_unit_test_from_docker_hub_image
-      script:
-        - docker run --rm amazeteam/cmpe272assignment unittest
+      if: branch = master
+        script:
+          - docker run --rm amazeteam/cmpe272assignment unittest
 
 
 
