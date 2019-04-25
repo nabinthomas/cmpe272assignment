@@ -16,6 +16,7 @@ jobs:
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
         - docker run --rm amazeteam/cmpe272assignment unittest
         - docker push amazeteam/cmpe272assignment
+        - docker logout
 
     - stage: do_unit_test_from_docker_hub_image
       script:
