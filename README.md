@@ -72,7 +72,7 @@ Team members:
 ```bash
 docker push amazeteam/cmpe272assignment
 ```
-**Note**: _Todo: Make Docker image automatically push only for commits to the master branch._ 
+**Note**: _ Docker image is automatically pushed to Dockerhub with "latest" tag only for commits to the master branch. All other branches will have the branchname as the tag_ 
 
 ## To deploy docker on aws ec2 instance (linux 2 ami)
 ### To run the latest version from dockerhub
