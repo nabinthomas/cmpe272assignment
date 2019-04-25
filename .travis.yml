@@ -9,7 +9,7 @@ stages:
 
 jobs:
   include:
-    - stage: build_docker_image
+    - stage: docker_image_unit_test_and_push
       script: 
         - docker --version
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
@@ -17,7 +17,7 @@ jobs:
         - docker run --rm amazeteam/cmpe272assignment unittest
         - docker push amazeteam/cmpe272assignment
 
-    - stage: do_unit_test
+    - stage: do_unit_test_from_docker_hub_image
       script:
         - docker run --rm amazeteam/cmpe272assignment unittest
 
