@@ -5,7 +5,8 @@ services:
 
 stages:
   - docker_image_unit_test_and_push
-  - do_unit_test_from_docker_hub_image
+  - name: do_unit_test_from_docker_hub_image
+    if: branch = master
 
 jobs:
   include:
@@ -20,9 +21,8 @@ jobs:
         - docker logout
 
     - stage: do_unit_test_from_docker_hub_image
-      if: branch = master
-        script:
-          docker run --rm amazeteam/cmpe272assignment unittest
+      script:
+        docker run --rm amazeteam/cmpe272assignment unittest
 
 
 
