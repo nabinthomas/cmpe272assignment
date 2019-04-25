@@ -4,18 +4,24 @@ services:
   - docker
 
 stages:
-  - docker_image_unit_test_and_push
+  - docker_image_unit_test
+  - docker_image_tag_and_push
   - name: do_unit_test_from_docker_hub_image
     if: branch = master
 
 jobs:
   include:
-    - stage: docker_image_unit_test_and_push
+    - stage: docker_image_unit_test
+      script: 
+        - docker --version
+        - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
+        - docker run --rm amazeteam/cmpe272assignment unittest
+
+    - stage: docker_image_tag_and_push
       script: 
         - docker --version
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
         - docker build -t amazeteam/cmpe272assignment:$TAG -f docker/Dockerfile .
-        - docker run --rm amazeteam/cmpe272assignment:$TAG unittest
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker push amazeteam/cmpe272assignment:$TAG
         - docker logout
