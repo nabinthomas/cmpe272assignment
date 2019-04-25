@@ -4,22 +4,22 @@ services:
   - docker
 
 stages:
-  - build_docker_image
-  - do_unit_test
+  - docker_image_unit_test_and_push
+  - do_unit_test_from_docker_hub_image
 
 jobs:
   include:
     - stage: build_docker_image
       script: 
         - docker --version
-        #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
-        #- docker push amazeteam/cmpe272assignment
         - docker run --rm amazeteam/cmpe272assignment unittest
+        - docker push amazeteam/cmpe272assignment
 
     - stage: do_unit_test
       script:
-        - docker run --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment unittest
+        - docker run --rm amazeteam/cmpe272assignment unittest
 
 
 
