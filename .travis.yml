@@ -6,8 +6,6 @@ services:
 stages:
   - build_docker_image
   - do_unit_test
-  #- name: publish_docker_image
-   # if: branch = master
 
 jobs:
   include:
@@ -15,11 +13,11 @@ jobs:
       script: 
         - docker --version
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
+        - docker push amazeteam/cmpe272assignment
 
     - stage: do_unit_test
       script:
         - docker run --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment unittest
-        
-    - stage: publish_docker_image
-        - docker push amazeteam/cmpe272assignment
+
+
 
