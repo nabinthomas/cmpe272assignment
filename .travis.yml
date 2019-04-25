@@ -12,8 +12,10 @@ jobs:
     - stage: build_docker_image
       script: 
         - docker --version
+        #- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
-        - docker push amazeteam/cmpe272assignment
+        #- docker push amazeteam/cmpe272assignment
+        - docker run --rm amazeteam/cmpe272assignment unittest
 
     - stage: do_unit_test
       script:
