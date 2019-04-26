@@ -1,7 +1,7 @@
 import sys
 import pymongo
 import bson
-
+from bson.objectid import ObjectId
 
 def add_new_customer(db, customerInfo):
     '''
@@ -18,23 +18,24 @@ def add_new_customer(db, customerInfo):
     
     name = customerInfo["name"]
     email = customerInfo["email"]
-    print ("Customer name : " + name)
+    print ("\r\nCustomer name : " + name)
     print ("EMAIL id : " + email)
         
     
     collection.create_index( [("email", pymongo.ASCENDING) ], unique = True )
     
-    customerInfo["customerId"] = bson.objectid.ObjectId();
+    customerInfo["customerId"] = ObjectId();
     
     try:
         dbReturn = collection.insert_one(customerInfo)
     except pymongo.errors.DuplicateKeyError:
         print("User with this email id already exist")
         return ({}) 
-    
+
+    inserted_record = collection.find_one({"_id" : ObjectId(str(dbReturn.inserted_id))}) 
     print(dbReturn.inserted_id)
 
-    return customerInfo;
+    return inserted_record 
 
 if __name__ == "__main__":
     argv = sys.argv

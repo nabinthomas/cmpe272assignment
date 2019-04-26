@@ -4,10 +4,10 @@
 #Test to Import Books
 cd test/unittests
 echo "Running unit tests.."
-/bin/bash test_import_books.sh
+python3 /root/app/server/dbscripts/ut.py -v
 if [ "$?" -ne 0 ]
 then
-    echo "Importing Books failed"
+    echo "Add customer failed"
     exit -1
 fi 
 echo "All Unit tests passed"

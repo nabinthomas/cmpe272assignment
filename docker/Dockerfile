@@ -23,6 +23,7 @@ RUN pip3 install flask
 RUN pip3 install pytz
 # pymongo  for connecting to mongodb
 RUN pip3 install pymongo
+RUN pip3 install mongomock
 
 #Expose ports
 EXPOSE 80/tcp
