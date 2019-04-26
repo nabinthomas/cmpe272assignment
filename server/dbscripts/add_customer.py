@@ -1,30 +1,65 @@
 import sys
 import pymongo
+import bson
 
 
-def add_new_customer(db, cust_json_file):
-    available_books = []
-    for record in db.inventory.find({}):
-        book_id = record['id']
-        qty = record['qty']
-        if qty <= 0:
-            continue
-        book = db.books.find_one({'_id': book_id})
-        book['qty'] = qty
-        available_books.append(book)
-    return available_books
+def add_new_customer(db, customerInfo):
+    '''
+    Adds a new Customer
+    param db - reference to the db ob
+    param customerInfo - Customer Information 
+        {"email" : "nabin.thomas@gmail.com", "name" : "Nabin Thomas" }
+    return 0 when successful, -1 when failed. 
+    '''
+     
+    # Created or Switched to collection name: customers 
+    collection = db['customers'] 
+
+    
+    name = customerInfo["name"]
+    email = customerInfo["email"]
+    print ("Customer name : " + name)
+    print ("EMAIL id : " + email)
+        
+    
+    collection.create_index( [("email", pymongo.ASCENDING) ], unique = True )
+    
+    customerInfo["customerId"] = bson.objectid.ObjectId();
+    
+    try:
+        dbReturn = collection.insert_one(customerInfo)
+    except pymongo.errors.DuplicateKeyError:
+        print("User with this email id already exist")
+        return ({}) 
+    
+    print(dbReturn.inserted_id)
+
+    return customerInfo;
 
 if __name__ == "__main__":
     argv = sys.argv
-    if len(argv) < 3:
-        print("Usage: python add_customer.py mongodb_uri customer.json")
+    if len(argv) < 4:
+        print("Usage: python add_customer.py mongodb_uri customername email")
         exit(-1)
 
     mongodb_uri = argv[1]
-    cust_json_file = argv[2]
+    customername = argv[2]
+    email = argv[3]
+
+    customerInfo = {
+        "name" : customername,
+        "email": email
+    }
     
     db = pymongo.MongoClient(mongodb_uri).get_database()
-    add_new_customer(db, cust_json_file)
 
-{ "customerId" : 1, "email" : "nabin.thomas@gmail.com", "name" : "Nabin Thomas" }
+    customers=db["customers"]
+    
+    retval = add_new_customer(db, customerInfo)
+    if (retval != {}):
+        print ("Successfully added Customer:" + str(customerInfo))
+    else:
+        print ("Failed to add Customer  :" + str(customerInfo))
+        exit (-1)
 
+    exit (0)
