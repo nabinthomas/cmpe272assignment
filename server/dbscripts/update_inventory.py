@@ -4,8 +4,8 @@ import pymongo
 def get_available_book_count(db, in_book_id):
     book_count = -1
     for record in db.books.find({}):
-	    book_id = record['ISBN-13']
-	    if book_id != in_book_id:
+        book_id = record['ISBN-13']
+        if book_id != in_book_id:
             continue
 
         book_count = record['Inventory']
@@ -13,19 +13,19 @@ def get_available_book_count(db, in_book_id):
     return book_count
 
 
-def update_inventory(db, id, incoming_inv):
-    update_status = failed
+def update_inventory(db, isbn, incoming_inv):
+    update_status = "failed"
 
-    current_inv = get_available_book_count(db, id)
+    current_inv = get_available_book_count(db, isbn)
     new_inv = current_inv + incoming_inv
 
     if current_inv < 0 or new_inv < 0:
         return update_status
 
     #TODO: replace id with Unique key combinations?
-    record = db.inventory.find_one_and_update({"_id": ObjectId(id)}, { '$set': {'Inventory': incoming_inv }})
+    record = db.inventory.find_one_and_update({"ISBN-13": isbn}, { '$set': {'Inventory': incoming_inv }})
 
-    update_status = success # TODO: detect update success/failure
+    update_status = "success" # TODO: detect update success/failure
     return update_status
 
 if __name__ == "__main__":
