@@ -17,6 +17,7 @@ WORKDIR /root/
 #Install required tools and frameworks. 
 RUN apt-get update
 RUN apt-get install -y python3
+RUN apt-get install -y vim
 RUN apt-get install -y python3-pip
 RUN apt-get install -y mongodb mongodb-server mongo-tools
 RUN pip3 install flask

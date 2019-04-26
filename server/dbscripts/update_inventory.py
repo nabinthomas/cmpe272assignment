@@ -1,11 +1,11 @@
 import sys
 import pymongo
 
-def get_available_book_count(db, book_id):
+def get_available_book_count(db, in_book_id):
     book_count = -1
     for record in db.books.find({}):
-	_book_id = record['ISBN-13']
-	if book_id != _book_id:
+	    book_id = record['ISBN-13']
+	    if book_id != in_book_id:
             continue
 
         book_count = record['Inventory']
@@ -39,8 +39,8 @@ if __name__ == "__main__":
     incoming_quantity = argv[3]
     
     db = pymongo.MongoClient(mongodb_uri).get_database()
-    ret_val = update_inventory(db, book_id, incoming_quantity):
-    print("update_inventory operation " ret_val)
+    ret_val = update_inventory(db, book_id, incoming_quantity)
+    print("update_inventory operation " + ret_val)
 
 '''
 	# Books Entry for ref:
