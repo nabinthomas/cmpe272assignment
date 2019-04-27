@@ -26,15 +26,6 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
     return 0 when successful, -1 when failed. 
     '''
 
-    # Confirm inventory
-    for items_dict in book_order_list: 
-        bookId = items_dict["BookId"]
-        requested_qty = items_dict["qty"]
-        in_stock_count = get_available_book_count(db, bookId)
-        if int(in_stock_count) < int(requested_qty):
-            print("BookId " + bookId + "Out of stock to fulfill order")           
-            return {}
-
     # Create Order
     new_order = {}
     new_order.update({"OrderID":orderId})
@@ -44,6 +35,15 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
     new_order.update({"PaymentType":"Cash On Delivery"})
 
     # TODO: Make order insertion and inventory update Atomic
+    # Confirm inventory
+    for items_dict in book_order_list: 
+        bookId = items_dict["BookId"]
+        requested_qty = items_dict["qty"]
+        in_stock_count = get_available_book_count(db, bookId)
+        if int(in_stock_count) < int(requested_qty):
+            print("BookId " + bookId + "Out of stock to fulfill order")           
+            return {}
+
     orders_coll = db['orders'] 
     dbReturn = orders_coll.insert_one(new_order)
     if dbReturn is None:
@@ -59,7 +59,7 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
 
     inserted_record = orders_coll.find_one({"_id" : ObjectId(str(dbReturn.inserted_id))}) 
     
-    return inserted_record, updated_record
+    return inserted_record
 
 
 if __name__ == "__main__":
@@ -87,16 +87,15 @@ if __name__ == "__main__":
 
     in_stock_count = get_available_book_count(db, "978-1503215678")
     in_stock_count1 = get_available_book_count(db, "978-1503215675")
-    print("Inventory after Order creation: ")
+    print("Inventory before Order creation: ")
     print("978-1503215678 : " + str(in_stock_count)) 
-    print("978-1503215675 : " + str(in_stock_count1)+ "\r\n\r\n") 
+    print("978-1503215675 : " + str(in_stock_count1)+ "\r\n") 
 
-    inserted_record, updated_record = create_new_order(db, orderId, customerId, book_order_list, shipping_details, paymentType)
+    inserted_record = create_new_order(db, orderId, customerId, book_order_list, shipping_details, paymentType)
     
     if (inserted_record != {}):
         print("New Order created successfully:")
         print("Order created:" + str(inserted_record))
-        print("Updated inventory record:" + str(updated_record))
     else:
        print("New Order creation failed")
        exit(-1) 

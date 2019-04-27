@@ -39,7 +39,7 @@ def update_inventory(db, isbn, incoming_inv):
     updated_record = db.books.find_and_modify(query={'ISBN-13':isbn}, update={"$set": {'Inventory': new_inv}}, upsert=False, full_response= True)
     if updated_record is None:
         return {}
-    print("Updated record:" + str(updated_record))
+    print("\r\nUpdated record:" + str(updated_record))
 
     return updated_record
 
