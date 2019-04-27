@@ -17,12 +17,15 @@ WORKDIR /root/
 #Install required tools and frameworks. 
 RUN apt-get update
 RUN apt-get install -y python3
+RUN apt-get install -y vim
 RUN apt-get install -y python3-pip
 RUN apt-get install -y mongodb mongodb-server mongo-tools
 RUN pip3 install flask
 RUN pip3 install pytz
 # pymongo  for connecting to mongodb
 RUN pip3 install pymongo
+# For unit tests. TODO: Keep this only for unit tests
+RUN pip3 install mongomock
 
 #Expose ports
 EXPOSE 80/tcp
@@ -33,9 +36,9 @@ COPY setup setup
 #COPY data data
 COPY test test
 
-ENTRYPOINT [ "/bin/bash", "setup/startservers.sh" ]
+# Main entry point for the docker image
+ENTRYPOINT [ "/bin/bash", "setup/entrypoint.sh" ]
 
-
-
-#Default command to start the servers
-CMD ["/bin/bash"]
+# see ../setup/entrypoint.sh for other possible commands. 
+# Default command is to start the servers
+CMD ["startserver"]
