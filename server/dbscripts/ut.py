@@ -58,7 +58,6 @@ class DBTests(unittest.TestCase):
         Test to see whether adding a customer works. 
         '''
         customerInfo = add_customer.add_new_customer(self.db, self.customer_info)
-#        self.assertEqual(len(customer_info), 1)
         self.assertEqual(customerInfo['email'], self.customer_info['email'])
         self.assertEqual(customerInfo['name'], self.customer_info['name'])
         print('\r\nCustomer info from db \r\n' + str(customerInfo))
@@ -69,7 +68,6 @@ class DBTests(unittest.TestCase):
         '''
         customerInfo1 = add_customer.add_new_customer(self.db, self.customer_info)
         customerInfo2 = add_customer.add_new_customer(self.db, self.customer_info)
-#        self.assertEqual(len(customer_info), 1)
         self.assertEqual(customerInfo2, {})
         print('\r\nCustomer1 info from db \r\n' + str(customerInfo1))
         print('Customer2 info from db \r\n' + str(customerInfo2))
