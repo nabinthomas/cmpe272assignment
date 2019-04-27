@@ -1,7 +1,6 @@
 import unittest
 import mongomock
 import json
-#import list_books
 import add_customer
 import create_order
 import update_inventory
