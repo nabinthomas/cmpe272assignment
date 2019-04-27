@@ -44,6 +44,15 @@ class DBTests(unittest.TestCase):
         print('Customer2 info from db \r\n' + str(customerInfo2))
         self.db.customers.drop()
 
+    def test_add_customer2(self):
+        customerInfo1 = add_customer.add_new_customer(self.db, self.customer_info)
+        customerInfo2 = add_customer.add_new_customer(self.db, self.customer_info)
+#        self.assertEqual(len(customer_info), 1)
+        self.assertNotEqual(customerInfo2, {})
+        print('\r\nCustomer1 info from db \r\n' + str(customerInfo1))
+        print('Customer2 info from db \r\n' + str(customerInfo2))
+        self.db.customers.drop()
+
     def test_create_order(self):
         paymentType = "Cash On Delivery"
         orderId = 21
