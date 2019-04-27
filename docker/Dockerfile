@@ -24,6 +24,7 @@ RUN pip3 install flask
 RUN pip3 install pytz
 # pymongo  for connecting to mongodb
 RUN pip3 install pymongo
+# For unit tests. TODO: Keep this only for unit tests
 RUN pip3 install mongomock
 
 #Expose ports

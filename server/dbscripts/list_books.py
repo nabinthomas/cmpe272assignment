@@ -4,16 +4,17 @@ import pymongo
 
 def list_books(db):
     available_books = []
-    for record in db.inventory.find({}):
+    for record in db.books.find({}):
         book_id = record['id']
         book_count = record['Inventory']
         if book_count <= 0:
             continue
         book = db.books.find_one({'_id': book_id})
+        book['Title'] = record['Title']
         book['Inventory'] = book_count
         book['Author'] = record['Author'] #TODO: Authors??
         book['Genre'] = record['Genre']
-        book['Publishe'] = record['Publishe']
+        book['Publisher'] = record['Publisher']
         book['Price'] = record['Price']
         book['ISBN-13'] = record['ISBN-13']
         available_books.append(book)
@@ -31,3 +32,8 @@ if __name__ == "__main__":
     for book in list_books(db):
         print(book['Title'], book['Author'], book['Inventory'], book['Genre'], book['Publisher'], book['Price'], book['ISBN-13']))
 
+'''
+{ "Title" : "How to Think Like Sherlock Holmes", "Author" : [ "Konnikova, Maria" ], 
+"Genre" : "psychology", "Page" : 240, "Publisher" : "Penguin", "Price" : 24, 
+"ISBN-13" : "978-1503215681", "Inventory" : 30 }
+'''
