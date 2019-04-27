@@ -88,7 +88,7 @@ nohup sudo docker run --rm -p 80:80/tcp amazeteam/cmpe272assignment
 sudo service docker start
 nohup sudo docker run --rm -p 80:80/tcp amazeteam/cmpe272assignment:version
 ```
-**Note**: _Replace version with the right tag to run._
+**Note**: _Replace **version** with the right tag to run._
 # Git Cheatsheat
 - http://www.cheat-sheets.org/saved-copy/git-cheat-sheet.pdf
 
