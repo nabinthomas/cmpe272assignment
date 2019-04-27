@@ -24,7 +24,11 @@ class DBTests(unittest.TestCase):
         print ("tearDown")
         pass
     
-    def test_list_books(self):
+    def test_list_available_books(self):
+        '''
+        Test case: List available books and make sure it has books which are actually having 
+        copies available to sell.
+        '''
         books = list_books.get_available_books(self.db)
         self.assertEqual(books.count(), 6) # Ensure 6th book with 0 copies is not returned
         print(books)
@@ -32,7 +36,7 @@ class DBTests(unittest.TestCase):
     def test_list_books_after_order_all(self):
         '''
         Order all the copies of an available book to make it empty. And then try search to ensure that this book
-        is removed from the returned test.
+        is removed from the returned list.
         This also tests for update inventory
         '''
         books = list_books.get_available_books(self.db)
@@ -50,23 +54,30 @@ class DBTests(unittest.TestCase):
         print(books)
 
     def test_add_customer(self):
+        '''
+        Test to see whether adding a customer works. 
+        '''
         customerInfo = add_customer.add_new_customer(self.db, self.customer_info)
 #        self.assertEqual(len(customer_info), 1)
         self.assertEqual(customerInfo['email'], self.customer_info['email'])
         self.assertEqual(customerInfo['name'], self.customer_info['name'])
         print('\r\nCustomer info from db \r\n' + str(customerInfo))
-        self.db.customers.drop()
 
-    def test_add_customer1(self):
+    def test_add_customer_try_duplicate(self):
+        '''
+        Test to make sure that adding a 2nd customer with same email address does not work. 
+        '''
         customerInfo1 = add_customer.add_new_customer(self.db, self.customer_info)
         customerInfo2 = add_customer.add_new_customer(self.db, self.customer_info)
 #        self.assertEqual(len(customer_info), 1)
         self.assertEqual(customerInfo2, {})
         print('\r\nCustomer1 info from db \r\n' + str(customerInfo1))
         print('Customer2 info from db \r\n' + str(customerInfo2))
-        self.db.customers.drop()
 
-    def test_create_order(self):
+    def test_create_order_valid(self):
+        '''
+        Test to make a valid order
+        '''
         paymentType = "Cash On Delivery"
         orderId = 21
         customerId = 12
@@ -77,9 +88,11 @@ class DBTests(unittest.TestCase):
         # Usage: python create_order.py mongodb_uri collection_name new_order_dict")
         self.assertEqual(ins_record['OrderID'], orderId)
         self.assertEqual(ins_record['CustomerId'], customerId)
-        self.db.orders.drop()
 
-    def test_create_order1(self):
+    def test_create_order_invalid(self):
+        '''
+        Attempt an invalid order (more books than available)
+        '''
         paymentType = "Cash On Delivery"
         orderId = 21
         customerId = 12
@@ -91,6 +104,9 @@ class DBTests(unittest.TestCase):
         self.assertEqual(ins_record, {})
     
     def test_update_inventory(self):
+        '''
+        Ensure inventory is updated after order
+        '''
         # Place order        
         paymentType = "Cash On Delivery"
         orderId = 22
