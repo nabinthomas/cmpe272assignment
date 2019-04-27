@@ -27,7 +27,7 @@ fi
 
 # Other unit tests
 echo "Running unit tests.."
-python3 /root/app/server/dbscripts/ut.py -v
+PYTHONPATH=/root/app/server/dbscripts/ python3 /root/test/unittests/ut_transactions.py -v
 if [ "$?" -ne 0 ]
 then
     exit -1
