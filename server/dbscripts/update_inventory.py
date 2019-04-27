@@ -1,7 +1,15 @@
 import sys
 import pymongo
+from bson.objectid import ObjectId
+from pymongo import ReturnDocument
 
 def get_available_book_count(db, in_book_id):
+    '''
+    Fetch number of book available in inventory
+    param db: reference to the database
+    param in_book_id: ISBN-13 value of Book 
+    return updated record when successful, {} when failed. 
+    '''
     book_count = -1
     for record in db.books.find({}):
         book_id = record['ISBN-13']
@@ -14,19 +22,26 @@ def get_available_book_count(db, in_book_id):
 
 
 def update_inventory(db, isbn, incoming_inv):
-    update_status = "failed"
-
+    '''
+    Update Inventory
+    param db - reference to the database
+    param customerInfo - Inventory update value (-/+)
+    return updated record when successful, {} when failed. 
+    '''
     current_inv = get_available_book_count(db, isbn)
     new_inv = current_inv + incoming_inv
 
     if current_inv < 0 or new_inv < 0:
-        return update_status
+        return {}
 
     #TODO: replace id with Unique key combinations?
-    record = db.inventory.find_one_and_update({"ISBN-13": isbn}, { '$set': {'Inventory': incoming_inv }})
+    #updated_record = db.books.find_one_and_update({"ISBN-13": isbn}, { '$set': {'Inventory': new_inv }}, return_document=ReturnDocument.AFTER)
+    updated_record = db.books.find_and_modify(query={'ISBN-13':isbn}, update={"$set": {'Inventory': new_inv}}, upsert=False, full_response= True)
+    if updated_record is None:
+        return {}
+    print("Updated record:" + str(updated_record))
 
-    update_status = "success" # TODO: detect update success/failure
-    return update_status
+    return updated_record
 
 if __name__ == "__main__":
     argv = sys.argv

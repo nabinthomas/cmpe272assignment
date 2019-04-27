@@ -2,6 +2,7 @@ import sys
 import pymongo
 from  update_inventory import *
 
+
 def import_books_inventory(db) :
     db.books.insert_one({  "Title" : "Fundamentals of Wavelets", "Author" : [ "Goswami, Jaideva", "Binu Jose" ], "Genre" : "signal_processing", "Page" : 228, "Publisher" : "Wiley", "Price" : 22.8, "ISBN-13" : "978-1503215672", "Inventory" : 10 })
     db.books.insert_one({  "Title" : "Data Smart", "Author" : [ "Foreman, John" ], "Genre" : "data_science", "Page" : 235, "Publisher" : "Wiley", "Price" : 23.5, "ISBN-13" : "978-1503215673", "Inventory" : 20 })
@@ -24,7 +25,6 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
         {"email" : "nabin.thomas@gmail.com", "name" : "Nabin Thomas" }
     return 0 when successful, -1 when failed. 
     '''
-    ret_status = 'failed'
 
     # Confirm inventory
     for items_dict in book_order_list: 
@@ -33,7 +33,7 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
         in_stock_count = get_available_book_count(db, bookId)
         if int(in_stock_count) < int(requested_qty):
             print("BookId " + bookId + "Out of stock to fulfill order")           
-            return ret_status
+            return {}
 
     # Create Order
     new_order = {}
@@ -44,18 +44,22 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
     new_order.update({"PaymentType":"Cash On Delivery"})
 
     # TODO: Make order insertion and inventory update Atomic
-    order_col = db['orders'] 
-    order_col.insert_one(new_order) 
-    # TODO: ERROR handling, exit on failure
-    
+    orders_coll = db['orders'] 
+    dbReturn = orders_coll.insert_one(new_order)
+    if dbReturn is None:
+        return {}
+
     # Update inventory if all items are in stock, else fail.
     for items_dict in book_order_list: 
         bookId = items_dict["BookId"]
         requested_qty = items_dict["qty"]
-        update_inventory(db, bookId, -requested_qty) # Update with -ve quantity for sale.
+        updated_record = update_inventory(db, bookId, -requested_qty) # Update with -ve quantity for sale.
+        if updated_record is None:
+            return {}
 
-    ret_status = 'success'
-    return ret_status
+    inserted_record = orders_coll.find_one({"_id" : ObjectId(str(dbReturn.inserted_id))}) 
+    
+    return inserted_record, updated_record
 
 
 if __name__ == "__main__":
@@ -80,9 +84,30 @@ if __name__ == "__main__":
     db = pymongo.MongoClient(mongodb_uri).get_database()
 
     import_books_inventory(db) # Temporary import code
-    ret_status = create_new_order(db, orderId, customerId, book_order_list, shipping_details, paymentType)
-    print("New order creation " + ret_status)
 
+    in_stock_count = get_available_book_count(db, "978-1503215678")
+    in_stock_count1 = get_available_book_count(db, "978-1503215675")
+    print("Inventory after Order creation: ")
+    print("978-1503215678 : " + str(in_stock_count)) 
+    print("978-1503215675 : " + str(in_stock_count1)+ "\r\n\r\n") 
+
+    inserted_record, updated_record = create_new_order(db, orderId, customerId, book_order_list, shipping_details, paymentType)
+    
+    if (inserted_record != {}):
+        print("New Order created successfully:")
+        print("Order created:" + str(inserted_record))
+        print("Updated inventory record:" + str(updated_record))
+    else:
+       print("New Order creation failed")
+       exit(-1) 
+
+    in_stock_count = get_available_book_count(db, "978-1503215678")
+    in_stock_count1 = get_available_book_count(db, "978-1503215675")
+    print("\r\n\r\nInventory after Order creation: ")
+    print("978-1503215678 : " + str(in_stock_count)) 
+    print("978-1503215675 : " + str(in_stock_count1)) 
+     
+    exit(0)
 '''
     Orders schema: 
 
