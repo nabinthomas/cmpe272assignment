@@ -55,7 +55,18 @@ class DBTests(unittest.TestCase):
         # Usage: python create_order.py mongodb_uri collection_name new_order_dict")
         self.assertEqual(ins_record['OrderID'], orderId)
         self.assertEqual(ins_record['CustomerId'], customerId)
+        self.db.orders.drop()
 
+    def test_create_order1(self):
+        paymentType = "Cash On Delivery"
+        orderId = 21
+        customerId = 12
+        shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
+        book_order_list = [{"BookId": "978-1503215678", "qty" : 111, "SellingPrice": 22},{"BookId": "978-1503215675", "qty" : 3, "SellingPrice": 23}]
+        ins_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType)
+
+        # Usage: python create_order.py mongodb_uri collection_name new_order_dict")
+        self.assertEqual(ins_record, {})
     '''
     def test_update_inventory(self, cust_json_file):
         {  "Title" : "Fundamentals of Wavelets", 
