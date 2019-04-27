@@ -2,23 +2,8 @@ import sys
 import pymongo
 
 
-def list_books(db):
-    available_books = []
-    for record in db.books.find({}):
-        book_id = record['id']
-        book_count = record['Inventory']
-        if book_count <= 0:
-            continue
-        book = db.books.find_one({'_id': book_id})
-        book['Title'] = record['Title']
-        book['Inventory'] = book_count
-        book['Author'] = record['Author'] #TODO: Authors??
-        book['Genre'] = record['Genre']
-        book['Publisher'] = record['Publisher']
-        book['Price'] = record['Price']
-        book['ISBN-13'] = record['ISBN-13']
-        available_books.append(book)
-    return available_books
+def get_available_books(db):
+    return db.books.find({ "Inventory" : { "$gt": 0 }  })
 
 if __name__ == "__main__":
     argv = sys.argv
@@ -29,8 +14,23 @@ if __name__ == "__main__":
     mongodb_uri = argv[1]
     
     db = pymongo.MongoClient(mongodb_uri).get_database()
-    for book in list_books(db):
-        print(book['Title'], book['Author'], book['Inventory'], book['Genre'], book['Publisher'], book['Price'], book['ISBN-13']))
+    available_books = get_available_books(db)
+    print("List of Available Books")
+    print("************************")
+    for book in available_books:
+        print("Title: ", book['Title'])
+        print("Author(s) :", end='')
+        for author in book["Author"]:
+            print(author, "\n          :", end='')
+        print("\r", end='')
+        print("Available Copies :", book['Inventory'])
+        print("Genre", book['Genre'])
+        print("Publisher", book['Publisher'])
+        print("Current Price", book['Price'])
+        print("ISBN-13 : ", book['ISBN-13'])
+        print("*************************")
+        print()
+        
 
 '''
 { "Title" : "How to Think Like Sherlock Holmes", "Author" : [ "Konnikova, Maria" ], 

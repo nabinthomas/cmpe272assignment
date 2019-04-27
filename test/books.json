@@ -8,4 +8,5 @@
 { "Title" : "The Drunkard's Walk", "Author" : [ "Mlodinow, Leonard" ], "Genre" : "science", "Page" : 197, "Publisher" : "Penguin", "Price" : 19.7, "ISBN-13" : "978-1503215679", "Inventory" : 50 }
 { "Title" : "Image Processing & Mathematical Morphology", "Author" : [ "Shih, Frank" ], "Genre" : "signal_processing", "Page" : 241, "Publisher" : "CRC", "Price" : 24.1, "ISBN-13" : "978-1503215680", "Inventory" : 49 }
 { "Title" : "How to Think Like Sherlock Holmes", "Author" : [ "Konnikova, Maria" ], "Genre" : "psychology", "Page" : 240, "Publisher" : "Penguin", "Price" : 24, "ISBN-13" : "978-1503215681", "Inventory" : 30 }
+{ "Title" : "Copy just Ran out", "Author" : [ "Konnikova, Maria" ], "Genre" : "psychology", "Page" : 240, "Publisher" : "Penguin", "Price" : 24, "ISBN-13" : "978-1503215981", "Inventory" : 0 }
 

@@ -10,13 +10,7 @@ def get_available_book_count(db, in_book_id):
     param in_book_id: ISBN-13 value of Book 
     return updated record when successful, {} when failed. 
     '''
-    book_count = -1
-    for record in db.books.find({}):
-        book_id = record['ISBN-13']
-        if book_id != in_book_id:
-            continue
-
-        book_count = record['Inventory']
+    book_count = db.books.find_one({"ISBN-13" : in_book_id})['Inventory']
 
     return book_count
 
@@ -36,7 +30,7 @@ def update_inventory(db, isbn, incoming_inv):
 
     #TODO: replace id with Unique key combinations?
     #updated_record = db.books.find_one_and_update({"ISBN-13": isbn}, { '$set': {'Inventory': new_inv }}, return_document=ReturnDocument.AFTER)
-    updated_record = db.books.find_and_modify(query={'ISBN-13':isbn}, update={"$set": {'Inventory': new_inv}}, upsert=False, full_response= True)
+    updated_record = db.books.find_one_and_update({'ISBN-13':isbn}, {"$set": {'Inventory': new_inv}}, return_document=ReturnDocument.AFTER)
     if updated_record is None:
         return {}
     print("\r\nUpdated record:" + str(updated_record))

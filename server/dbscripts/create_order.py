@@ -54,6 +54,7 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
         bookId = items_dict["BookId"]
         requested_qty = items_dict["qty"]
         updated_record = update_inventory(db, bookId, -requested_qty) # Update with -ve quantity for sale.
+        print (bookId, requested_qty)
         if updated_record is None:
             return {}
 
