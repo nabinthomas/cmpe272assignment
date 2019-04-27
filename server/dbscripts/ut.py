@@ -3,15 +3,17 @@ import mongomock
 import json
 #import list_books
 import add_customer
-#import create_order
-#import update_inventory
+import create_order
+import update_inventory
 
 class DBTests(unittest.TestCase):
     def setUp(self):
         self.db = mongomock.MongoClient()['testdb']
- #       self.db.books.insert_one({'_id': '1', 'title': 'A test book'})
- #       self.db.books.insert_one({'_id': '2', 'title': 'Another test book'})
- #       self.db.books.insert_one({'_id': '3', 'title': 'A rare book'})
+        self.db.books.insert_one({'_id': '1', "Title" : "Integration of the Indian States", "Author" : [ "Menon, V P" ], "Genre" : "history", "Page" : 217, "Publisher" : "Orient Blackswan", "Price" : 21.7, "ISBN-13" : "978-1503215678", "Inventory" : 90 })
+        self.db.books.insert_one({'_id': '2', "Title" : "God Created the Integers", "Author" : [ "Hawking, Stephen" ], "Genre" : "mathematics", "Page" : 197, "Publisher" : "Penguin", "Price" : 19.7, "ISBN-13" : "978-1503215674", "Inventory" : 40 }) 
+        self.db.books.insert_one({'_id': '3', "Title" : "Superfreakonomics", "Author" : [ "Dubner, Stephen" ], "Genre" : "economics", "Page" : 179, "Publisher" : "HarperCollins", "Price" : 17.9, "ISBN-13" : "978-1503215675", "Inventory" : 60 })
+        self.db.books.insert_one({'_id': '4', "Title" : "Fundamentals of Wavelets", "Author" : [ "Goswami, Jaideva", "Binu Jose" ], "Genre" : "signal_processing", "Page" : 228, "Publisher" : "Wiley", "Price" : 22.8, "ISBN-13" : "978-1503215672", "Inventory" : 10 })
+        self.db.books.insert_one({'_id': '5', "Title" : "Nature of Statistical Learning Theory, The", "Author" : [ "Vapnik, Vladimir" ], "Genre" : "data_science", "Page" : 230, "Publisher" : "Springer", "Price" : 23, "ISBN-13" : "978-1503215677", "Inventory" : 80 })
  #       self.db.inventory.insert_one({'_id': '1', 'id': '1', 'qty': 5})
  #       self.db.inventory.insert_one({'_id': '2', 'id': '2', 'qty': 0})
         self.customer_info = {"name" : "Mock User", "email": "mock_email@email.com"}
@@ -42,19 +44,19 @@ class DBTests(unittest.TestCase):
         print('Customer2 info from db \r\n' + str(customerInfo2))
         self.db.customers.drop()
 
-    '''
-    def test_create_order(self, cust_json_file):
-	# Adding a new order with unique id gen: as [ "_id" : "13" ]
-    	new_order_dict = { "_id": "13",  "OrderID" : 13 , "CustomerId" : 1, 
-     			   "Items" : [ {"BookId": "978-1503215678", "qty" : 1, "SellingPrice": 22}, {"BookId": "9978-1503215677", "qty" : 3, "SellingPrice": 23} ],  
-         		   "Shipping" : { "Address": "4321 Avery Ranch, San Mateo, CA 95123", "Status" : "InProgress", "Provider" : "UPS", "Type" : "Overnight shipping", "ShippingDate":"", "DeliveryDate":"" }, 
-        		   "PaymentType": "Cash On Delivery" }
+    def test_create_order(self):
+        paymentType = "Cash On Delivery"
+        orderId = 21
+        customerId = 12
+        shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
+        book_order_list = [{"BookId": "978-1503215678", "qty" : 1, "SellingPrice": 22},{"BookId": "978-1503215675", "qty" : 3, "SellingPrice": 23}]
+        ins_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType)
 
-        books = create_order.create_new_order(self.db, 'orders', new_order_dict)
         # Usage: python create_order.py mongodb_uri collection_name new_order_dict")
-        self.assertEqual(len(books), 1)
-        print(books)
+        self.assertEqual(ins_record['OrderID'], orderId)
+        self.assertEqual(ins_record['CustomerId'], customerId)
 
+    '''
     def test_update_inventory(self, cust_json_file):
         {  "Title" : "Fundamentals of Wavelets", 
            "Author" : [ "Goswami, Jaideva", "Binu Jose" ], 
