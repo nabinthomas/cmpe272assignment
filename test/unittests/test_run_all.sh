@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Start local mongodb instance
+service mongodb start
 
 #Test import scripts
 cd test/unittests
@@ -23,6 +25,7 @@ then
     exit -1
 fi 
 
+# Other unit tests
 echo "Running unit tests.."
 python3 /root/app/server/dbscripts/ut.py -v
 if [ "$?" -ne 0 ]
