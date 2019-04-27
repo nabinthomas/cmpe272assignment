@@ -72,6 +72,7 @@ Team members:
 **Note**: _The database dir is kept outside the docker image to make sure the data is persistent across docker runs. For testing, a different database directory may be used to avoid corrupting real data._ 
 ## To push the docker image to docker hub
 ```bash
+docker login
 docker push amazeteam/cmpe272assignment
 ```
 **Note**: _ Docker image is automatically pushed to Dockerhub with "latest" tag only for commits to the master branch. All other branches will have the branchname as the tag_ 
