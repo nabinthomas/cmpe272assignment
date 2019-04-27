@@ -21,9 +21,8 @@ class DBTests(unittest.TestCase):
         print ("SETUP END")
         
     def tearDown(self):
-        print ("tearDown BEGIN")
+        print ("tearDown")
         pass
-        print ("tearDown END")
     
     def test_list_books(self):
         books = list_books.get_available_books(self.db)
@@ -68,7 +67,6 @@ class DBTests(unittest.TestCase):
         self.db.customers.drop()
 
     def test_create_order(self):
-        print ("LOOK HERE")
         paymentType = "Cash On Delivery"
         orderId = 21
         customerId = 12
