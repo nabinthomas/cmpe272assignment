@@ -21,7 +21,7 @@ Team members:
 	* Github tag 3.0
 
 ## Build instructions
-1. Install git and Sync code to your local machine. (to <gitroot>)
+1. Install git and Sync code to your local machine. (to ```<gitroot>```)
 2. Install docker
 3. Build docker image
 ```bash
