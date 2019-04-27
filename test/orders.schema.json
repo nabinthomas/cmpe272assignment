@@ -1,0 +1,12 @@
+{
+    "OrderID" : "number",
+    "CustomerId" :"number",
+    "Items" : "jsonarray",
+    "Shipping" : "jsonarray",
+    
+    "PaymentType" : "string"
+ 
+}
+
+
+ 
