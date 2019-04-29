@@ -13,10 +13,15 @@ Team members:
 1. Assignment 1 - Submitted. 
 	* Docker hub image: amazeteam/cmpe272assignment:1.0
 	* Github tag 1.0
-2. Assginment 2 - In progress.
+2. Assginment 2 - Submitted. 
+	* Docker hub image: amazeteam/cmpe272assignment:2.0
+	* Github tag 2.0
+2. Assginment 3 - Ready to Submit 
+	* Docker hub image: amazeteam/cmpe272assignment:3.0
+	* Github tag 3.0
 
 ## Build instructions
-1. Install git and Sync code to your local machine. (to <gitroot>)
+1. Install git and Sync code to your local machine. (to ```<gitroot>```)
 2. Install docker
 3. Build docker image
 ```bash
@@ -59,11 +64,19 @@ Team members:
         cd <gitroot>/ 
         docker run --rm -p 80:80/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
 ```
+4. Run the unit tests
+```bash
+        cd <gitroot>/ 
+        docker run --rm amazeteam/cmpe272assignment unittest
+```
 **Note**: _The database dir is kept outside the docker image to make sure the data is persistent across docker runs. For testing, a different database directory may be used to avoid corrupting real data._ 
 ## To push the docker image to docker hub
 ```bash
+docker login
 docker push amazeteam/cmpe272assignment
 ```
+**Note**: _ Docker image is automatically pushed to Dockerhub with "latest" tag only for commits to the master branch. All other branches will have the branchname as the tag_ 
+
 ## To deploy docker on aws ec2 instance (linux 2 ami)
 ### To run the latest version from dockerhub
 ```bash
@@ -75,7 +88,7 @@ nohup sudo docker run --rm -p 80:80/tcp amazeteam/cmpe272assignment
 sudo service docker start
 nohup sudo docker run --rm -p 80:80/tcp amazeteam/cmpe272assignment:version
 ```
-**Note**: _Replace version with the right tag to run._
+**Note**: _Replace **version** with the right tag to run._
 # Git Cheatsheat
 - http://www.cheat-sheets.org/saved-copy/git-cheat-sheet.pdf
 
