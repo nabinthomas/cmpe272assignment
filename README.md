@@ -16,7 +16,7 @@ Team members:
 2. Assginment 2 - Submitted. 
 	* Docker hub image: amazeteam/cmpe272assignment:2.0
 	* Github tag 2.0
-2. Assginment 3 - Ready to Submit 
+2. Assginment 3 - Submitted.
 	* Docker hub image: amazeteam/cmpe272assignment:3.0
 	* Github tag 3.0
 
