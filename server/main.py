@@ -168,14 +168,19 @@ def book_isbn(isbn13):
     @param - isbn13 - ISBN 13 value as a string for the book.
     TODO get real data from the database
     curl -XGET http://localhost/api/book/13455
+    curl -XGET http://localhost/api/book/978-1503215680
     """
     book = get_bookdata(db, isbn13)
+    response = {"requested_book": isbn13}
 
     if book is None:
+        
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
     else:
+        del book['_id']
+        response["book_details"] = book
         returnCode = ReturnCodes.SUCCESS
-    return encodeJsonResponse(str(book), returnCode);
+    return encodeJsonResponse(response, returnCode);
 
 
 ########################################################################
