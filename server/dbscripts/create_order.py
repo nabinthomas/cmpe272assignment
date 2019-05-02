@@ -16,14 +16,13 @@ def import_books_inventory(db) :
     db.books.insert_one({ "Title" : "How to Think Like Sherlock Holmes", "Author" : [ "Konnikova, Maria" ], "Genre" : "psychology", "Page" : 240, "Publisher" : "Penguin", "Price" : 24, "ISBN-13" : "978-1503215681", "Inventory" : 30 })
 
 
-# TODO:Fix CASING
 def create_new_order(db, orderId, customerId, book_order_list, shipping_details, paymentType):
     '''
     Creates a new Order
     param db - reference to the db ob
     param customerInfo - Customer Information 
         {"email" : "nabin.thomas@gmail.com", "name" : "Nabin Thomas" }
-    return 0 when successful, -1 when failed. 
+    return new_order_record when successful, {} when failed. 
     '''
 
     # Create Order
@@ -34,34 +33,25 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
     new_order["Shipping"] = shipping_details
     new_order.update({"PaymentType":"Cash On Delivery"})
 
-    # TODO: Make order insertion and inventory update Atomic
-    # Confirm inventory
-    for items_dict in book_order_list: 
-        bookId = items_dict["BookId"]
-        requested_qty = items_dict["qty"]
-        in_stock_count = get_available_book_count(db, bookId)
-        if int(in_stock_count) < int(requested_qty):
-            print("BookId " + bookId + "Out of stock to fulfill order")           
-            return {}
-
     orders_coll = db['orders'] 
     dbReturn = orders_coll.insert_one(new_order)
-    if dbReturn is None:
-        return {}
-
-    # Update inventory if all items are in stock, else fail.
-    for items_dict in book_order_list: 
-        bookId = items_dict["BookId"]
-        requested_qty = items_dict["qty"]
-        updated_record = update_inventory(db, bookId, -requested_qty) # Update with -ve quantity for sale.
-        print (bookId, requested_qty)
-        if updated_record is None:
-            return {}
-
     inserted_record = orders_coll.find_one({"_id" : ObjectId(str(dbReturn.inserted_id))}) 
-    
-    return inserted_record
+    print ("dbReturn = " , str(inserted_record))
+    print ("dbReturn = " , type(inserted_record))
 
+    if inserted_record is None:
+        return {}
+ 
+    orders_coll.create_index( [("OrderID", pymongo.ASCENDING) ], unique = True )
+    
+    inserted_record = orders_coll.find_one({"_id" : ObjectId(str(dbReturn.inserted_id))}) 
+
+    if (orderId == 0):
+        print ("Order ID Was 0 .. Fixing it")
+        inserted_record = orders_coll.find_one_and_update({'_id':dbReturn.inserted_id}, 
+            {"$set": {'OrderID': dbReturn.inserted_id, 'Shipping': { 'Status' : 'InProgress'}}}, return_document=ReturnDocument.AFTER)
+    print ("Inserted Order record = ", str(inserted_record))
+    return inserted_record
 
 if __name__ == "__main__":
     argv = sys.argv

@@ -5,6 +5,7 @@ import add_customer
 import create_order
 import update_inventory
 import list_books
+import process_order
 
 class DBTests(unittest.TestCase):
     def setUp(self):
@@ -31,26 +32,6 @@ class DBTests(unittest.TestCase):
         '''
         books = list_books.get_available_books(self.db)
         self.assertEqual(books.count(), 6) # Ensure 6th book with 0 copies is not returned
-        print(books)
-
-    def test_list_books_after_order_all(self):
-        '''
-        Order all the copies of an available book to make it empty. And then try search to ensure that this book
-        is removed from the returned list.
-        This also tests for update inventory
-        '''
-        books = list_books.get_available_books(self.db)
-        self.assertEqual(books.count(), 6) # Ensure 6th book with 0 copies is not returned
-        # Place order        
-        paymentType = "Cash On Delivery"
-        orderId = 21
-        customerId = 12
-        shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
-        book_order_list = [{"BookId": "978-1505332546", "qty" : 1, "SellingPrice": 6.88}]
-        ins_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType) 
-
-        books = list_books.get_available_books(self.db)
-        self.assertEqual(books.count(), 5) # Ensure 6th, 7th books now with 0 copies are not returned
         print(books)
 
     def test_add_customer(self):
@@ -87,6 +68,23 @@ class DBTests(unittest.TestCase):
         self.assertEqual(ins_record['OrderID'], orderId)
         self.assertEqual(ins_record['CustomerId'], customerId)
 
+    def test_create_order_with_auto_order_id(self):
+        '''
+        Test to make a valid order
+        '''
+        paymentType = "Cash On Delivery"
+        orderId = 0
+        customerId = 12
+        shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
+        book_order_list = [{"BookId": "978-1503215678", "qty" : 1, "SellingPrice": 22},{"BookId": "978-1503215675", "qty" : 3, "SellingPrice": 23}]
+        ins_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType)
+        print("Test inserted record ", str(ins_record))
+        # Usage: python create_order.py mongodb_uri collection_name new_order_dict")
+        self.assertNotEqual(ins_record, {})
+        print("Order ID: ", ins_record['OrderID'])
+        self.assertNotEqual(ins_record['OrderID'], orderId)
+        self.assertEqual(ins_record['CustomerId'], customerId)
+
     def test_create_order_invalid(self):
         '''
         Attempt an invalid order (more books than available)
@@ -97,10 +95,35 @@ class DBTests(unittest.TestCase):
         shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
         book_order_list = [{"BookId": "978-1503215678", "qty" : 111, "SellingPrice": 22},{"BookId": "978-1503215675", "qty" : 3, "SellingPrice": 23}]
         ins_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType)
-
-        # Usage: python create_order.py mongodb_uri collection_name new_order_dict")
-        self.assertEqual(ins_record, {})
+        self.assertEqual(ins_record['OrderID'], orderId)
+        self.assertEqual(ins_record['CustomerId'], customerId)
+        self.assertNotEqual(ins_record, {})
+        
+        processed_order = process_order.process_order(self.db, orderId) 
+        self.assertEqual(processed_order, {})       
     
+    def test_list_books_after_order_all(self):
+        '''
+        Order all the copies of an available book to make it empty. And then try search to ensure that this book
+        is removed from the returned list.
+        This also tests for update inventory
+        '''
+        books = list_books.get_available_books(self.db)
+        self.assertEqual(books.count(), 6) # Ensure 6th book with 0 copies is not returned
+        # Place order        
+        paymentType = "Cash On Delivery"
+        orderId = 21
+        customerId = 12
+        shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
+        book_order_list = [{"BookId": "978-1505332546", "qty" : 1, "SellingPrice": 6.88}]
+        order_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType) 
+        order_record = process_order.process_order(self.db, orderId)
+
+        books = list_books.get_available_books(self.db)
+        self.assertEqual(books.count(), 5) # Ensure 6th, 7th books now with 0 copies are not returned
+        self.assertEqual(order_record["Shipping"]["Status"], "Shipped")
+        print(books)
+
     def test_update_inventory(self):
         '''
         Ensure inventory is updated after order
@@ -112,10 +135,30 @@ class DBTests(unittest.TestCase):
         shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
         book_order_list = [{"BookId": "978-1503215678", "qty" : 3, "SellingPrice": 22}]
         original_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
-        ins_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType) 
+        order_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType) 
+        order_record = process_order.process_order(self.db, orderId)
 
         new_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
         self.assertEqual(original_book_count - new_book_count, 3) #3 books ordered
+        self.assertEqual(order_record["Shipping"]["Status"], "Shipped")
+
+def test_update_inventory_out_of_stock(self):
+        '''
+        Ensure inventory is not updated after order if not enough books are available to ship
+        '''
+        # Place order        
+        paymentType = "Cash On Delivery"
+        orderId = 22
+        customerId = 12
+        shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
+        book_order_list = [{"BookId": "978-1503215678", "qty" : 3000, "SellingPrice": 22}]
+        original_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
+        order_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType) 
+        order_record = process_order.process_order(self.db, orderId)
+        
+        new_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
+        self.assertEqual(original_book_count, new_book_count) # No books are shipped. 
+        self.assertEqual(order_record["Shipping"]["Status"], "InProgress")
 
 if __name__ == "__main__":
     unittest.main()
