@@ -170,6 +170,10 @@ def book_isbn(isbn13):
     """
     return encodeJsonResponse("Details about book " + isbn13, ReturnCodes.SUCCESS);
 
+
+########################################################################
+# MAIN
+########################################################################
 if __name__ == '__main__':
         ## Start the http server
         app.run(host='0.0.0.0', port=80);
