@@ -6,7 +6,8 @@ import pytz
 from flask import Flask, render_template, jsonify, request
 import pymongo  
 from pymongo import MongoClient
-
+from server.dbscripts.list_books import *
+import sys
 
 ## Create the App
 app = Flask(__name__)
@@ -168,12 +169,28 @@ def book_isbn(isbn13):
     TODO get real data from the database
     curl -XGET http://localhost/api/book/13455
     """
-    return encodeJsonResponse("Details about book " + isbn13, ReturnCodes.SUCCESS);
+    book = get_bookdata(db, isbn13)
+
+    if book is None:
+        returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+    else:
+        returnCode = ReturnCodes.SUCCESS
+    return encodeJsonResponse(str(book), returnCode);
 
 
 ########################################################################
 # MAIN
 ########################################################################
 if __name__ == '__main__':
-        ## Start the http server
-        app.run(host='0.0.0.0', port=80);
+    ## Setup environment 
+    argv = sys.argv
+    if len(argv) < 2:
+        print("Usage: python list_books.py mongodb_uri")
+        exit(-1)
+
+    mongodb_uri = argv[1]
+
+    db = pymongo.MongoClient(mongodb_uri).get_database()
+    ## Start the http server
+    app.run(host='0.0.0.0', port=80);
+        

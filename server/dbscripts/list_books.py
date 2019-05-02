@@ -5,6 +5,9 @@ import pymongo
 def get_available_books(db):
     return db.books.find({ "Inventory" : { "$gt": 0 }  })
 
+def get_bookdata(db, isbn13):
+    return db.books.find_one({ "ISBN-13" : { "$eq": isbn13 } })
+
 if __name__ == "__main__":
     argv = sys.argv
     if len(argv) < 2:
