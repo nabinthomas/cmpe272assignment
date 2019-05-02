@@ -35,7 +35,6 @@ Team members:
 1. Create clone of the repository.	
 ```bash
 	git clone https://github.com/nabinthomas/cmpe272assignment.git
-  	chmod 700 README.md
 ```
 2. Checkout branch and push changes back to the branch. 
 ```bash
