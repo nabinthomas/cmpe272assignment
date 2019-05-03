@@ -29,7 +29,7 @@ class RESTTests(unittest.TestCase):
         print ("tearDown")
         pass
 
-    def test_default(self):
+    def test_api(self):
         """
         Test REST API /api 
         """
@@ -41,7 +41,22 @@ class RESTTests(unittest.TestCase):
             "response": {
                 "message": "\n    API Usage:\n \n        - GET    /api/booklist\n        - GET    /api/get/<isbn13>\n        - POST   /api/order data={\"key\": \"value\"}\n        - PUT    /api/update/<orderid> data={\"key\": \"value_to_replace\"}\n        - DELETE is not supported\n\n"
             },
-            "status": "Success"
+            "status": main.ReturnCodes.SUCCESS
+        })
+    
+    def test_api_book(self):
+        """
+        Test REST API /api/book/
+        """
+        resp = self.app.get('/api/book')
+        reply_from_server = json.loads(resp.data)
+        print (reply_from_server)
+        self.assertEqual(reply_from_server['status'], main.ReturnCodes.ERROR_INVALID_PARAM)
+        self.assertEqual(reply_from_server, {
+            "response": {
+                
+            },
+            "status": main.ReturnCodes.ERROR_INVALID_PARAM
         })
         
 if __name__ == "__main__":
