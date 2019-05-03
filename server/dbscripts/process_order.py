@@ -1,6 +1,8 @@
 import sys
 import pymongo
-from  update_inventory import *
+
+from server.dbscripts.update_inventory import * 
+
 
 
 def import_books_inventory(db) :

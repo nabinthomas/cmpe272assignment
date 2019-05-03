@@ -1,6 +1,11 @@
 import sys
 import pymongo
-from  update_inventory import *
+from server.dbscripts.add_customer import *
+from server.dbscripts.create_order import * 
+from server.dbscripts.update_inventory import * 
+from server.dbscripts.list_books import *
+from server.dbscripts.process_order import *
+
 
 
 def import_books_inventory(db) :

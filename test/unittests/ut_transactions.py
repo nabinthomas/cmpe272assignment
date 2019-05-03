@@ -1,11 +1,18 @@
 import unittest
 import mongomock
 import json
-import add_customer
-import create_order
-import update_inventory
-import list_books
-import process_order
+import server.dbscripts.add_customer 
+import server.dbscripts.create_order 
+import server.dbscripts.update_inventory 
+from server.dbscripts import *
+import server.dbscripts.process_order 
+"""
+from server.dbscripts.add_customer import *
+from server.dbscripts.create_order import * 
+from server.dbscripts.update_inventory import * 
+from server.dbscripts.list_books import *
+from server.dbscripts.process_order import *
+"""
 
 class DBTests(unittest.TestCase):
     def setUp(self):
