@@ -132,7 +132,7 @@ def newOrder():
     eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/neworder -d '{"book" : "12314", "copies" : 3}'
     """
     payload = request.json;
-    return encodeJsonResponse({"InputJsonWas" : payload}, ReturnCodes.ERROR_UNAUTHORIZED);
+    return encodeJsonResponse({"order_request" : payload}, ReturnCodes.ERROR_UNAUTHORIZED);
 
 @app.route('/api/updateorder', methods=['PUT'])
 def updateOrder_default():
@@ -174,7 +174,6 @@ def book_isbn(isbn13):
     response = {"requested_book": isbn13}
 
     if book is None:
-        
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
     else:
         del book['_id']

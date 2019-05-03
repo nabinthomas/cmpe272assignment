@@ -25,11 +25,20 @@ then
     exit -1
 fi 
 
-# Other unit tests
-echo "Running unit tests.."
+# DB Unit tests
+echo "Running DB tests.."
 PYTHONPATH=/root/app/server/dbscripts/ python3 /root/test/unittests/ut_transactions.py -v
 if [ "$?" -ne 0 ]
 then
     exit -1
 fi 
+
+#DB REST API Unit tests
+echo "Running REST API tests.."
+PYTHONPATH=/root/app/server/dbscripts/ python3 /root/test/unittests/ut_rest.py -v
+if [ "$?" -ne 0 ]
+then
+    exit -1
+fi 
+
 echo "All Unit tests passed"
