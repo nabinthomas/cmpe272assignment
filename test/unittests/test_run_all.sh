@@ -2,24 +2,23 @@
 
 # Start local mongodb instance
 service mongodb start
+ut_dir=/root/test/unittests
 
+#cd ${ut_dir}
 #Test import scripts
-cd test/unittests
-bash ./test_import_books.sh
+bash ${ut_dir}/test_import_books.sh
 if [ "$?" -ne 0 ]
 then
     exit -1
 fi 
 
-cd test/unittests
-bash ./test_import_orders.sh
+bash ${ut_dir}/test_import_orders.sh
 if [ "$?" -ne 0 ]
 then
     exit -1
 fi 
 
-cd test/unittests
-bash ./test_import_customers.sh
+bash ${ut_dir}/test_import_customers.sh
 if [ "$?" -ne 0 ]
 then
     exit -1

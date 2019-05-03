@@ -25,6 +25,7 @@ class DBTests(unittest.TestCase):
         self.db.books.insert_one({'_id': '5', "Title" : "Nature of Statistical Learning Theory, The", "Author" : [ "Vapnik, Vladimir" ], "Genre" : "data_science", "Page" : 230, "Publisher" : "Springer", "Price" : 23, "ISBN-13" : "978-1503215677", "Inventory" : 80 })
         self.db.books.insert_one({'_id': '6', "Title" : "The Jungle Book", "Author" : [ "Kipling, Rudyard" ], "Genre" : "fiction", "Page" : 92, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "978-1503332546", "Inventory" : 0 })
         self.db.books.insert_one({'_id': '7', "Title" : "The Jungle Book(Paperback)", "Author" : [ "Kipling, Rudyard" ], "Genre" : "fiction", "Page" : 94, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "978-1505332546", "Inventory" : 1 })
+        self.db.books.insert_one({'_id': '8', "Title" : "Image Processing & Mathematical Morphology", "Author": ["Shih, Frank"], "Genre": "signal_processing", "Page": 241, "Publisher": "CRC", "Price": 24.1, "ISBN-13": "978-1503215680", "Inventory": 0})
         self.customer_info = {"name" : "Mock User", "email": "mock_email@email.com"}
         print ("SETUP END")
         
@@ -38,7 +39,16 @@ class DBTests(unittest.TestCase):
         copies available to sell.
         '''
         books = list_books.get_available_books(self.db)
-        self.assertEqual(books.count(), 6) # Ensure 6th book with 0 copies is not returned
+        self.assertEqual(books.count(), 6) # Ensure 7th, 8th book with 0 copies is not returned
+        print(books)
+
+    def test_get_all_books(self):
+        '''
+        Test case: List available books and make sure it has books which are actually having 
+        copies available to sell.
+        '''
+        books = list_books.get_all_books(self.db)
+        self.assertEqual(books.count(), 8) # Ensure books with 0 copies are also returned
         print(books)
 
     def test_add_customer(self):

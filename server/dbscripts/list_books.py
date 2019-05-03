@@ -1,6 +1,9 @@
 import sys
 import pymongo
 
+def get_all_books(db):
+    return db.books.find()
+
 def get_available_books(db):
     return db.books.find({ "Inventory" : { "$gt": 0 }  })
 

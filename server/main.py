@@ -160,7 +160,7 @@ def book_default():
     eg: curl -XGET http://localhost/api/books
     """
     response = {}
-    books = get_available_books(db)
+    books = get_all_books(db)
     if books is None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
     else:
