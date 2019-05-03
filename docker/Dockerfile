@@ -15,7 +15,7 @@ FROM ubuntu:bionic
 WORKDIR /root/
 
 #Install required tools and frameworks. 
-RUN apt-get update
+RUN apt-get update --fix-missing
 RUN apt-get install -y python3
 RUN apt-get install -y vim
 RUN apt-get install -y python3-pip
