@@ -7,6 +7,7 @@ from flask import Flask, render_template, jsonify, request
 import pymongo  
 from pymongo import MongoClient
 from server.dbscripts.list_books import *
+from server.dbscripts.create_order import *
 import sys
 
 ## Create the App
@@ -129,11 +130,27 @@ def newOrder():
     """
     API To create a new order
     TODO Document the payload format and process it
-    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/neworder -d '{"book" : "12314", "copies" : 3}'
+    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/neworder -d '{"CustomerId" : 2, "Items" : [ {"BookId": "978-1503215678", "qty" : 1} ] }'
     """
     payload = request.json;
-    return encodeJsonResponse({"order_request" : payload}, ReturnCodes.ERROR_UNAUTHORIZED);
 
+    print ("new order:", payload)
+
+    customerId = request.json['CustomerId']
+    book_order_list = request.json['Items']
+    new_order = create_new_order(db, 0, customerId, book_order_list, "none", "none")
+
+    response = {}
+
+    if new_order is None:
+        returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+    else:
+        del new_order['_id']
+        new_order['OrderID'] = str(new_order['OrderID'])
+        response["order_request"] = new_order
+        returnCode = ReturnCodes.SUCCESS
+    return encodeJsonResponse(response, returnCode);
+    
 @app.route('/api/updateorder', methods=['PUT'])
 def updateOrder_default():
     """
