@@ -20,9 +20,12 @@ class RESTTests(unittest.TestCase):
         self.db.books.insert_one({'_id': '5', "Title" : "Nature of Statistical Learning Theory, The", "Author" : [ "Vapnik, Vladimir" ], "Genre" : "data_science", "Page" : 230, "Publisher" : "Springer", "Price" : 23, "ISBN-13" : "978-1503215677", "Inventory" : 80 })
         self.db.books.insert_one({'_id': '6', "Title" : "The Jungle Book", "Author" : [ "Kipling, Rudyard" ], "Genre" : "fiction", "Page" : 92, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "978-1503332546", "Inventory" : 0 })
         self.db.books.insert_one({'_id': '7', "Title" : "The Jungle Book(Paperback)", "Author" : [ "Kipling, Rudyard" ], "Genre" : "fiction", "Page" : 94, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "978-1505332546", "Inventory" : 1 })
+        self.db.books.insert_one({'_id': '8', "Title" : "New Book", "Author" : [ "New, Author" ], "Genre" : "fiction", "Page" : 94, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "123-1234567890", "Inventory" : 1 })
 
 
         self.app = main.app.test_client()
+        main.db = self.db
+
         print ("SETUP END")
         
     def tearDown(self):
@@ -57,6 +60,22 @@ class RESTTests(unittest.TestCase):
                 
             },
             "status": main.ReturnCodes.ERROR_INVALID_PARAM
+        })
+    
+    def test_api_book_details(self):
+        """
+        Test REST API /api/book/<isbn13>
+        """
+        resp = self.app.get('/api/book/123-1234567890')
+        reply_from_server = json.loads(resp.data)
+        print (reply_from_server)
+        self.assertEqual(reply_from_server['status'], main.ReturnCodes.SUCCESS)
+        self.assertEqual(reply_from_server, {
+            "response": { 
+                "book_details": {"Title" : "New Book", "Author" : [ "New, Author" ], "Genre" : "fiction", "Page" : 94, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "123-1234567890", "Inventory" : 1 },
+                'requested_book': '123-1234567890'
+                },
+            "status": main.ReturnCodes.SUCCESS
         })
         
 if __name__ == "__main__":

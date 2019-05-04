@@ -12,6 +12,7 @@ import sys
 
 ## Create the App
 app = Flask(__name__)
+db = None;
 
 @app.route('/mongo')
 def mongo():
@@ -233,6 +234,3 @@ if __name__ == '__main__':
     mongodb_uri = argv[1]
 
     db = pymongo.MongoClient(mongodb_uri).get_database()
-    ## Start the http server
-    app.run(host='0.0.0.0', port=80);
-        
