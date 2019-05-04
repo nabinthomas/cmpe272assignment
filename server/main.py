@@ -171,9 +171,9 @@ def updateOrder_orderid(orderid):
     return encodeJsonResponse({"OrderID" : orderid, "updaterequest" : request.json}, ReturnCodes.ERROR_UNAUTHORIZED);
 
 @app.route('/api/books', methods=['GET'])
-def book_default():
+def books():
     """
-    Handle and error out case when book detail is requested without a book isbn number
+    Handle API to request details of all books
     eg: curl -XGET http://localhost/api/books
     """
     response = {}
@@ -190,6 +190,14 @@ def book_default():
         returnCode = ReturnCodes.SUCCESS
 
     return encodeJsonResponse(response, returnCode)
+
+@app.route('/api/book', methods=['GET'])
+def book_default():
+    """
+    Handle and error out case when book detail is requested without a book isbn number
+    eg: curl -XGET http://localhost/api/book
+    """
+    return encodeJsonResponse({}, ReturnCodes.ERROR_INVALID_PARAM)
 
 @app.route('/api/book/<string:isbn13>', methods=['GET'])
 def book_isbn(isbn13):
