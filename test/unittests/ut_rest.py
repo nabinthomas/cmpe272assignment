@@ -86,9 +86,9 @@ class RESTTests(unittest.TestCase):
         resp = self.app.get('/api/books')
 
         reply_from_server = json.loads(resp.data)
-        print("----------------------GET response----------------------------")
+        print("----------------------GET api/books response----------------------------")
         print (reply_from_server)
-        print("----------------------GET response----------------------------")
+        print("----------------------GET api/books response----------------------------")
 
         expected_json_file = "/root/test/unittests/data/books_ut_cmp.json"
 
