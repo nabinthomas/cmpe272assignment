@@ -9,6 +9,7 @@ from server.dbscripts.list_books import *
 from server.dbscripts.process_order import *
 from server import main
 
+
 class RESTTests(unittest.TestCase):
     def setUp(self):
         print ("SETUP BEGIN")
@@ -77,6 +78,31 @@ class RESTTests(unittest.TestCase):
                 },
             "status": main.ReturnCodes.SUCCESS
         })
+        
+    def test_api_books(self):
+        """
+        Test REST API /api/books>
+        """
+        resp = self.app.get('/api/books')
+
+        reply_from_server = json.loads(resp.data)
+        print("----------------------GET response----------------------------")
+        print (reply_from_server)
+        print("----------------------GET response----------------------------")
+
+        expected_json_file = "/root/test/unittests/data/books_ut_cmp.json"
+
+        vdata = {}
+        with open(expected_json_file) as f:
+            vdata = json.load(f)
+        print("------------------Expected response--------------------------------")
+        print(vdata)
+        print("------------------Expected response--------------------------------")
+
+        self.assertEqual(reply_from_server['status'], main.ReturnCodes.SUCCESS)
+        self.assertEqual(reply_from_server, vdata)
+
+
         
 if __name__ == "__main__":
     unittest.main()

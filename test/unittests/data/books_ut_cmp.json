@@ -1,0 +1,96 @@
+{
+  "response": {
+    "books": [
+      {"Author": [
+        "Menon, V P"
+        ], 
+        "Genre": "history", 
+        "ISBN-13": "978-1503215678", 
+        "Inventory": 90, 
+        "Page": 217, 
+        "Price": 21.7, 
+        "Publisher": "Orient Blackswan", 
+        "Title": "Integration of the Indian States"
+      }, 
+      {"Author": [
+        "Hawking, Stephen"
+        ], 
+        "Genre": "mathematics", 
+        "ISBN-13": "978-1503215674", 
+        "Inventory": 40, 
+        "Page": 197, 
+        "Price": 19.7, 
+        "Publisher": "Penguin", 
+        "Title": "God Created the Integers"
+      }, 
+      {"Author": [
+        "Dubner, Stephen"
+        ], 
+        "Genre": "economics", 
+        "ISBN-13": "978-1503215675", 
+        "Inventory": 60, 
+        "Page": 179, 
+        "Price": 17.9, 
+        "Publisher": "HarperCollins", 
+        "Title": "Superfreakonomics"
+      }, 
+      {"Author": [
+        "Goswami, Jaideva", 
+        "Binu Jose"
+        ], 
+        "Genre": "signal_processing", 
+        "ISBN-13": "978-1503215672", 
+        "Inventory": 10, 
+        "Page": 228, 
+        "Price": 22.8, 
+        "Publisher": "Wiley", 
+        "Title": "Fundamentals of Wavelets"
+      }, 
+      {"Author": [
+        "Vapnik, Vladimir"
+        ], 
+        "Genre": "data_science", 
+        "ISBN-13": "978-1503215677", 
+        "Inventory": 80, 
+        "Page": 230, 
+        "Price": 23, 
+        "Publisher": "Springer", 
+        "Title": "Nature of Statistical Learning Theory, The"
+      }, 
+      {"Author": [
+        "Kipling, Rudyard"
+        ], 
+        "Genre": "fiction", 
+        "ISBN-13": "978-1503332546", 
+        "Inventory": 0, 
+        "Page": 92, 
+        "Price": 6.89, 
+        "Publisher": "CreateSpace Independent Publishing Platform", 
+        "Title": "The Jungle Book"
+      }, 
+      {"Author": [
+        "Kipling, Rudyard"
+        ], 
+        "Genre": "fiction", 
+        "ISBN-13": "978-1505332546", 
+        "Inventory": 1, 
+        "Page": 94, 
+        "Price": 6.89, 
+        "Publisher": "CreateSpace Independent Publishing Platform", 
+        "Title": "The Jungle Book(Paperback)"
+      }, 
+      {"Author": [
+        "New, Author"
+        ], 
+        "Genre": "fiction", 
+        "ISBN-13": "123-1234567890", 
+        "Inventory": 1, 
+        "Page": 94, 
+        "Price": 6.89, 
+        "Publisher": "CreateSpace Independent Publishing Platform", 
+        "Title": "New Book"
+      }
+    ]
+  }, 
+  "status": "Success"
+}
