@@ -82,9 +82,9 @@ api_help_message = { "message":
 """
     API Usage:
  
-        - GET    /api/booklist
-        - GET    /api/get/<isbn13>
-        - POST   /api/order data={"key": "value"}
+        - GET    /api/books
+        - GET    /api/book/<isbn13>
+        - POST   /api/neworder data={"key": "value"}
         - PUT    /api/update/<orderid> data={"key": "value_to_replace"}
         - DELETE is not supported
 
