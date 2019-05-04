@@ -39,7 +39,7 @@ class RESTTests(unittest.TestCase):
         self.assertEqual(reply_from_server['status'], main.ReturnCodes.SUCCESS)
         self.assertEqual(reply_from_server, {
             "response": {
-                "message": "\n    API Usage:\n \n        - GET    /api/booklist\n        - GET    /api/get/<isbn13>\n        - POST   /api/order data={\"key\": \"value\"}\n        - PUT    /api/update/<orderid> data={\"key\": \"value_to_replace\"}\n        - DELETE is not supported\n\n"
+                "message": "\n    API Usage:\n \n        - GET    /api/books\n        - GET    /api/book/<isbn13>\n        - POST   /api/neworder data={\"key\": \"value\"}\n        - PUT    /api/update/<orderid> data={\"key\": \"value_to_replace\"}\n        - DELETE is not supported\n\n"
             },
             "status": main.ReturnCodes.SUCCESS
         })
