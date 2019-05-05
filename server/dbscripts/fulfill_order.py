@@ -14,7 +14,7 @@ def add_one_temp_order(db) :
     #return the order Id
     return 3 
 
-def fulfill_order(mongoClient, db, orderId):
+def fulfill_order( db, orderId):
     '''
     Update an Order   
     param db - reference to the db ob
@@ -35,33 +35,43 @@ def fulfill_order(mongoClient, db, orderId):
     book_order_list = record_to_update["Items"]
     # verify whether the order can be fulfilled minimum verification 
     # check whether the number of books requested already present .
-    #session = db.getMongo().startSession()
-    with  mongoClient.start_session() as s:
-        s.start_transaction()
-     
-        is_order_ok_to_fulfill = True;
+
+    is_order_ok_to_fulfill = True;
+    for book in book_order_list:
+        bookId = book ['BookId']
+        qty = book['qty']
+        if (qty > get_bookcount(db, bookId)):
+                is_order_ok_to_fulfill = False;
+                break;
+    
+    print ("1 is_order_ok_to_fulfill = " , is_order_ok_to_fulfill)
+    if (is_order_ok_to_fulfill == True):
         for book in book_order_list:
             bookId = book ['BookId']
-            qty = book['qty']
-            if (qty > get_bookcount(db, bookId)):
-                    is_order_ok_to_fulfill = False;
-                    break;
-        
-        print ("1 is_order_ok_to_fulfill = " , is_order_ok_to_fulfill)
-        if (is_order_ok_to_fulfill == True):
-            for book in book_order_list:
-                bookId = book ['BookId']
-                qty = book['qty'] * -1 ;
-                db.books.find_one_and_update({'ISBN-13':bookId}, {"$inc": {'Inventory': qty}}, return_document=ReturnDocument.AFTER)
-        print ("2 is_order_ok_to_fulfill = " , is_order_ok_to_fulfill)
-        order = db.orders.find_one({ "OrderID" : { "$eq": orderId }})
-        if(is_order_ok_to_fulfill == True):
-            order["Shipping"]["Status"] = "Complete";
-        else :
-            order["Shipping"]["Status"] = "OnHold";
+
+
+            qty_org= db.books.find_one ({'ISBN-13':bookId} ) ['Inventory']
+            print ("Binu Before update qty:", qty_org ) 
+  
+            print ("Binu going to reduce   update qty:", book['qty'] ) 
+            qty = book['qty'] * -1 ;
             
-        orders_coll.find_one_and_replace({"OrderID" : orderId},order)
-        s.commit_transaction()
+             
+            db.books.find_one_and_update({'ISBN-13':bookId}, {"$inc": {'Inventory': qty}}, return_document=ReturnDocument.AFTER)
+            
+            qty_new= db.books.find_one ({'ISBN-13':bookId} ) ['Inventory']
+            print ("Binu After update qty:", qty_new ) 
+
+
+    print ("2 is_order_ok_to_fulfill = " , is_order_ok_to_fulfill)
+    order = db.orders.find_one({ "OrderID" : { "$eq": orderId }})
+    if(is_order_ok_to_fulfill == True):
+        order["Shipping"]["Status"] = "Complete";
+    else :
+        order["Shipping"]["Status"] = "OnHold";
+        
+    orders_coll.find_one_and_replace({"OrderID" : orderId},order)
+        
 
     return  is_order_ok_to_fulfill;
 
@@ -101,10 +111,12 @@ if __name__ == "__main__":
     print("Before Order update order:   ", str(order) , "\n\n\n\r" );
 
     print("\r\n  ");
-    fulfill_order(mongoClient=mongoClient, db=db, orderId =orderId);
-    order = db.orders.find_one({ "OrderID" : { "$eq": orderId }  })
-    print("After  Order update order:   ", str(order));
-   
+    with  mongoClient.start_session() as s:
+        s.start_transaction()
+        fulfill_order( db=db, orderId =orderId);
+        order = db.orders.find_one({ "OrderID" : { "$eq": orderId }  })
+        print("After  Order update order:   ", str(order));
+        s.commit_transaction()
     exit(0)
 
 
