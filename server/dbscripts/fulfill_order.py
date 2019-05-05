@@ -29,7 +29,7 @@ def fulfill_order( db, orderId):
     orders_coll = db['orders'] 
     record_to_update = orders_coll.find_one({"OrderID" : orderId}) 
     if record_to_update is None:
-        print ("Error: update order , order id not found in db")
+        print ("Error: update order,  order id [",orderId,"] not found in db")
         return False
 
     book_order_list = record_to_update["Items"]
