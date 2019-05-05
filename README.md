@@ -40,17 +40,18 @@ Team members:
 ```bash
 	git clone https://github.com/nabinthomas/cmpe272assignment.git
 ```
-2. Checkout branch and push changes back to the branch. 
+2. Create your branch, checkout branch and push changes back to the branch. 
 ```bash
-	git checkout -b cmpe272assignment_binu
+	cd cmpe272assignment
+	git checkout -b cmpe272assignment_<branchname>
 	#following will create the branch and push in changes
-	git push origin cmpe272assignment_binu
+	git push origin cmpe272assignment_<branchname>
 	#after modifying any file do the following command to update 
 	git add -u 
 	#commit the changes
 	git commit -m "message"
 	#push it back to your branch 
-	git push origin cmpe272assignment_binu 
+	git push origin cmpe272assignment_<branchname> 
 ```
 3. Now open a pull request from this branch to the main branch using github. 
 
