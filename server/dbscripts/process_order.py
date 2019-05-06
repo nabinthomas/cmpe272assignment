@@ -40,7 +40,7 @@ def process_order(db, orderId):
         in_stock_count = get_available_book_count(db, bookId)
         if int(in_stock_count) < int(requested_qty): 
             print("BookId " + bookId + " Out of stock to fulfill order")           
-            return {}
+            return order
 
     # Update inventory if all items are in stock, else fail.
     for items_dict in book_order_list: 
