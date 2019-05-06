@@ -1,5 +1,7 @@
 import unittest
-import mongomock
+import os
+#import mongomock
+import pymongo
 import json
 from flask import jsonify
 from server.dbscripts.add_customer import *
@@ -11,9 +13,22 @@ from server import main
 
 
 class RESTTests(unittest.TestCase):
+    # Each of the test case should have a fresh dtabase
+    # Test cases may run in parallel so need to give unique name.
+    test_case_number = 133; 
+        
     def setUp(self):
+        
         print ("SETUP BEGIN")
-        self.db = mongomock.MongoClient()['testdb']
+        #self.mongo_client = mongomock.MongoClient() 
+        #self.db = self.mongo_client['testdb']
+        RESTTests.test_case_number = RESTTests.test_case_number + 1; 
+        self.testname =  str(RESTTests.test_case_number)
+        print ("testcase  name = ", self.testname)
+        mongodb_uri = "mongodb://localhost/" + self.testname  
+        self.mongo_client  = pymongo.MongoClient(mongodb_uri)
+        self.db = self.mongo_client.get_database()
+   
         self.db.books.insert_one({'_id': '1', "Title" : "Integration of the Indian States", "Author" : [ "Menon, V P" ], "Genre" : "history", "Page" : 217, "Publisher" : "Orient Blackswan", "Price" : 21.7, "ISBN-13" : "978-1503215678", "Inventory" : 90 })
         self.db.books.insert_one({'_id': '2', "Title" : "God Created the Integers", "Author" : [ "Hawking, Stephen" ], "Genre" : "mathematics", "Page" : 197, "Publisher" : "Penguin", "Price" : 19.7, "ISBN-13" : "978-1503215674", "Inventory" : 40 }) 
         self.db.books.insert_one({'_id': '3', "Title" : "Superfreakonomics", "Author" : [ "Dubner, Stephen" ], "Genre" : "economics", "Page" : 179, "Publisher" : "HarperCollins", "Price" : 17.9, "ISBN-13" : "978-1503215675", "Inventory" : 60 })
@@ -23,15 +38,19 @@ class RESTTests(unittest.TestCase):
         self.db.books.insert_one({'_id': '7', "Title" : "The Jungle Book(Paperback)", "Author" : [ "Kipling, Rudyard" ], "Genre" : "fiction", "Page" : 94, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "978-1505332546", "Inventory" : 1 })
         self.db.books.insert_one({'_id': '8', "Title" : "New Book", "Author" : [ "New, Author" ], "Genre" : "fiction", "Page" : 94, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "123-1234567890", "Inventory" : 1 })
 
-
+        self.db.orders.insert_one({"OrderID": 33, "CustomerId": 2, "Items": [{"BookId": "978-1503215677", "qty": 30, "SellingPrice": 24.0}], "Shipping": {"Address": "100 W Tasman Dr, San Jose, 95134", "Status": "InProgress", "Provider": "Fedex", "Type": "2 day shipping", "ShippingDate": "4/12/2019", "DeliveryDate": "4/14/2019 "}, "PaymentType": "Cash On Delivery"})
+        self.db.orders.insert_one({"OrderID": 44, "CustomerId": 2, "Items": [{"BookId": "978-1503215677", "qty": 300, "SellingPrice": 24.0}], "Shipping": {"Address": "100 W Tasman Dr, San Jose, 95134", "Status": "InProgress", "Provider": "Fedex", "Type": "2 day shipping", "ShippingDate": "4/12/2019", "DeliveryDate": "4/14/2019 "}, "PaymentType": "Cash On Delivery"})
+       
         self.app = main.app.test_client()
         main.db = self.db
-
+        main.mongo_client = self.mongo_client
         print ("SETUP END")
         
     def tearDown(self):
-        print ("tearDown")
-        pass
+        print ("tearDown Start : " , self.testname)
+        self.db.books.drop() ;
+        self.db.orders.drop() ;
+        print ("Collections Dropped  tearDown END :",self.testname)
 
     def test_api(self):
         """
@@ -102,7 +121,34 @@ class RESTTests(unittest.TestCase):
         self.assertEqual(reply_from_server['status'], main.ReturnCodes.SUCCESS)
         self.assertEqual(reply_from_server, vdata)
 
+    def test_api_fulfill_order(self):
+        """
+        Test REST API /api/fulfillorder/<orderid>
+        """
+        print("------------------test_api_fulfill_order enter--------------------------------")
+       
+        resp = self.app.put('/api/fulfillorder/33')
+        reply_from_server = json.loads(resp.data)
+        print (reply_from_server)
+        self.assertEqual(reply_from_server['status'], main.ReturnCodes.SUCCESS)
+        self.assertEqual(reply_from_server['response']['Status'], True)
+        print("------------------test_api_fulfill_order exit--------------------------------")
+       
 
-        
+    def test_api_fulfill_order_fail(self):
+        """
+        Test REST API /api/fulfillorder/<orderid>
+        """
+        print("------------------test_api_fulfill_order_fail enter--------------------------------")
+       
+        resp = self.app.put('/api/fulfillorder/987')
+        reply_from_server = json.loads(resp.data)
+        print (reply_from_server)
+        self.assertEqual(reply_from_server['status'], main.ReturnCodes.ERROR_OBJECT_NOT_FOUND)
+        self.assertEqual(reply_from_server['response']['Status'], False)
+             
+        print("------------------test_api_fulfill_order_fail exit--------------------------------")
+       
+
 if __name__ == "__main__":
     unittest.main()

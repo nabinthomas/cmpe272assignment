@@ -44,26 +44,22 @@ def fulfill_order( db, orderId):
                 is_order_ok_to_fulfill = False;
                 break;
     
-    print ("1 is_order_ok_to_fulfill = " , is_order_ok_to_fulfill)
+    print ("fulfill_order (check book count) is_order_ok_to_fulfill = " , is_order_ok_to_fulfill)
     if (is_order_ok_to_fulfill == True):
         for book in book_order_list:
             bookId = book ['BookId']
-
-
             qty_org= db.books.find_one ({'ISBN-13':bookId} ) ['Inventory']
-            print ("Binu Before update qty:", qty_org ) 
+            print ("fulfill_order Before update qty:", qty_org ) 
   
-            print ("Binu going to reduce   update qty:", book['qty'] ) 
+            print ("fulfill_order going to reduce   update qty:", book['qty'] ) 
             qty = book['qty'] * -1 ;
             
              
             db.books.find_one_and_update({'ISBN-13':bookId}, {"$inc": {'Inventory': qty}}, return_document=ReturnDocument.AFTER)
             
             qty_new= db.books.find_one ({'ISBN-13':bookId} ) ['Inventory']
-            print ("Binu After update qty:", qty_new ) 
+            print ("fulfill_order After update qty:", qty_new ) 
 
-
-    print ("2 is_order_ok_to_fulfill = " , is_order_ok_to_fulfill)
     order = db.orders.find_one({ "OrderID" : { "$eq": orderId }})
     if(is_order_ok_to_fulfill == True):
         order["Shipping"]["Status"] = "Complete";

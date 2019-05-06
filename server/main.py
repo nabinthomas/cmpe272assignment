@@ -14,6 +14,7 @@ import sys
 ## Create the App
 app = Flask(__name__)
 db = None;
+mongo_client = None;
 
 @app.route('/mongo')
 def mongo():
