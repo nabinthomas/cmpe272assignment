@@ -3,6 +3,11 @@ import pymongo
 
 from server.dbscripts.update_inventory import * 
 
+###
+## TODO:  This file is to be removed. Fulfiling order is now handled in in fulfull_order.py
+## Other type of operations for orders are not planned now. 
+## 
+
 def import_books_inventory(db) :
     db.books.insert_one({  "Title" : "Fundamentals of Wavelets", "Author" : [ "Goswami, Jaideva", "Binu Jose" ], "Genre" : "signal_processing", "Page" : 228, "Publisher" : "Wiley", "Price" : 22.8, "ISBN-13" : "978-1503215672", "Inventory" : 10 })
     db.books.insert_one({  "Title" : "Data Smart", "Author" : [ "Foreman, John" ], "Genre" : "data_science", "Page" : 235, "Publisher" : "Wiley", "Price" : 23.5, "ISBN-13" : "978-1503215673", "Inventory" : 20 })
@@ -40,7 +45,7 @@ def process_order(db, orderId):
         in_stock_count = get_available_book_count(db, bookId)
         if int(in_stock_count) < int(requested_qty): 
             print("BookId " + bookId + " Out of stock to fulfill order")           
-            return {}
+            return order
 
     # Update inventory if all items are in stock, else fail.
     for items_dict in book_order_list: 

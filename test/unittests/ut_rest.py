@@ -148,7 +148,36 @@ class RESTTests(unittest.TestCase):
         self.assertEqual(reply_from_server['response']['Status'], False)
              
         print("------------------test_api_fulfill_order_fail exit--------------------------------")
-       
+        
+    def test_api_create_order(self):
+        """
+        Test REST API /api/neworder
+        """
+        new_order = {"CustomerId" : 2, "Items" : [ {"BookId": "978-1503215678", "qty" : 1} ] }
+        response = self.app.post('/api/neworder', data = json.dumps(new_order), content_type='application/json')
+        print ("Response status ", response)
+        resp_from_server = json.loads(response.data)
+        print ("Response data ", resp_from_server)
+        self.assertEqual(resp_from_server['status'],"Success")
+        del resp_from_server['response']['order_request']['OrderID']  #orderid is dynamically created, cannot compare with static info
+        self.assertEqual(resp_from_server, { 
+            "response": { 
+                "order_request": {
+                    "CustomerId": 2,
+                    "Items": [ 
+                        { 
+                            "BookId": "978-1503215678",
+                            "qty": 1 
+                        } 
+                    ], 
+                    "PaymentType": "Cash On Delivery", 
+                    "Shipping": { 
+                        "Status": "InProgress" 
+                    } 
+                } 
+            }, 
+            "status": "Success"
+        })
 
 if __name__ == "__main__":
     unittest.main()

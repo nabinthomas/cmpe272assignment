@@ -123,7 +123,7 @@ class DBTests(unittest.TestCase):
         self.assertNotEqual(ins_record, {})
         
         processed_order = process_order.process_order(self.db, orderId) 
-        self.assertEqual(processed_order, {})       
+        self.assertEqual(processed_order["Shipping"]["Status"], "InProgress")          
     
     def test_list_books_after_order_all(self):
         '''
@@ -165,7 +165,7 @@ class DBTests(unittest.TestCase):
         self.assertEqual(original_book_count - new_book_count, 3) #3 books ordered
         self.assertEqual(order_record["Shipping"]["Status"], "Shipped")
 
-    def XXX_test_update_inventory_out_of_stock(self):
+    def test_update_inventory_out_of_stock(self):
             '''
             Ensure inventory is not updated after order if not enough books are available to ship
             '''
@@ -177,11 +177,13 @@ class DBTests(unittest.TestCase):
             book_order_list = [{"BookId": "978-1503215678", "qty" : 3000, "SellingPrice": 22}]
             original_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
             order_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType) 
+            self.assertEqual(order_record["Shipping"]["Status"], "InProgress")
             order_record = process_order.process_order(self.db, orderId)
             
             new_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
-            self.assertEqual(original_book_count, new_book_count) # No books are shipped. 
+            self.assertEqual(int(original_book_count), int(new_book_count)) # No books are shipped. 
             self.assertEqual(order_record["Shipping"]["Status"], "InProgress")
+
 
 
     def test_fulfill_order_success(self):
