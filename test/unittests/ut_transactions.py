@@ -6,6 +6,8 @@ import server.dbscripts.create_order
 import server.dbscripts.update_inventory 
 from server.dbscripts import *
 import server.dbscripts.process_order 
+from server.dbscripts.list_books import * 
+from server.dbscripts.fulfill_order import * 
 """
 from server.dbscripts.add_customer import *
 from server.dbscripts.create_order import * 
@@ -17,7 +19,8 @@ from server.dbscripts.process_order import *
 class DBTests(unittest.TestCase):
     def setUp(self):
         print ("SETUP BEGIN")
-        self.db = mongomock.MongoClient()['testdb']
+        self.client = mongomock.MongoClient()
+        self.db = self.client['testdb']
         self.db.books.insert_one({'_id': '1', "Title" : "Integration of the Indian States", "Author" : [ "Menon, V P" ], "Genre" : "history", "Page" : 217, "Publisher" : "Orient Blackswan", "Price" : 21.7, "ISBN-13" : "978-1503215678", "Inventory" : 90 })
         self.db.books.insert_one({'_id': '2', "Title" : "God Created the Integers", "Author" : [ "Hawking, Stephen" ], "Genre" : "mathematics", "Page" : 197, "Publisher" : "Penguin", "Price" : 19.7, "ISBN-13" : "978-1503215674", "Inventory" : 40 }) 
         self.db.books.insert_one({'_id': '3', "Title" : "Superfreakonomics", "Author" : [ "Dubner, Stephen" ], "Genre" : "economics", "Page" : 179, "Publisher" : "HarperCollins", "Price" : 17.9, "ISBN-13" : "978-1503215675", "Inventory" : 60 })
@@ -27,6 +30,9 @@ class DBTests(unittest.TestCase):
         self.db.books.insert_one({'_id': '7', "Title" : "The Jungle Book(Paperback)", "Author" : [ "Kipling, Rudyard" ], "Genre" : "fiction", "Page" : 94, "Publisher" : "CreateSpace Independent Publishing Platform", "Price" : 6.89, "ISBN-13" : "978-1505332546", "Inventory" : 1 })
         self.db.books.insert_one({'_id': '8', "Title" : "Image Processing & Mathematical Morphology", "Author": ["Shih, Frank"], "Genre": "signal_processing", "Page": 241, "Publisher": "CRC", "Price": 24.1, "ISBN-13": "978-1503215680", "Inventory": 0})
         self.customer_info = {"name" : "Mock User", "email": "mock_email@email.com"}
+        
+        self.db.orders.insert_one({"OrderID": 33, "CustomerId": 2, "Items": [{"BookId": "978-1503215677", "qty": 30, "SellingPrice": 24.0}], "Shipping": {"Address": "100 W Tasman Dr, San Jose, 95134", "Status": "InProgress", "Provider": "Fedex", "Type": "2 day shipping", "ShippingDate": "4/12/2019", "DeliveryDate": "4/14/2019 "}, "PaymentType": "Cash On Delivery"})
+        self.db.orders.insert_one({"OrderID": 44, "CustomerId": 2, "Items": [{"BookId": "978-1503215677", "qty": 300, "SellingPrice": 24.0}], "Shipping": {"Address": "100 W Tasman Dr, San Jose, 95134", "Status": "InProgress", "Provider": "Fedex", "Type": "2 day shipping", "ShippingDate": "4/12/2019", "DeliveryDate": "4/14/2019 "}, "PaymentType": "Cash On Delivery"})
         print ("SETUP END")
         
     def tearDown(self):
@@ -159,23 +165,53 @@ class DBTests(unittest.TestCase):
         self.assertEqual(original_book_count - new_book_count, 3) #3 books ordered
         self.assertEqual(order_record["Shipping"]["Status"], "Shipped")
 
-def test_update_inventory_out_of_stock(self):
-        '''
-        Ensure inventory is not updated after order if not enough books are available to ship
-        '''
-        # Place order        
-        paymentType = "Cash On Delivery"
-        orderId = 22
-        customerId = 12
-        shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
-        book_order_list = [{"BookId": "978-1503215678", "qty" : 3000, "SellingPrice": 22}]
-        original_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
-        order_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType) 
-        order_record = process_order.process_order(self.db, orderId)
-        
-        new_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
-        self.assertEqual(original_book_count, new_book_count) # No books are shipped. 
-        self.assertEqual(order_record["Shipping"]["Status"], "InProgress")
+    def XXX_test_update_inventory_out_of_stock(self):
+            '''
+            Ensure inventory is not updated after order if not enough books are available to ship
+            '''
+            # Place order        
+            paymentType = "Cash On Delivery"
+            orderId = 22
+            customerId = 12
+            shipping_details = {"Address": "4321 Avery Ranch, San Mateo, CA 95123","Status" : "InProgress","Provider" : "UPS","Type" : "Overnight shipping","ShippingDate":"","DeliveryDate":""}
+            book_order_list = [{"BookId": "978-1503215678", "qty" : 3000, "SellingPrice": 22}]
+            original_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
+            order_record = create_order.create_new_order(self.db, orderId, customerId, book_order_list, shipping_details, paymentType) 
+            order_record = process_order.process_order(self.db, orderId)
+            
+            new_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215678"})["Inventory"]
+            self.assertEqual(original_book_count, new_book_count) # No books are shipped. 
+            self.assertEqual(order_record["Shipping"]["Status"], "InProgress")
 
+
+    def test_fulfill_order_success(self):
+        '''
+        Test case: Full fill an order which  has enough boks in inventory to satisfy the order .
+        '''
+        old_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215677"})["Inventory"] 
+        retValue = fulfill_order( db=self.db, orderId =33);
+        print ("test_fulfill_order_success return " ,retValue )
+        self.assertEqual(retValue, True)
+        new_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215677"})["Inventory"] 
+        self.assertEqual(old_book_count, new_book_count+30)
+        order_now= {}
+        order_now = self.db.orders.find_one({"OrderID" : 33})
+        #print (" order_now test_fulfill_order_success   " , str(order_now) )
+        self.assertEqual( order_now["Shipping"]["Status"] , "Complete" )
+
+
+    def test_fulfill_order_fail(self):
+        '''
+        Test case: Full fill an order which  has not  enough boks in inventory to satisfy the order .
+        '''
+        old_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215677"})["Inventory"]
+        retValue =  fulfill_order( db=self.db, orderId =44);
+        print ("test_fulfill_order_fail return = " ,retValue )
+        self.assertEqual(retValue, False) 
+        new_book_count = self.db.books.find_one({"ISBN-13" : "978-1503215677"})["Inventory"] 
+        self.assertEqual(old_book_count, new_book_count)
+        order_now = self.db.orders.find_one({"OrderID" : 44})
+        #print ("order_now test_fulfill_order_fail   " , str(order_now) )
+        self.assertEqual( order_now["Shipping"]["Status"] , "OnHold" )
 if __name__ == "__main__":
     unittest.main()

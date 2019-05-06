@@ -8,6 +8,7 @@ import pymongo
 from pymongo import MongoClient
 from server.dbscripts.list_books import *
 from server.dbscripts.create_order import *
+from server.dbscripts.fulfill_order import *
 import sys
 
 ## Create the App
@@ -152,24 +153,34 @@ def newOrder():
         returnCode = ReturnCodes.SUCCESS
     return encodeJsonResponse(response, returnCode);
     
-@app.route('/api/updateorder', methods=['PUT'])
-def updateOrder_default():
+@app.route('/api/fulfillorder', methods=['PUT'])
+def fulfillorder_default():
     """
     API To update an order
-    TODO Document the payload format and process it
-    eg: curl -XPUT -H 'Content-Type: application/json' http://localhost/api/updateorder -d '{"book" : "12314", "copies" : 3}'
+    Order Id is a mandatory argument .    
     """
     return encodeJsonResponse({}, ReturnCodes.ERROR_INVALID_PARAM)
 
-@app.route('/api/updateorder/<string:orderid>', methods=['PUT'])
-def updateOrder_orderid(orderid):
+@app.route('/api/fulfillorder/<string:orderid>', methods=['PUT'])
+def fulfillorder_orderid(orderid):
     """
     API To update an order
     @param orderid -> ID of the order to modify
     TODO Document the payload format and process it
-    eg: curl -XPUT -H 'Content-Type: application/json' http://localhost/api/updateorder/1234 -d '{"book" : "12314", "copies" : 3}'
+    eg: curl -XPUT -H 'Content-Type: application/json' http://localhost/api/fulfillorder/1234 -d '{"book" : "12314", "copies" : 3}'
     """
-    return encodeJsonResponse({"OrderID" : orderid, "updaterequest" : request.json}, ReturnCodes.ERROR_UNAUTHORIZED);
+    #make sure the oder id is an integer.
+    OrderId= int (orderid)
+
+    with  mongo_client.start_session() as s:
+        s.start_transaction()
+        status = fulfill_order(db,OrderId)
+        s.commit_transaction()
+    if (status == True) :
+        returnCode = ReturnCodes.SUCCESS;
+    else :
+        returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+    return encodeJsonResponse({"Status" : status }, returnCode);
 
 @app.route('/api/books', methods=['GET'])
 def books():
@@ -232,8 +243,8 @@ if __name__ == '__main__':
         exit(-1)
 
     mongodb_uri = argv[1]
-
-    db = pymongo.MongoClient(mongodb_uri).get_database()
+    mongo_client = pymongo.MongoClient(mongodb_uri);
+    db = mongo_client.get_database()
     
     ## Start the http server
     app.run(host='0.0.0.0', port=80);
