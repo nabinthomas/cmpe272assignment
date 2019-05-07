@@ -9,6 +9,9 @@ Team members:
 
 ## Status
 
+### CI/CD Status
+[![Build Status](https://travis-ci.org/nabinthomas/cmpe272assignment.svg?branch=master)](https://travis-ci.org/nabinthomas/cmpe272assignment)
+
 ### Implementation Status
 1. Assignment 1 - Submitted. 
 	* Docker hub image: amazeteam/cmpe272assignment:1.0
@@ -25,9 +28,6 @@ Team members:
 5. Assginment 5 - In Progress
 	* Docker hub image: amazeteam/cmpe272assignment:5.0
 	* Github tag 5.0
-
-### CI/CD Status
- See https://travis-ci.org/nabinthomas/cmpe272assignment
 
 ## Build instructions
 1. Install git and Sync code to your local machine. (to ```<gitroot>```)
