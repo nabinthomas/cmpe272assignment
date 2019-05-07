@@ -9,7 +9,7 @@ Team members:
 
 ## Status
 
-### CI/CD Status
+### CI/CD Status (Travis-CI)
 [![Build Status](https://travis-ci.org/nabinthomas/cmpe272assignment.svg?branch=master)](https://travis-ci.org/nabinthomas/cmpe272assignment)
 
 ### Implementation Status
