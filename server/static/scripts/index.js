@@ -10,7 +10,32 @@ class EnterWebsiteButton extends React.Component {
 
   render() {
     if (this.state.clicked) {
-      return 'Loading Shopping site.. Please Wait...';
+      var message = 'Loading Shopping site.. Please Wait...';
+      fetch("/api")
+      .then(serverresponse => {
+        console.log(serverresponse);
+        return serverresponse.json();
+      }).then (data => {
+        console.log("The response from server was : ");
+        console.log("******************************\n");
+        console.log(data['response']);
+        console.log("The status from server was : ");
+        console.log("******************************\n");
+        console.log(data['status']);
+        console.log("The response.message from server was : ");
+        console.log("******************************\n");
+        console.log(data['response']['message']);
+        console.log("******************************\n");
+        //let message = data.toString();
+      })
+      
+      return e(
+        'button', 
+        {
+           onClick: () => this.setState({ clicked: false }), 
+        },
+        message 
+      )
     }
 
     return e(
