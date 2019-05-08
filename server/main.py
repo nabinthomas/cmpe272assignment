@@ -113,16 +113,15 @@ def dated_url_for(endpoint, **values):
 # REST API Implementation
 ########################################################################
 api_help_message = { "message":
-"""
-    API Usage:
- 
-        - GET    /api/books
-        - GET    /api/book/<isbn13>
-        - POST   /api/neworder data={"key": "value"}
-        - PUT    /api/update/<orderid> data={"key": "value_to_replace"}
-        - DELETE is not supported
-
-"""}
+    [
+    "API Usage:",
+    "    - GET    /api/books",
+    "    - GET    /api/book/<isbn13>",
+    "    - POST   /api/neworder data={'key': 'value'}",
+    "    - PUT    /api/update/<orderid> data={'key': 'value_to_replace'}",
+    "    - DELETE is not supported"
+    ]
+}
 
 class ReturnCodes:
     SUCCESS = "Success";

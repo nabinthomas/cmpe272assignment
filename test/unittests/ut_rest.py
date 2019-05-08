@@ -58,12 +58,11 @@ class RESTTests(unittest.TestCase):
         """
         resp = self.app.get('/api')
         reply_from_server = json.loads(resp.data)
-        print (reply_from_server)
+        print ("Reply from Server was :\n", reply_from_server)
+        print ("api help message was :\n", main.api_help_message)
         self.assertEqual(reply_from_server['status'], main.ReturnCodes.SUCCESS)
         self.assertEqual(reply_from_server, {
-            "response": {
-                "message": "\n    API Usage:\n \n        - GET    /api/books\n        - GET    /api/book/<isbn13>\n        - POST   /api/neworder data={\"key\": \"value\"}\n        - PUT    /api/update/<orderid> data={\"key\": \"value_to_replace\"}\n        - DELETE is not supported\n\n"
-            },
+            "response": main.api_help_message,
             "status": main.ReturnCodes.SUCCESS
         })
     
