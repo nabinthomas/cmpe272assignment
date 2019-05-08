@@ -73,10 +73,41 @@ def mainPage():
 
     return render_template('default.html', 
 			serverTime=now, 
-			pageWelcomeMessage="Welcome to Team aMAZE!", 
+			pageWelcomeMessage="Welcome aMAZE.com Online Book Store", 
 			pageTitle="aMAZE.com Online Book Store",
             teamMembers=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
 
+
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 0 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+@app.context_processor
+def override_url_for():
+    """
+    Generate a new token on every request to prevent the browser from
+    caching static files.
+    From : https://gist.github.com/itsnauman/b3d386e4cecf97d59c94
+    """
+    return dict(url_for=dated_url_for)
+
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(app.root_path,
+                                     endpoint, filename)
+            values['q'] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
 
 ########################################################################
 # REST API Implementation
