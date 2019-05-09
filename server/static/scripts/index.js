@@ -53,23 +53,22 @@ class EnterWebsiteButton extends React.Component {
       else {
         // update UI with new results and reset flag
         this.state.needs_ui_update = false;
-        return e(
-          'pre', 
-          {
-             onClick: () => this.setState({ clicked: false }),
-             align: "left" 
-          },
-          this.state.messagefromserver  
-        );
+         // e is same as React.createElement as defined earlier
+        return e("div", {style:{borderStyle:"solid"}}, 
+                e("pre", {
+                  align: "left" 
+                }, this.state.messagefromserver), 
+                e("button", {
+                    onClick: () => this.setState({ clicked: false }),
+                    align: "center" 
+                  }, " Close "));
       }
     }
     
-    
-
     return e(
       'button',
       { onClick: () => this.setState({ clicked: true }) },
-      'Enter'
+      'Open'
     );
   }
 }
