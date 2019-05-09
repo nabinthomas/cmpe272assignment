@@ -61,7 +61,10 @@ class EnterWebsiteButton extends React.Component {
                 e("button", {
                     onClick: () => this.setState({ clicked: false }),
                     align: "center" 
-                  }, " Close "));
+                  }, " Close "), 
+                  e('a', {
+                      href: "http://localhost/mongo"
+                    }, "Mongo"));
       }
     }
     
