@@ -13,17 +13,56 @@
       <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
     -->
     <style type="text/css">
-      .welcome_container {
-        max-width: 1500px;
-        padding-top: 80px;
-        padding-left : 20px;
-        border: 5px;
-      }
+        .books_search_bar {
+            min-width:500px;
+            max-width: 1500px;
+            padding-left : 20px;
+            border: 5px;
+            border-color:gainsboro;
+            border-style: double;
+        }
+        .books_table {
+            min-width:500px;
+            max-width: 1500px;
+
+            border: 1px;
+            border-color:darkred;
+            border-style: solid;
+        }
+        .books_header {
+            background-color: darkgrey;
+            max-width: 1500px;
+
+            border: 1px;
+            border-color:darkred;
+            border-style: solid;
+        }
+        .books_list {
+            background-color: lightgray;
+            max-width: 1500px;
+
+            border: 1px;
+            border-color:darkred;
+            border-style: solid;
+        }
+        .price_cell {
+            align-content: right;
+            text-align: right;
+        }
+        .count_cell {
+            align-content: center;
+            text-align: center;
+        }
+
+        .button_cell {
+            align-content: center;
+            text-align: center;
+        }
     </style>
   </head>
   <body>
 
-    <table border=1 bordercolor=red align="center" id="page_contents" style="min-width:500px">
+    <table class=books_search_bar align="center" id="page_contents" style="min-width:500px">
         <tr>
             <td> Book Title: </td>
             <td> <input id=searchBookTitle></td>
@@ -31,11 +70,12 @@
             <td> <input id=searchBookAuthor></td>
         </tr>
         <tr>
-            <table border=1 bordercolor=blue align="center" id=book_list>
-                <thead id=book_list_heading>
+            <table 
+            <table  class=books_table align="center" id=book_list>
+                <thead class=books_header id=book_list_heading>
                     
                 </thead>
-                <tbody id=book_list_data>
+                <tbody class=books_list id=book_list_data>
                     
                 </tbody>
             </table>
