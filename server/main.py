@@ -77,6 +77,12 @@ def mainPage():
 			pageTitle="aMAZE.com Online Book Store",
             teamMembers=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
 
+@app.route('/books')
+def page_books():
+    """ Handle request for /books page. 
+    """
+    return render_template('books.html');
+
 
 @app.after_request
 def add_header(r):
