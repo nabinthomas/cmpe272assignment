@@ -293,6 +293,25 @@ def addToCart():
         returnCode = ReturnCodes.SUCCESS
     return encodeJsonResponse(response, returnCode);
 
+@app.route('/api/cart/<int:customerId>', methods=['GET'])
+def customer_cart(customerId):
+    """
+    Get the details about a customer's cart. 
+    @param - customerId
+    TODO get real data from the database
+    curl -XGET http://localhost/api/cart/2
+    """
+    cart = get_cart(db, customerId)
+    response = {"requested_cart": customerId}
+
+    if cart is None:
+        returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+    else:
+        response["cart_details"] = cart
+        returnCode = ReturnCodes.SUCCESS
+    return encodeJsonResponse(response, returnCode);
+
+
 ########################################################################
 # MAIN
 ########################################################################

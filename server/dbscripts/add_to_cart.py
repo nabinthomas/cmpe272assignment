@@ -36,6 +36,34 @@ def add_to_cart(db, customerId, cart):
     print ("Inserted cart record = ", str(inserted_cart))
     return inserted_cart['cart']
 
+def get_cart(db, customerId):
+    '''
+    Get cart
+    param db - reference to the db ob
+    param customerId - Customer Information 
+    return cart when successful, {}
+    '''
+
+    # Find customer 
+    customer = db.customers.find_one({ "customerId" : { "$eq": customerId }  })
+    print("Customer Found = ", str(customer));
+
+    if customer is None:
+        print ("Error: add to cart,  customer id [",customerId,"] not found in db")
+        return {}
+
+    try:
+        cus_cart = db.customers.find_one({'customerId':customerId})['cart']
+    except KeyError:
+        print("No cart for customer ", customerId)
+        return {}
+   
+    print ("Inserted cart record = ", str(cus_cart))
+    if cus_cart is None:
+        return {}
+    else:
+        return cus_cart
+
 if __name__ == "__main__":
     argv = sys.argv
     '''
