@@ -16,6 +16,22 @@ class AddToCartButton extends React.Component {
         // console.log("state = " + JSON.stringify(this.state));
         // console.log("object = " + this);
         console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
+        var order = {
+            CustomerId : 2, 
+            Items : {
+                BookId: this.state.isbn13, 
+                qty : 1
+            } 
+        };
+        fetch('/api/addtocart', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(order)
+            }
+        );
     }
     render(){
         return element('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  '+')
