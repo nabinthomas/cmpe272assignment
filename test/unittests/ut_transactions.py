@@ -53,9 +53,49 @@ class DBTests(unittest.TestCase):
         Test case: List available books and make sure it has books which are actually having 
         copies available to sell.
         '''
-        books = list_books.get_all_books(self.db)
+        books,book_count,pagecount = list_books.get_all_books(self.db, 0, 0)
         self.assertEqual(books.count(), 8) # Ensure books with 0 copies are also returned
+        self.assertEqual(book_count, 8) # Ensure book_count
+        self.assertEqual(pagecount, 1) # Ensure page count
         print(books)
+
+    def test_get_all_books_page_request(self):
+        '''
+        Test case: List available books and make sure it has books which are actually having 
+        copies available to sell.
+        '''
+        books,count,page_count = list_books.get_all_books(self.db, 3, 3)
+        print(books)
+        self.assertEqual(len(books), 2) 
+
+    def test_get_all_books_page_request2(self):
+        '''
+        Test case: List available books and make sure it has books which are actually having
+        copies available to sell.
+        '''
+        books,count,page_count = list_books.get_all_books(self.db, 2, 3)
+        print(books)
+        self.assertEqual(len(books), 3)
+
+    def test_get_all_books_invalid_page_request(self):
+        '''
+        Test case: List available books and make sure it has books which are actually having
+        copies available to sell.
+        '''
+        books,book_count,page_count = list_books.get_all_books(self.db, 5, 3)
+        print(books)
+        self.assertEqual(books, None) 
+        self.assertEqual(book_count, None) 
+        self.assertEqual(page_count, None) 
+
+    def test_get_all_books_invalid_page_size_request(self):
+        '''
+        Test case: List available books and make sure it has books which are actually having
+        copies available to sell.
+        '''
+        books,count,page_count = list_books.get_all_books(self.db, 2, 100)
+        print(books)
+
 
     def test_add_customer(self):
         '''
@@ -215,5 +255,7 @@ class DBTests(unittest.TestCase):
         order_now = self.db.orders.find_one({"OrderID" : 44})
         #print ("order_now test_fulfill_order_fail   " , str(order_now) )
         self.assertEqual( order_now["Shipping"]["Status"] , "OnHold" )
+
+
 if __name__ == "__main__":
     unittest.main()

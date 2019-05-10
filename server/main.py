@@ -9,6 +9,7 @@ from pymongo import MongoClient
 from server.dbscripts.list_books import *
 from server.dbscripts.create_order import *
 from server.dbscripts.fulfill_order import *
+from server.dbscripts.add_to_cart import *
 import sys
 
 ## Create the App
@@ -226,7 +227,7 @@ def books():
     eg: curl -XGET http://localhost/api/books
     """
     response = {}
-    books = get_all_books(db)
+    books,total_book_count,page_count = get_all_books(db, 0, 0)
     if books is None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
     else:
@@ -268,6 +269,29 @@ def book_isbn(isbn13):
         returnCode = ReturnCodes.SUCCESS
     return encodeJsonResponse(response, returnCode);
 
+@app.route('/api/addtocart', methods=['POST'])
+def addToCart():
+    """
+    API To add book to cart
+    TODO Document the payload format and process it
+    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/addtocart -d '{"CustomerId" : 2, "Items" : {"BookId": "978-1503215678", "qty" : 1} }'
+    """
+    payload = request.json;
+
+    print ("add to cart:", payload)
+
+    customerId = request.json['CustomerId']
+    cart_item = request.json['Items']
+    new_cart = add_to_cart(db, customerId, cart_item)
+
+    response = {}
+
+    if new_cart is None:
+        returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+    else:
+        response["cart_item"] = new_cart
+        returnCode = ReturnCodes.SUCCESS
+    return encodeJsonResponse(response, returnCode);
 
 ########################################################################
 # MAIN
