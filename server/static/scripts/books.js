@@ -8,7 +8,8 @@ class AddToCartButton extends React.Component {
         // console.log("Props = " + JSON.stringify(props));
         this.state = {
             isbn13 : props.isbn13,
-            callBack: props.callBack
+            callBack: props.callBack,
+            callBackObj : props.callBackObj
         };
     }
 
@@ -35,7 +36,7 @@ class AddToCartButton extends React.Component {
         ).then(res => res.json())
         .then(response => {
             console.log('Success:', JSON.stringify(response));
-            this.state.callBack();
+            this.state.callBack(this.state.callBackObj);
             /* const book_list_data = document.querySelector('#book_list_data');
             ReactDOM.render(element(BookListData), book_list_data); */
         })
@@ -161,8 +162,13 @@ class BookListData extends React.Component{
         });
       }
 
-    cartUpdated(){
-        console.log("Cart updated ");
+    cartUpdated(target){
+        //console.log("Cart updated ");
+        document.getElementById(target)
+        var currentCopies = Number(document.getElementById(target).innerText);
+        //console.log("This item current copies = ", currentCopies);
+        currentCopies++;
+        document.getElementById(target).innerText = currentCopies.toString(10);
     }
       // render this component
       render() {
@@ -189,8 +195,8 @@ class BookListData extends React.Component{
             cells.push(element('td', {key:authorId}, authorListString));
             cells.push(element('td', {key:priceId, className:'price_cell'}, '$' + this.state.books[i].Price.toFixed(2)));
             cells.push(element('td', {key:availableCopiesId, className:'count_cell'}, this.state.books[i].AvailableCopies));
-            cells.push(element('td', {key:inCartCopiesId, className:'count_cell'}, this.state.books[i].InCartCopies));
-            var addButton = element(AddToCartButton, {key:addButtonId, isbn13:this.state.books[i].ISBN13, callBack:this.cartUpdated}, ''); 
+            cells.push(element('td', {key:inCartCopiesId, id:inCartCopiesId, className:'count_cell'}, this.state.books[i].InCartCopies));
+            var addButton = element(AddToCartButton, {key:addButtonId, isbn13:this.state.books[i].ISBN13, callBackObj:inCartCopiesId, callBack:this.cartUpdated}, ''); 
             cells.push(element('td', {key:addButtonCellId, className:'button_cell'}, addButton));
             var thisRow = element(
                 'tr',
@@ -201,6 +207,7 @@ class BookListData extends React.Component{
             rows.push(thisRow);
         }
         // console.log(rows);
+        this.state.renderAgain = false;
         return rows;
     }
 }
