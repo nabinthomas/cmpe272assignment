@@ -2,6 +2,25 @@
 
 const element = React.createElement;
 
+class AddToCartButton extends React.Component {
+    constructor(props){
+        super(props);
+        // console.log("Props = " + JSON.stringify(props));
+        this.state = {
+            isbn13 : props.isbn13
+        };
+    }
+
+    handleClick(){
+        // console.log("Button Clicked" + JSON.stringify(buttonId));
+        // console.log("state = " + JSON.stringify(this.state));
+        // console.log("object = " + this);
+        console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
+    }
+    render(){
+        return element('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  '+')
+    }
+}
 class BooksListHeadingRow extends React.Component {
     constructor(props) {
       super(props);
@@ -18,6 +37,7 @@ class BooksListHeadingRow extends React.Component {
         ]
       };
     }
+
     render() {
         let cells = [];
 
@@ -78,18 +98,18 @@ class BookListData extends React.Component{
             var titleId = `title-${i}`;
             var authorId= `author-${i}`;
             var priceId=`price-${i}`;
-            var availableCopiesId = `copies-${i}`;
-            var inCartCopiesId = `copies-${i}`;
+            var availableCopiesId = `availableCopies-${i}`;
+            var inCartCopiesId = `inCartcopies-${i}`;
             var addButtonId = `add-${i}`;
             var addButtonCellId = `add-button-cell-${i}`;
             cells.push(element('td', {key:isbn13id}, this.state.books[i].ISBN13));
             cells.push(element('td', {key:titleId}, this.state.books[i].Title));
             cells.push(element('td', {key:authorId}, this.state.books[i].Author));
-            cells.push(element('td', {key:priceId, class:'price_cell'}, '$ ' + this.state.books[i].Price.toFixed(2)));
-            cells.push(element('td', {key:availableCopiesId, class:'count_cell'}, this.state.books[i].AvailableCopies));
-            cells.push(element('td', {key:inCartCopiesId, class:'count_cell'}, this.state.books[i].InCartCopies));
-            var addButton = element('button', {key:addButtonId}, '+'); 
-            cells.push(element('td', {key:addButtonCellId, class:'button_cell'}, addButton));
+            cells.push(element('td', {key:priceId, className:'price_cell'}, '$ ' + this.state.books[i].Price.toFixed(2)));
+            cells.push(element('td', {key:availableCopiesId, className:'count_cell'}, this.state.books[i].AvailableCopies));
+            cells.push(element('td', {key:inCartCopiesId, className:'count_cell'}, this.state.books[i].InCartCopies));
+            var addButton = element(AddToCartButton, {key:addButtonId, isbn13:this.state.books[i].ISBN13}, ''); 
+            cells.push(element('td', {key:addButtonCellId, className:'button_cell'}, addButton));
             var thisRow = element(
                 'tr',
                 {key:`book-${i}`},
