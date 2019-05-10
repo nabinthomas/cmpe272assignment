@@ -84,6 +84,11 @@ def page_books():
     """
     return render_template('books.html');
 
+@app.route('/cart')
+def page_cart():
+    """ Handle request for /cart page. 
+    """
+    return render_template('cart.html');
 
 @app.after_request
 def add_header(r):
