@@ -24,12 +24,14 @@ def get_all_books(db, page_index, books_per_index ):
             total_indices = total_indices  + 1
         if page_index > total_indices:
             print("Fewer indices available")
-            return {}
+            return None
         start = (page_index -1) * books_per_index
-        end = page_index * books_per_index
+        end = page_index * books_per_index 
+        if end > total_book_count:
+            end = total_book_count 
         db_booklist = db.books.find()
         booklist = []
-        for i in range(start,end):
+        for i in range(start-1,end-1):
             booklist.append(db_booklist[i])
         return booklist
 
