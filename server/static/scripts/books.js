@@ -58,38 +58,58 @@ class BookListData extends React.Component{
     constructor(props) {
         super(props);
         this.state = { 
-          books : [
-              {
-                ISBN13: "1",
-                Title: "The Jungle Book", 
-                Author: "Rudyard Kipling",
-                Price: 24.0,
-                AvailableCopies: 399,
-                InCartCopies:0
-                // Add To Cart + button
-              },
-              {
-                ISBN13: "12",
-                Title: "The Jungle Book 2", 
-                Author: "Rudyard Kipling",
-                Price: 30.99,
-                AvailableCopies: 9,
-                InCartCopies:0
-                // Add To Cart + button
-              },
-              {
-                ISBN13: "123",
-                Title: "The Adventures of Sherlock Holmes", 
-                Author: "Sir Arthur Conan Doyle",
-                Price: 22.97,
-                AvailableCopies: 99,
-                InCartCopies:0
-                // Add To Cart + button
-              }
-          ]
+          books : []
         };
       }
 
+      componentDidMount() {
+        this.setState({books: []});
+        
+        fetch("/api/books")
+        .then(serverresponse => {
+          console.log(serverresponse);
+          return serverresponse.json();
+        }).then (data => {
+          console.log("The response from server was : ");
+          console.log("******************************\n");
+          console.log(data['response']);
+          console.log("The status from server was : ");
+          console.log("******************************\n");
+          console.log(data['status']);
+          console.log("The response.books from server was : ");
+          console.log("******************************\n");
+          console.log(data['response']['books']);
+          console.log("******************************\n");
+          this.state.messagefromserver = "";
+          var booklist = []
+          for (var bookIndex in data['response']['books']){
+            /* ISBN13: "1",
+            Title: "The Jungle Book", 
+            Author: "Rudyard Kipling",
+            Price: 24.0,
+            AvailableCopies: 399,
+            InCartCopies:0 */
+            
+            var formatted_book_data = {
+                ISBN13 : data['response']['books'][bookIndex]['ISBN-13'],
+                Title : data['response']['books'][bookIndex]['Title'],
+                Author : data['response']['books'][bookIndex]['Author'],
+                Price : data['response']['books'][bookIndex]['Price'],
+                AvailableCopies : data['response']['books'][bookIndex]['Inventory'],
+                InCartCopies : 0
+            };
+            booklist.push(
+              formatted_book_data  
+            ) ;
+          }
+          
+          console.log(booklist);
+          // Trigger a re-rendering with the new data
+          this.setState({books:booklist}); 
+        });
+      }
+
+      // render this component
       render() {
         let rows = [];
         for (var i = 0; i < this.state.books.length; i++){
@@ -104,8 +124,15 @@ class BookListData extends React.Component{
             var addButtonCellId = `add-button-cell-${i}`;
             cells.push(element('td', {key:isbn13id}, this.state.books[i].ISBN13));
             cells.push(element('td', {key:titleId}, this.state.books[i].Title));
-            cells.push(element('td', {key:authorId}, this.state.books[i].Author));
-            cells.push(element('td', {key:priceId, className:'price_cell'}, '$ ' + this.state.books[i].Price.toFixed(2)));
+            var authorListString = '';
+            for (var j = 0; j < this.state.books[i].Author.length; j++){
+                if (j != 0) {
+                    authorListString += " & ";
+                }
+                authorListString += this.state.books[i].Author[j];
+            }
+            cells.push(element('td', {key:authorId}, authorListString));
+            cells.push(element('td', {key:priceId, className:'price_cell'}, '$' + this.state.books[i].Price.toFixed(2)));
             cells.push(element('td', {key:availableCopiesId, className:'count_cell'}, this.state.books[i].AvailableCopies));
             cells.push(element('td', {key:inCartCopiesId, className:'count_cell'}, this.state.books[i].InCartCopies));
             var addButton = element(AddToCartButton, {key:addButtonId, isbn13:this.state.books[i].ISBN13}, ''); 
