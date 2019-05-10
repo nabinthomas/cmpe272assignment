@@ -227,7 +227,7 @@ def books():
     eg: curl -XGET http://localhost/api/books
     """
     response = {}
-    books = get_all_books(db)
+    books = get_all_books(db, 0, 0)
     if books is None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
     else:

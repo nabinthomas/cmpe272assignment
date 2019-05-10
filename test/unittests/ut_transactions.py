@@ -53,7 +53,7 @@ class DBTests(unittest.TestCase):
         Test case: List available books and make sure it has books which are actually having 
         copies available to sell.
         '''
-        books = list_books.get_all_books(self.db)
+        books = list_books.get_all_books(self.db, 0, 0)
         self.assertEqual(books.count(), 8) # Ensure books with 0 copies are also returned
         print(books)
 

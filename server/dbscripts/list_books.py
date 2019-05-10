@@ -1,8 +1,37 @@
 import sys
 import pymongo
 
-def get_all_books(db):
-    return db.books.find()
+    
+'''
+    Function to fetch books
+        db: Database
+        page_index: Record Page number to return
+            0 : ALL books
+        books_per_index: Number of books per index
+
+    Invoke as get_all_books(db, 0, 0) for all books
+'''
+def get_all_books(db, page_index, books_per_index ):
+    if page_index is 0:
+        return db.books.find()
+    else:
+        total_book_count = db.books.count()
+        if total_book_count is 0:
+            print("No books available in inventory")
+            return None
+        total_indices = total_book_count / books_per_index
+        if (total_book_count % books_per_index) is not 0:
+            total_indices = total_indices  + 1
+        if page_index > total_indices:
+            print("Fewer indices available")
+            return {}
+        start = (page_index -1) * books_per_index
+        end = page_index * books_per_index
+        db_booklist = db.books.find()
+        booklist = []
+        for i in range(start,end):
+            booklist.append(db_booklist[i])
+        return booklist
 
 def get_available_books(db):
     return db.books.find({ "Inventory" : { "$gt": 0 }  })
