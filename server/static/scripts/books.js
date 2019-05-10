@@ -46,6 +46,7 @@ class AddToCartButton extends React.Component {
         return element('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  '+')
     }
 }
+
 class BooksListHeadingRow extends React.Component {
     constructor(props) {
       super(props);
@@ -170,8 +171,8 @@ class BookListData extends React.Component{
         currentCopies++;
         document.getElementById(target).innerText = currentCopies.toString(10);
     }
-      // render this component
-      render() {
+    // render this component
+    render() {
         let rows = [];
         for (var i = 0; i < this.state.books.length; i++){
             let cells = [];
