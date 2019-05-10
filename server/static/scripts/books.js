@@ -17,7 +17,7 @@ class AddToCartButton extends React.Component {
         // console.log("Button Clicked" + JSON.stringify(buttonId));
         // console.log("state = " + JSON.stringify(this.state));
         // console.log("object = " + this);
-        console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
+        // console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         var order = {
             CustomerId : 2,  // TODO Use the right Customer ID
             Items : {
@@ -35,7 +35,7 @@ class AddToCartButton extends React.Component {
             }
         ).then(res => res.json())
         .then(response => {
-            console.log('Success:', JSON.stringify(response));
+            // console.log('Success:', JSON.stringify(response));
             this.state.callBack(this.state.callBackObj);
             /* const book_list_data = document.querySelector('#book_list_data');
             ReactDOM.render(element(BookListData), book_list_data); */
@@ -94,19 +94,19 @@ class BookListData extends React.Component{
         
         fetch("/api/books")
         .then(serverresponse => {
-          console.log(serverresponse);
+          // console.log(serverresponse);
           return serverresponse.json();
         }).then (data => {
-          console.log("The response from server was : ");
-          console.log("******************************\n");
-          console.log(data['response']);
-          console.log("The status from server was : ");
-          console.log("******************************\n");
-          console.log(data['status']);
-          console.log("The response.books from server was : ");
-          console.log("******************************\n");
-          console.log(data['response']['books']);
-          console.log("******************************\n");
+          // console.log("The response from server was : ");
+          // console.log("******************************\n");
+          // console.log(data['response']);
+          // console.log("The status from server was : ");
+          // console.log("******************************\n");
+          // console.log(data['status']);
+          // console.log("The response.books from server was : ");
+          // console.log("******************************\n");
+          // console.log(data['response']['books']);
+          // console.log("******************************\n");
           this.state.messagefromserver = "";
           var booklist = []
           for (var bookIndex in data['response']['books']){
@@ -130,7 +130,7 @@ class BookListData extends React.Component{
             ) ;
           }
           
-            console.log(booklist);
+            // console.log(booklist);
 
             fetch('/api/cart/2', {
                 method: 'GET'/*,
@@ -140,17 +140,17 @@ class BookListData extends React.Component{
                 }*/
             }).then(res => res.json())
             .then(response => {
-                console.log('Success:', JSON.stringify(response));
+                // console.log('Success:', JSON.stringify(response));
                 var cart_details = response['response']['cart_details'];
                 this.state.cart = cart_details;
                 //return cart_details; 
-                console.log("CART: this.state.cart  + ", cart_details);
+                // console.log("CART: this.state.cart  + ", cart_details);
                 // For each book find total count in cart. 
                 for (var i = 0; i < booklist.length; i++){
-                    console.log(" book : " + booklist[i].ISBN13);
+                    // console.log(" book : " + booklist[i].ISBN13);
                     for (var j = 0; j < cart_details.length; j++){
                         if (booklist[i].ISBN13 == this.state.cart[j].BookId) {
-                            console.log("Found book" + booklist[i].ISBN13);
+                            // console.log("Found book" + booklist[i].ISBN13);
                             booklist[i].InCartCopies += this.state.cart[j].qty;
                         }
                     }
