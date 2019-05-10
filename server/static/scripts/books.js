@@ -7,7 +7,8 @@ class AddToCartButton extends React.Component {
         super(props);
         // console.log("Props = " + JSON.stringify(props));
         this.state = {
-            isbn13 : props.isbn13
+            isbn13 : props.isbn13,
+            callBack: props.callBack
         };
     }
 
@@ -17,7 +18,7 @@ class AddToCartButton extends React.Component {
         // console.log("object = " + this);
         console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         var order = {
-            CustomerId : 2, 
+            CustomerId : 2,  // TODO Use the right Customer ID
             Items : {
                 BookId: this.state.isbn13, 
                 qty : 1
@@ -31,7 +32,14 @@ class AddToCartButton extends React.Component {
                 },
                 body: JSON.stringify(order)
             }
-        );
+        ).then(res => res.json())
+        .then(response => {
+            console.log('Success:', JSON.stringify(response));
+            this.state.callBack();
+            /* const book_list_data = document.querySelector('#book_list_data');
+            ReactDOM.render(element(BookListData), book_list_data); */
+        })
+        .catch(error => console.error('Error:', error));
     }
     render(){
         return element('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  '+')
@@ -74,7 +82,8 @@ class BookListData extends React.Component{
     constructor(props) {
         super(props);
         this.state = { 
-          books : []
+          books : [],
+          cart :[]
         };
       }
 
@@ -119,12 +128,42 @@ class BookListData extends React.Component{
             ) ;
           }
           
-          console.log(booklist);
-          // Trigger a re-rendering with the new data
-          this.setState({books:booklist}); 
+            console.log(booklist);
+
+            fetch('/api/cart/2', {
+                method: 'GET'/*,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }*/
+            }).then(res => res.json())
+            .then(response => {
+                console.log('Success:', JSON.stringify(response));
+                var cart_details = response['response']['cart_details'];
+                this.state.cart = cart_details;
+                //return cart_details; 
+                console.log("CART: this.state.cart  + ", cart_details);
+                // For each book find total count in cart. 
+                for (var i = 0; i < booklist.length; i++){
+                    console.log(" book : " + booklist[i].ISBN13);
+                    for (var j = 0; j < cart_details.length; j++){
+                        if (booklist[i].ISBN13 == this.state.cart[j].BookId) {
+                            console.log("Found book" + booklist[i].ISBN13);
+                            booklist[i].InCartCopies += this.state.cart[j].qty;
+                        }
+                    }
+                }
+                // Trigger a re-rendering with the new data
+                this.setState({books:booklist}); 
+            })
+
+            
         });
       }
 
+    cartUpdated(){
+        console.log("Cart updated ");
+    }
       // render this component
       render() {
         let rows = [];
@@ -151,7 +190,7 @@ class BookListData extends React.Component{
             cells.push(element('td', {key:priceId, className:'price_cell'}, '$' + this.state.books[i].Price.toFixed(2)));
             cells.push(element('td', {key:availableCopiesId, className:'count_cell'}, this.state.books[i].AvailableCopies));
             cells.push(element('td', {key:inCartCopiesId, className:'count_cell'}, this.state.books[i].InCartCopies));
-            var addButton = element(AddToCartButton, {key:addButtonId, isbn13:this.state.books[i].ISBN13}, ''); 
+            var addButton = element(AddToCartButton, {key:addButtonId, isbn13:this.state.books[i].ISBN13, callBack:this.cartUpdated}, ''); 
             cells.push(element('td', {key:addButtonCellId, className:'button_cell'}, addButton));
             var thisRow = element(
                 'tr',
