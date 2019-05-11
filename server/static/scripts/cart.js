@@ -52,7 +52,7 @@ class PlaceOrder extends React.Component {
                 }, 5000);
            }
            else {
-                document.getElementById('statusmessage').innerText = "Failed to Place the order !!";
+                document.getElementById('statusmessage').innerText = "Failed to Place the order !! Reason: " + replyFromServer['response']['Reason'];
            }
             /* const book_list_data = document.querySelector('#book_list_data');
             ReactDOM.render(element(BookListData), book_list_data); */
@@ -107,13 +107,13 @@ class CancelOrder extends React.Component {
             */
            if (replyFromServer['status'] == "Success")
            {
-                document.getElementById('statusmessage').innerText = "Order Cancelled Successfully (Redirecting to homepage in 5 seconds)";
+                document.getElementById('statusmessage').innerText = "Cart Emptied Successfully (Redirecting to homepage in 5 seconds)";
                 setTimeout(function () {
                     window.location.replace("/");
                 }, 5000);
            }
            else {
-                document.getElementById('statusmessage').innerText = "Failed to Cancel the order !!";
+                document.getElementById('statusmessage').innerText = "Failed to Empty Cart!!";
            }
             /* const book_list_data = document.querySelector('#book_list_data');
             ReactDOM.render(element(BookListData), book_list_data); */
@@ -124,7 +124,7 @@ class CancelOrder extends React.Component {
         console.log("Status Message posted");
     }
     render(){
-        return React.createElement('button', {key:this.props.addButtonId, id:'CancelOrder', onClick: () => this.handleClick()},  'Cancel Order')
+        return React.createElement('button', {key:this.props.addButtonId, id:'CancelOrder', onClick: () => this.handleClick()},  'Empty Cart')
     }
 }
 
@@ -204,8 +204,7 @@ class CartEntriesData extends React.Component{
              rows.push(thisRow);
             }
         }
-        else{
-            document.getElementById("action_list").style.visibility = "hidden";
+        else {
             var messageCell = React.createElement('td',{key:0, colSpan:3, className:'count_cell'}, "Your Cart is Empty");
             var messageRow = React.createElement('tr', {key:0 }, messageCell);
             rows.push(messageRow);

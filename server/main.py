@@ -338,6 +338,8 @@ def placeOrder():
     customer_cart = get_cart(db, customerId)
     print("Customer's cart: ", str(customer_cart))
 
+    if len(customer_cart) is 0:
+        return encodeJsonResponse({"Reason" : "Cart was empty"}, ReturnCodes.ERROR_OBJECT_NOT_FOUND)
     #place order
     new_order = create_new_order(db, 0, customerId, customer_cart, "none", "none")
 
@@ -345,11 +347,14 @@ def placeOrder():
 
     if new_order is None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+        reason = "Customer ID was invalid"
+        response["Reason": reason]
         print("create_new_order FAILED")
     else:
         del new_order['_id']
         new_order['OrderID'] = str(new_order['OrderID'])
         response["order_request"] = new_order
+        
         returnCode = ReturnCodes.SUCCESS
         cid = delete_cart(db, customerId)
         
