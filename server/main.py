@@ -17,6 +17,7 @@ app = Flask(__name__)
 db = None;
 mongo_client = None;
 
+'''
 @app.route('/mongo')
 def mongo():
     """ Handle request for page to dump mongodb. 
@@ -64,7 +65,7 @@ def mongo():
     ret = ret + "<html>"
     return ret
 
-    
+'''
 
 @app.route('/')
 def mainPage():
