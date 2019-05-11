@@ -31,7 +31,15 @@ def add_to_cart(db, customerId, cart):
         print ("Error: add to cart,  customer id [",customerId,"] not found in db")
         return {}
 
-    inserted_cart = db.customers.find_one_and_update({'customerId':customerId}, {'$push': {'cart': cart}}, return_document=ReturnDocument.AFTER)
+    qty = cart['qty']
+    bookId = cart['BookId']
+    inserted_cart = db.customers.find_one_and_update({'customerId':customerId ,'cart.BookId':bookId}, { '$inc': {'cart.$.qty': qty}}, return_document=ReturnDocument.AFTER)
+
+    if inserted_cart is None:
+        print("Purchasing new book ", bookId)
+        inserted_cart = db.customers.find_one_and_update({'customerId':customerId}, {'$push': {'cart': cart}}, return_document=ReturnDocument.AFTER)
+    else:
+        print("Updated book qty for book ", bookId)
    
     print ("Inserted cart record = ", str(inserted_cart))
     return inserted_cart['cart']
