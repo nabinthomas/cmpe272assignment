@@ -298,6 +298,29 @@ def addToCart():
         returnCode = ReturnCodes.SUCCESS
     return encodeJsonResponse(response, returnCode);
 
+@app.route('/api/deletecart', methods=['DELETE'])
+def deleteCart():
+    """
+    API To delete user's cart
+    TODO Document the payload format and process it
+    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/deletecart -d '{"CustomerId" : 2} }'
+    """
+    payload = request.json;
+
+    print ("delete cart:", payload)
+
+    customerId = request.json['CustomerId']
+    deleted_cart = delete_cart(db, customerId)
+
+    response = {}
+
+    if deleted_cart is not None:
+        returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+    else:
+        response["deleted_cart_item"] = deleted_cart
+        returnCode = ReturnCodes.SUCCESS
+    return encodeJsonResponse(response, returnCode);
+
 @app.route('/api/cart/<int:customerId>', methods=['GET'])
 def customer_cart(customerId):
     """

@@ -44,6 +44,28 @@ def add_to_cart(db, customerId, cart):
     print ("Inserted cart record = ", str(inserted_cart))
     return inserted_cart['cart']
 
+def delete_cart(db, customerId):
+    '''
+    Delete user's cart
+    param db - reference to the db
+    customerId - Customer Id
+    return new_cart when successful, {} when failed.
+    '''
+    
+    print("Customer Id:", customerId)
+    # Find customer 
+    customer = db.customers.find_one({ "customerId" : { "$eq": customerId }  })
+    if customer is None:
+        print ("Error: deleting from cart,  customer id [",customerId,"] not found in db")
+        return {}
+
+    print("Customer Found = ", str(customer));
+    
+    updated_customer_record = db.customers.find_one_and_update({'customerId':customerId}, {'$set': {'cart': None}}, return_document=ReturnDocument.AFTER)
+        
+    print ("Deleted customer record = ", str(updated_customer_record))
+    return updated_customer_record['cart']
+
 def get_cart(db, customerId):
     '''
     Get cart
