@@ -77,4 +77,4 @@ class EnterWebsiteButton extends React.Component {
 }
 
 const domContainer = document.querySelector('#enter_website_button_container');
-ReactDOM.render(e(EnterWebsiteButton), domContainer);
+// ReactDOM.render(e(EnterWebsiteButton), domContainer);
