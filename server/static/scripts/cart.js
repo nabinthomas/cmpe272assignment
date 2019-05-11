@@ -14,6 +14,9 @@ class PlaceOrder extends React.Component {
 
     handleClick(){
         console.log("Placing Order");
+        document.getElementById('PlaceOrder').disabled = true;
+        document.getElementById('CancelOrder').disabled = true;
+
         // '/api/neworder' , DELETE 
         // console.log("Button Clicked" + JSON.stringify(buttonId));
         // console.log("state = " + JSON.stringify(this.state));
@@ -57,7 +60,7 @@ class PlaceOrder extends React.Component {
         .catch(error => console.error('Error:', error));
     }
     render(){
-        return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'Place Order')
+        return React.createElement('button', {key:this.props.addButtonId, id:'PlaceOrder', onClick: () => this.handleClick()},  'Place Order')
     }
 }
 
@@ -72,6 +75,10 @@ class CancelOrder extends React.Component {
 
     handleClick(){
         console.log("Cancelling Order");
+        document.getElementById('PlaceOrder').disabled = true;
+        document.getElementById('CancelOrder').disabled = true;
+        
+
         var customerInfo = {"CustomerId" : 2} ; // TODO Remove HARD CODED Customer ID
         // '/api/neworder' , DELETE 
         // console.log("Button Clicked" + JSON.stringify(buttonId));
@@ -117,7 +124,7 @@ class CancelOrder extends React.Component {
         console.log("Status Message posted");
     }
     render(){
-        return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'Cancel Order')
+        return React.createElement('button', {key:this.props.addButtonId, id:'CancelOrder', onClick: () => this.handleClick()},  'Cancel Order')
     }
 }
 
