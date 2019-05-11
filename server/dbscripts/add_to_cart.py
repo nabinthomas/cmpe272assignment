@@ -61,10 +61,10 @@ def delete_cart(db, customerId):
 
     print("Customer Found = ", str(customer));
     
-    updated_customer_record = db.customers.find_one_and_update({'customerId':customerId}, {'$set': {'cart': None}}, return_document=ReturnDocument.AFTER)
+    updated_customer_record = db.customers.find_one_and_update({'customerId':customerId}, {'$set': {'cart': []}}, return_document=ReturnDocument.AFTER)
         
     print ("Deleted customer record = ", str(updated_customer_record))
-    return updated_customer_record['cart']
+    return customerId
 
 def get_cart(db, customerId):
     '''

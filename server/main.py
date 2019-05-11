@@ -321,6 +321,44 @@ def deleteCart():
         returnCode = ReturnCodes.SUCCESS
     return encodeJsonResponse(response, returnCode);
 
+@app.route('/api/placeorder', methods=['POST'])
+def placeOrder():
+    """
+    API To place order from customer cart
+    TODO Document the payload format and process it
+    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/placeorder -d '{"CustomerId" : 2} }'
+    """
+    payload = request.json;
+
+    print ("place order for customer:", payload)
+
+    customerId = request.json['CustomerId']
+    # Fetch customer cart
+    customer_cart = get_cart(db, customerId)
+    print("Customer's cart: ", str(customer_cart))
+
+    #place order
+    new_order = create_new_order(db, 0, customerId, customer_cart, "none", "none")
+
+    response = {}
+
+    if new_order is None:
+        returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+        print("create_new_order FAILED")
+    else:
+        del new_order['_id']
+        new_order['OrderID'] = str(new_order['OrderID'])
+        response["order_request"] = new_order
+        returnCode = ReturnCodes.SUCCESS
+        cid = delete_cart(db, customerId)
+        
+        if cid is not customerId:
+            returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
+            response = {}
+            print("delete_cart FAILED")
+            
+    return encodeJsonResponse(response, returnCode);
+
 @app.route('/api/cart/<int:customerId>', methods=['GET'])
 def customer_cart(customerId):
     """
