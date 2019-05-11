@@ -312,8 +312,12 @@ def customer_cart(customerId):
     if cart is None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
     else:
+        for item in cart:
+            book = get_bookdata(db, item['BookId'])
+            item['Title'] = book ['Title']
         response["cart_details"] = cart
         returnCode = ReturnCodes.SUCCESS
+
     return encodeJsonResponse(response, returnCode);
 
 

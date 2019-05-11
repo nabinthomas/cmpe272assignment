@@ -41,6 +41,10 @@ class CancelOrder extends React.Component {
         // console.log("state = " + JSON.stringify(this.state));
         // console.log("object = " + this);
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
+        //console.log("Cart updated ");
+    
+        document.getElementById('statusmessage').innerText = "Order Placed Successfully";
+        console.log("Status Message posted");
     }
     render(){
         return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'Cancel Order')
@@ -52,7 +56,8 @@ class CartEntriesHeading extends React.Component {
       super(props);
       this.state = { 
         headings : [
-            "BookId",
+            "ISBN-13",
+            "Title",
             "QTY" 
         ]
       };
@@ -105,10 +110,12 @@ class CartEntriesData extends React.Component{
             for (var i = 0; i < this.state.cartEntries.length; i++){
                 let cells = [];
                 var BookId = `BookId${i}`;
+                var TitleId = `TitleId${i}`;
                 var QtyId = `qty${i}`;
                 console.log(" cart: this.state.cartEntries[" , i , "] \n" , this.state.cartEntries[i] );
                 cells.push(React.createElement('td', {key:BookId}, this.state.cartEntries[i]['BookId']));
-                    cells.push(React.createElement('td', {key:QtyId}, this.state.cartEntries[i]['qty']));
+                cells.push(React.createElement('td', {key:TitleId}, this.state.cartEntries[i]['Title']));
+                cells.push(React.createElement('td', {key:QtyId}, this.state.cartEntries[i]['qty']));
              
                 var thisRow = React.createElement(
                     'tr',
@@ -121,7 +128,7 @@ class CartEntriesData extends React.Component{
             }
         }
         else{
-            var messageCell = React.createElement('td',{key:0, colSpan:2, className:'count_cell'}, "Your Cart is Empty");
+            var messageCell = React.createElement('td',{key:0, colSpan:3, className:'count_cell'}, "Your Cart is Empty");
             var messageRow = React.createElement('tr', {key:0 }, messageCell);
             rows.push(messageRow);
         }
