@@ -20,11 +20,41 @@ class PlaceOrder extends React.Component {
         // console.log("object = " + this);
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         //console.log("Cart updated ");
+        var customerInfo = {"CustomerId" : 2} ; // TODO Remove HARD CODED Customer ID
     
-        document.getElementById('statusmessage').innerText = "Order Placed Successfully (Redirecting to homepage in 5 seconds)";
-        setTimeout(function () {
-            window.location.replace("/");
-        }, 5000);
+        fetch('/api/placeorder', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify(customerInfo)
+
+        }).then(res => res.json())
+        .then(replyFromServer => {
+            console.log('response:', JSON.stringify(replyFromServer));
+            /* 
+            {
+                "response": {
+                    "CustomerId": 2
+                },
+                "status": "Success"
+            }
+            */
+           if (replyFromServer['status'] == "Success")
+           {
+                document.getElementById('statusmessage').innerText = "Order# (" + replyFromServer['response']['order_request']['OrderID'] +") Placed Successfully (Redirecting to homepage in 5 seconds)";
+                setTimeout(function () {
+                    window.location.replace("/");
+                }, 5000);
+           }
+           else {
+                document.getElementById('statusmessage').innerText = "Failed to Place the order !!";
+           }
+            /* const book_list_data = document.querySelector('#book_list_data');
+            ReactDOM.render(element(BookListData), book_list_data); */
+        })
+        .catch(error => console.error('Error:', error));
     }
     render(){
         return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'Place Order')
