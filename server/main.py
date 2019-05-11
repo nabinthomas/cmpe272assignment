@@ -317,7 +317,7 @@ def deleteCart():
     if deleted_cart is not None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
     else:
-        response["deleted_cart_item"] = deleted_cart
+        response["CustomerId"] = customerId
         returnCode = ReturnCodes.SUCCESS
     return encodeJsonResponse(response, returnCode);
 

@@ -42,17 +42,48 @@ class CancelOrder extends React.Component {
 
     handleClick(){
         console.log("Cancelling Order");
+        var customerInfo = {"CustomerId" : 2} ; // TODO Remove HARD CODED Customer ID
         // '/api/neworder' , DELETE 
         // console.log("Button Clicked" + JSON.stringify(buttonId));
         // console.log("state = " + JSON.stringify(this.state));
         // console.log("object = " + this);
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         //console.log("Cart updated ");
+        fetch('/api/deletecart', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify(customerInfo)
+
+        }).then(res => res.json())
+        .then(replyFromServer => {
+            console.log('response:', JSON.stringify(replyFromServer));
+            /* 
+            {
+                "response": {
+                    "CustomerId": 2
+                },
+                "status": "Success"
+            }
+            */
+           if (replyFromServer['status'] == "Success")
+           {
+                document.getElementById('statusmessage').innerText = "Order Cancelled Successfully (Redirecting to homepage in 5 seconds)";
+                setTimeout(function () {
+                    window.location.replace("/");
+                }, 5000);
+           }
+           else {
+                document.getElementById('statusmessage').innerText = "Failed to Cancel the order !!";
+           }
+            /* const book_list_data = document.querySelector('#book_list_data');
+            ReactDOM.render(element(BookListData), book_list_data); */
+        })
+        .catch(error => console.error('Error:', error));
     
-        document.getElementById('statusmessage').innerText = "Order Cancelled Successfully (Redirecting to homepage in 5 seconds)";
-        setTimeout(function () {
-            window.location.replace("/");
-        }, 5000);
+
         console.log("Status Message posted");
     }
     render(){
