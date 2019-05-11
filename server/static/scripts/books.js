@@ -87,81 +87,79 @@ class BookListData extends React.Component{
           books : [],
           cart :[]
         };
-      }
+    }
 
-      componentDidMount() {
-        this.setState({books: []});
+    componentDidMount() {
+    this.setState({books: []});
+    
+    fetch("/api/books")
+    .then(serverresponse => {
+        // console.log(serverresponse);
+        return serverresponse.json();
+    }).then (data => {
+        // console.log("The response from server was : ");
+        // console.log("******************************\n");
+        // console.log(data['response']);
+        // console.log("The status from server was : ");
+        // console.log("******************************\n");
+        // console.log(data['status']);
+        // console.log("The response.books from server was : ");
+        // console.log("******************************\n");
+        // console.log(data['response']['books']);
+        // console.log("******************************\n");
+        this.state.messagefromserver = "";
+        var booklist = []
+        for (var bookIndex in data['response']['books']){
+        /* ISBN13: "1",
+        Title: "The Jungle Book", 
+        Author: "Rudyard Kipling",
+        Price: 24.0,
+        AvailableCopies: 399,
+        InCartCopies:0 */
         
-        fetch("/api/books")
-        .then(serverresponse => {
-          // console.log(serverresponse);
-          return serverresponse.json();
-        }).then (data => {
-          // console.log("The response from server was : ");
-          // console.log("******************************\n");
-          // console.log(data['response']);
-          // console.log("The status from server was : ");
-          // console.log("******************************\n");
-          // console.log(data['status']);
-          // console.log("The response.books from server was : ");
-          // console.log("******************************\n");
-          // console.log(data['response']['books']);
-          // console.log("******************************\n");
-          this.state.messagefromserver = "";
-          var booklist = []
-          for (var bookIndex in data['response']['books']){
-            /* ISBN13: "1",
-            Title: "The Jungle Book", 
-            Author: "Rudyard Kipling",
-            Price: 24.0,
-            AvailableCopies: 399,
-            InCartCopies:0 */
-            
-            var formatted_book_data = {
-                ISBN13 : data['response']['books'][bookIndex]['ISBN-13'],
-                Title : data['response']['books'][bookIndex]['Title'],
-                Author : data['response']['books'][bookIndex]['Author'],
-                Price : data['response']['books'][bookIndex]['Price'],
-                AvailableCopies : data['response']['books'][bookIndex]['Inventory'],
-                InCartCopies : 0
-            };
-            booklist.push(
-              formatted_book_data  
-            ) ;
-          }
-          
-            // console.log(booklist);
+        var formatted_book_data = {
+            ISBN13 : data['response']['books'][bookIndex]['ISBN-13'],
+            Title : data['response']['books'][bookIndex]['Title'],
+            Author : data['response']['books'][bookIndex]['Author'],
+            Price : data['response']['books'][bookIndex]['Price'],
+            AvailableCopies : data['response']['books'][bookIndex]['Inventory'],
+            InCartCopies : 0
+        };
+        booklist.push(
+            formatted_book_data  
+        ) ;
+        }
+        
+        // console.log(booklist);
 
-            fetch('/api/cart/2', {
-                method: 'GET'/*,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                }*/
-            }).then(res => res.json())
-            .then(response => {
-                // console.log('Success:', JSON.stringify(response));
-                var cart_details = response['response']['cart_details'];
-                this.state.cart = cart_details;
-                //return cart_details; 
-                // console.log("CART: this.state.cart  + ", cart_details);
-                // For each book find total count in cart. 
-                for (var i = 0; i < booklist.length; i++){
-                    // console.log(" book : " + booklist[i].ISBN13);
-                    for (var j = 0; j < cart_details.length; j++){
-                        if (booklist[i].ISBN13 == this.state.cart[j].BookId) {
-                            // console.log("Found book" + booklist[i].ISBN13);
-                            booklist[i].InCartCopies += this.state.cart[j].qty;
-                        }
+        fetch('/api/cart/2', {
+            method: 'GET'/*,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }*/
+        }).then(res => res.json())
+        .then(response => {
+            // console.log('Success:', JSON.stringify(response));
+            var cart_details = response['response']['cart_details'];
+            this.state.cart = cart_details;
+            //return cart_details; 
+            // console.log("CART: this.state.cart  + ", cart_details);
+            // For each book find total count in cart. 
+            for (var i = 0; i < booklist.length; i++){
+                // console.log(" book : " + booklist[i].ISBN13);
+                for (var j = 0; j < cart_details.length; j++){
+                    if (booklist[i].ISBN13 == this.state.cart[j].BookId) {
+                        // console.log("Found book" + booklist[i].ISBN13);
+                        booklist[i].InCartCopies += this.state.cart[j].qty;
                     }
                 }
-                // Trigger a re-rendering with the new data
-                this.setState({books:booklist}); 
-            })
-
-            
+            }
+            // Trigger a re-rendering with the new data
+            this.setState({books:booklist}); 
+        })
         });
-      }
+    }
 
     cartUpdated(target){
         //console.log("Cart updated ");
