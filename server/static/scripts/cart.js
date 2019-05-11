@@ -205,6 +205,7 @@ class CartEntriesData extends React.Component{
             }
         }
         else{
+            document.getElementById("action_list").style.visibility = "hidden";
             var messageCell = React.createElement('td',{key:0, colSpan:3, className:'count_cell'}, "Your Cart is Empty");
             var messageRow = React.createElement('tr', {key:0 }, messageCell);
             rows.push(messageRow);
