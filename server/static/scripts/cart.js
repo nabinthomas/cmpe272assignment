@@ -21,7 +21,7 @@ class PlaceOrder extends React.Component {
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
     }
     render(){
-        return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'PlaceOrder')
+        return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'Place Order')
     }
 }
 
@@ -43,7 +43,7 @@ class CancelOrder extends React.Component {
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
     }
     render(){
-        return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'CancelOrder')
+        return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'Cancel Order')
     }
 }
 
@@ -137,4 +137,9 @@ ReactDOM.render(React.createElement(CartEntriesHeading), cart_list_heading);
 const cart_list_data = document.querySelector('#cart_list_data');
 ReactDOM.render(React.createElement(CartEntriesData), cart_list_data);
 
- 
+const place_order_button = document.querySelector('#place_order_button');
+ReactDOM.render(React.createElement(PlaceOrder), place_order_button);
+
+const cancel_order_button = document.querySelector('#cancel_order_button');
+ReactDOM.render(React.createElement(CancelOrder), cancel_order_button);
+
