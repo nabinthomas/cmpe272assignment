@@ -59,12 +59,28 @@
     </style>
   </head>
   <body>
-
-     
-    <table 
     <table  class=cart_table align="center" id=book_list>
         <thead class=cart_header id=cart_list_heading>  </thead>
-        <tbody class=cart_list id=cart_list_data> </tbody>
+        <tbody class=cart_list id=cart_list_data> 
+            <td colspan="2" class=count_cell> Your Cart is Empty </td>
+        </tbody>
+    </table>
+    <table  class=cart_table align="center" id=book_list>
+        <thead class=cart_header>  
+            <th class=button_cell id=cancel_order_button>
+                Cancel Order
+            </th>
+            <th class=button_cell id=place_order_button>
+                Place Order
+            </th>
+            <tbody>
+                <td class=button_cell colspan=2>
+                    <div id=statusmessage>
+
+                    </div>
+                </td>
+            </tbody>
+        </thead>
     </table>
    
     <!-- BEGIN REACT IMPORTS -->

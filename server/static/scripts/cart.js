@@ -101,24 +101,32 @@ class CartEntriesData extends React.Component{
     render() {
         let rows = [];  
         console.log(" cart: this.state.cartEntries.length \n" , this.state.cartEntries.length );
-        for (var i = 0; i < this.state.cartEntries.length; i++){
-            let cells = [];
-            var BookId = `BookId${i}`;
-            var QtyId = `qty${i}`;
-            console.log(" cart: this.state.cartEntries[" , i , "] \n" , this.state.cartEntries[i] );
-            cells.push(React.createElement('td', {key:BookId}, this.state.cartEntries[i]['BookId']));
-                cells.push(React.createElement('td', {key:QtyId}, this.state.cartEntries[i]['qty']));
-         
-            var thisRow = React.createElement(
-                'tr',
-                {key:`cart_entry_${i}`},
-                cells
-            );
-    
-         console.log(cells);
-         rows.push(thisRow);
+        if (this.state.cartEntries.length > 0){
+            for (var i = 0; i < this.state.cartEntries.length; i++){
+                let cells = [];
+                var BookId = `BookId${i}`;
+                var QtyId = `qty${i}`;
+                console.log(" cart: this.state.cartEntries[" , i , "] \n" , this.state.cartEntries[i] );
+                cells.push(React.createElement('td', {key:BookId}, this.state.cartEntries[i]['BookId']));
+                    cells.push(React.createElement('td', {key:QtyId}, this.state.cartEntries[i]['qty']));
+             
+                var thisRow = React.createElement(
+                    'tr',
+                    {key:`cart_entry_${i}`},
+                    cells
+                );
+        
+             console.log(cells);
+             rows.push(thisRow);
+            }
         }
-         console.log(rows);
+        else{
+            var messageCell = React.createElement('td',{key:0, colSpan:2, className:'count_cell'}, "Your Cart is Empty");
+            var messageRow = React.createElement('tr', {key:0 }, messageCell);
+            rows.push(messageRow);
+        }
+        
+        console.log(rows);
         return rows;
     }
 }
