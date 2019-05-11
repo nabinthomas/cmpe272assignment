@@ -59,34 +59,45 @@
     </style>
   </head>
   <body>
-    <table  class=cart_table align="center" id=book_list>
-        <thead class=cart_header id=cart_list_heading>  </thead>
-        <tbody class=cart_list id=cart_list_data> 
-            <td colspan="3" class=count_cell> Your Cart is Empty </td>
-        </tbody>
-    </table>
-    <table  class=cart_table align="center" id=book_list>
-        <thead class=cart_header>  
-            <th class=button_cell id=cancel_order_button>
-                Cancel Order
-            </th>
-            <th class=button_cell id=place_order_button>
-                Place Order
-            </th>
-            <tbody>
-                <td class=button_cell colspan=3>
-                    <div id=statusmessage>
-
-                    </div>
-                </td>
+        <table  class=cart_table align="center">
+            <thead class=cart_header> 
+                <th align="left">
+                    aMAZE.com > Cart
+                </th>
+            </thead>
+        </table>
+        <table  class=cart_table align="center">
+            <thead class=cart_header id=cart_list_heading> 
+                <th align="center">
+                    Loading your Shopping Cart
+                </th>
+            </thead>
+            <tbody class=cart_list id=cart_list_data> 
+                <td colspan="3" class=count_cell> Your Cart is Empty </td>
             </tbody>
-        </thead>
-    </table>
-   
-    <!-- BEGIN REACT IMPORTS -->
-    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
-    <script src="/static/scripts/cart.js"></script>
-    <!-- END REACT IMPORTS -->
+        </table>
+        <table  class=cart_table align="center" id=book_list>
+            <thead class=cart_header>  
+                <th class=button_cell id=cancel_order_button>
+                    Cancel Order
+                </th>
+                <th class=button_cell id=place_order_button>
+                    Place Order
+                </th>
+                <tbody>
+                    <td class=button_cell colspan=3>
+                        <div id=statusmessage>
+
+                        </div>
+                    </td>
+                </tbody>
+            </thead>
+        </table>
+    
+        <!-- BEGIN REACT IMPORTS -->
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
+        <script src="/static/scripts/cart.js"></script>
+        <!-- END REACT IMPORTS -->
   </body>
