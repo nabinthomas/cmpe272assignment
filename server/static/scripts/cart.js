@@ -13,12 +13,18 @@ class PlaceOrder extends React.Component {
     }
 
     handleClick(){
-        console.log("Order has been placed");
-        // '/api/neworder' , POST 
+        console.log("Placing Order");
+        // '/api/neworder' , DELETE 
         // console.log("Button Clicked" + JSON.stringify(buttonId));
         // console.log("state = " + JSON.stringify(this.state));
         // console.log("object = " + this);
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
+        //console.log("Cart updated ");
+    
+        document.getElementById('statusmessage').innerText = "Order Placed Successfully (Redirecting to homepage in 5 seconds)";
+        setTimeout(function () {
+            window.location.replace("/");
+        }, 5000);
     }
     render(){
         return React.createElement('button', {key:this.props.addButtonId, onClick: () => this.handleClick()},  'Place Order')
@@ -35,7 +41,7 @@ class CancelOrder extends React.Component {
     }
 
     handleClick(){
-        console.log("Order has been placed");
+        console.log("Cancelling Order");
         // '/api/neworder' , DELETE 
         // console.log("Button Clicked" + JSON.stringify(buttonId));
         // console.log("state = " + JSON.stringify(this.state));
@@ -43,7 +49,10 @@ class CancelOrder extends React.Component {
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         //console.log("Cart updated ");
     
-        document.getElementById('statusmessage').innerText = "Order Placed Successfully";
+        document.getElementById('statusmessage').innerText = "Order Cancelled Successfully (Redirecting to homepage in 5 seconds)";
+        setTimeout(function () {
+            window.location.replace("/");
+        }, 5000);
         console.log("Status Message posted");
     }
     render(){
