@@ -178,15 +178,17 @@ def newOrder():
     TODO Document the payload format and process it
     eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/neworder -d '{"CustomerId" : 2, "Items" : [ {"BookId": "978-1503215678", "qty" : 1} ] }'
     """
+    response = {}
     payload = request.json;
-
     print ("new order:", payload)
 
-    customerId = request.json['CustomerId']
-    book_order_list = request.json['Items']
-    new_order = create_new_order(db, 0, customerId, book_order_list, "none", "none")
+    try:
+        customerId = request.json['CustomerId']
+        book_order_list = request.json['Items']
+    except:
+        return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM);
 
-    response = {}
+    new_order = create_new_order(db, 0, customerId, book_order_list, "none", "none")
 
     if new_order is None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
@@ -214,7 +216,10 @@ def fulfillorder_orderid(orderid):
     eg: curl -XPUT -H 'Content-Type: application/json' http://localhost/api/fulfillorder/1234 -d '{"book" : "12314", "copies" : 3}'
     """
     #make sure the oder id is an integer.
-    OrderId= int (orderid)
+    try:
+        OrderId= int (orderid)
+    except:
+        return encodeJsonResponse({}, ReturnCodes.ERROR_INVALID_PARAM)
 
     with  mongo_client.start_session() as s:
         s.start_transaction()
@@ -255,6 +260,8 @@ def book_default():
     """
     return encodeJsonResponse({}, ReturnCodes.ERROR_INVALID_PARAM)
 
+
+
 @app.route('/api/book/<string:isbn13>', methods=['GET'])
 def book_isbn(isbn13):
     """
@@ -275,22 +282,38 @@ def book_isbn(isbn13):
         returnCode = ReturnCodes.SUCCESS
     return encodeJsonResponse(response, returnCode);
 
+'''
+def is_valid_json(func):
+    def wrapper():
+        print("Something is happening before the function is X called.")
+        response = {}
+        if request == None :
+            print("Returning ERROR_INVALID_PARAM.")
+            raise Exception("Both x and y have to be positive")
+        else :
+            print(" request is not non.  .", str(request))
+            #return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM);
+        return func()
+    return wrapper
+'''
 @app.route('/api/addtocart', methods=['POST'])
+#@is_valid_json
 def addToCart():
     """
     API To add book to cart
     TODO Document the payload format and process it
     eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/addtocart -d '{"CustomerId" : 2, "Items" : {"BookId": "978-1503215678", "qty" : 1} }'
     """
-    payload = request.json;
-
-    print ("add to cart:", payload)
-
-    customerId = request.json['CustomerId']
-    cart_item = request.json['Items']
-    new_cart = add_to_cart(db, customerId, cart_item)
-
+    print("Inside  addToCart  .")
     response = {}
+    try :
+        customerId = request.json['CustomerId']
+        cart_item = request.json['Items']
+    except :
+        return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM);
+    payload = request.json;
+    print ("add to cart:", payload)
+    new_cart = add_to_cart(db, customerId, cart_item)
 
     if new_cart is None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
@@ -306,14 +329,17 @@ def deleteCart():
     TODO Document the payload format and process it
     eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/deletecart -d '{"CustomerId" : 2} }'
     """
-    payload = request.json;
-
-    print ("delete cart:", payload)
-
-    customerId = request.json['CustomerId']
-    deleted_cart = delete_cart(db, customerId)
-
     response = {}
+
+    try:
+        customerId = request.json['CustomerId']
+        deleted_cart = delete_cart(db, customerId)
+    except:
+        return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM)
+
+    payload = request.json;
+    print ("delete cart:", payload)
+   
 
     if deleted_cart is {}:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
@@ -329,11 +355,13 @@ def placeOrder():
     TODO Document the payload format and process it
     eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/placeorder -d '{"CustomerId" : 2} }'
     """
-    payload = request.json;
+    response = {}
+    try:
+        customerId = request.json['CustomerId']
+        
+    except:
+        return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM)
 
-    print ("place order for customer:", payload)
-
-    customerId = request.json['CustomerId']
     # Fetch customer cart
     customer_cart = get_cart(db, customerId)
     print("Customer's cart: ", str(customer_cart))
@@ -342,8 +370,6 @@ def placeOrder():
         return encodeJsonResponse({"Reason" : "Cart was empty"}, ReturnCodes.ERROR_OBJECT_NOT_FOUND)
     #place order
     new_order = create_new_order(db, 0, customerId, customer_cart, "none", "none")
-
-    response = {}
 
     if new_order is None:
         returnCode = ReturnCodes.ERROR_OBJECT_NOT_FOUND;
