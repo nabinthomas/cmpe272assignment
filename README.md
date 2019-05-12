@@ -25,7 +25,7 @@ Team members:
 4. Assginment 4 - Submitted.
 	* Docker hub image: amazeteam/cmpe272assignment:4.0
 	* Github tag 4.0
-5. Assginment 5 - In Progress
+5. Assginment 5 - Ready to Submit
 	* Docker hub image: amazeteam/cmpe272assignment:5.0
 	* Github tag 5.0
 
