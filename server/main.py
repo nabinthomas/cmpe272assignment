@@ -11,6 +11,7 @@ from server.dbscripts.create_order import *
 from server.dbscripts.fulfill_order import *
 from server.dbscripts.add_to_cart import *
 import sys
+import http.client
 
 ## Create the App
 app = Flask(__name__)
@@ -177,7 +178,7 @@ def loginSuccess():
     API To pass successful user auth from auth0. 
     This gets the response "code" from the auth0 server and issue a redirect to locahost/api/loginsuccess
 
-    open in browser: https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=http://localhost/api/loginsuccess&scope=openid%20profile&state=xyzABC123
+    open in browser: https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=http://localhost/api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123
     then login. and then this will be called with code and state as params. 
     """
 
@@ -190,6 +191,31 @@ def loginSuccess():
         state = request.args['state']
         print ("Client Code received:", code)
         print ("Client State received:", state)
+
+        conn = http.client.HTTPSConnection("nthomas.auth0.com")
+
+        #payload = "{\"code\":str(code),\"client_id\":\"QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG\",\"client_secret\":\"aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ\",\"audience\":\"http://localhost/login\",\"grant_type\":\"client_credentials\"}"
+        #payload = "grant_type=authorization_code&client_id=%24%7Baccount.clientId%7D&client_secret=YOUR_CLIENT_SECRET&code=YOUR_AUTHORIZATION_CODE&redirect_ui=https%3A%2F%2F%24%7Baccount.callback%7D"
+        CLIENT_ID = 'QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG'
+        CLIENT_SECRET = 'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ' 
+        AUTHORIZATION_CODE = code
+        payload = 'grant_type=authorization_code&client_id=' + CLIENT_ID + \
+                    '&client_secret=' + CLIENT_SECRET + \
+                    '&code=' + AUTHORIZATION_CODE + \
+                    '&redirect_uri=http://localhost/api/loginsuccess'
+
+        fullurl = "https://nthomas.auth0.com/oauth/token"+payload
+        print (fullurl)
+
+        headers = { 'content-type': 'application/x-www-form-urlencoded' }
+
+        conn.request("POST", "/oauth/token", payload, headers)
+
+        res = conn.getresponse()
+        data = res.read()
+
+        print(data.decode("utf-8"))
+
         response = {
             "Received" : {
                 "code" : code,
@@ -197,7 +223,8 @@ def loginSuccess():
             }
         }
         return encodeJsonResponse(response, ReturnCodes.SUCCESS);
-    except:
+    except Exception as e:
+        print ('Failed : '+ str(e))
         return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM);
 
 
