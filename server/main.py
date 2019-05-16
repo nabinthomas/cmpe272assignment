@@ -204,7 +204,7 @@ def loginSuccess():
                     '&code=' + AUTHORIZATION_CODE + \
                     '&redirect_uri=http://localhost/api/loginsuccess'
 
-        fullurl = "https://nthomas.auth0.com/oauth/token"+payload
+        fullurl = "https://nthomas.auth0.com/oauth/token" + payload
         print (fullurl)
 
         headers = { 'content-type': 'application/x-www-form-urlencoded' }
