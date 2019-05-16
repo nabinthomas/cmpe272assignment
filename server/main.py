@@ -171,6 +171,36 @@ def deleteUser():
     """
     return encodeJsonResponse({}, ReturnCodes.ERROR_NOT_IMPLEMENTED);
 
+@app.route('/api/loginsuccess', methods=['GET'])
+def loginSuccess():
+    """
+    API To pass successful user auth from auth0. 
+    This gets the response "code" from the auth0 server and issue a redirect to locahost/api/loginsuccess
+
+    open in browser: https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=http://localhost/api/loginsuccess&scope=openid%20profile&state=xyzABC123
+    then login. and then this will be called with code and state as params. 
+    """
+
+    response = {}
+    payload = request.args;
+    print ("Client login request: [", payload, "]")
+
+    try:
+        code = request.args['code']
+        state = request.args['state']
+        print ("Client Code received:", code)
+        print ("Client State received:", state)
+        response = {
+            "Received" : {
+                "code" : code,
+                "state" : state
+            }
+        }
+        return encodeJsonResponse(response, ReturnCodes.SUCCESS);
+    except:
+        return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM);
+
+
 @app.route('/api/neworder', methods=['POST'])
 def newOrder():
     """
