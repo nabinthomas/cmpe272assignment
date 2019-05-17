@@ -37,5 +37,6 @@ mongoimport -d test --drop ./test/unittests/data/customers.json
 
 #Start the web server
 #This should be started at the end
-PYTHONPATH=/root/app/ python3 app/server/main.py  mongodb://localhost/test &
-bash 
+export FLASK_ENV=development
+PYTHONPATH=/root/app/ python3 app/server/main.py  mongodb://localhost/test & bash
+

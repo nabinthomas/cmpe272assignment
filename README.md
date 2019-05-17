@@ -81,6 +81,11 @@ Team members:
         cd <gitroot>/ 
         docker run --rm amazeteam/cmpe272assignment unittest
 ```
+5. Kill the current server and rebuild/restart. 
+```bash
+	cd <gitroot>/
+	docker kill `docker ps |grep amaze |cut -f 1 -d ' '`; docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile . ; docker run --rm -p 80:80/tcp -v `pwd`/server:/root/app/server -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   -it amazeteam/cmpe272assignment
+```
 **Note**: _The database dir is kept outside the docker image to make sure the data is persistent across docker runs. For testing, a different database directory may be used to avoid corrupting real data._ 
 ## To push the docker image to docker hub
 ```bash
