@@ -1,3 +1,4 @@
+import * as cookies from '/static/scripts/cookies.js';
 'use strict';
 
 const element = React.createElement;
@@ -25,11 +26,14 @@ class AddToCartButton extends React.Component {
                 qty : 1
             } 
         };
+        var auth_token = cookies.getCookie('auth_token');
+
         fetch('/api/addtocart', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + auth_token
                 },
                 body: JSON.stringify(order)
             }
@@ -37,8 +41,6 @@ class AddToCartButton extends React.Component {
         .then(response => {
             // console.log('Success:', JSON.stringify(response));
             this.state.callBack(this.state.callBackObj);
-            /* const book_list_data = document.querySelector('#book_list_data');
-            ReactDOM.render(element(BookListData), book_list_data); */
         })
         .catch(error => console.error('Error:', error));
     }
@@ -92,9 +94,17 @@ class BookListData extends React.Component{
     componentDidMount() {
     this.setState({books: []});
     
-    fetch("/api/books")
+    var auth_token = cookies.getCookie('auth_token');
+    fetch("/api/books", {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + auth_token
+        }, 
+    })
     .then(serverresponse => {
-        // console.log(serverresponse);
+        console.log(serverresponse);
         return serverresponse.json();
     }).then (data => {
         // console.log("The response from server was : ");
@@ -117,27 +127,28 @@ class BookListData extends React.Component{
         AvailableCopies: 399,
         InCartCopies:0 */
         
-        var formatted_book_data = {
-            ISBN13 : data['response']['books'][bookIndex]['ISBN-13'],
-            Title : data['response']['books'][bookIndex]['Title'],
-            Author : data['response']['books'][bookIndex]['Author'],
-            Price : data['response']['books'][bookIndex]['Price'],
-            AvailableCopies : data['response']['books'][bookIndex]['Inventory'],
-            InCartCopies : 0
-        };
-        booklist.push(
-            formatted_book_data  
-        ) ;
+            var formatted_book_data = {
+                ISBN13 : data['response']['books'][bookIndex]['ISBN-13'],
+                Title : data['response']['books'][bookIndex]['Title'],
+                Author : data['response']['books'][bookIndex]['Author'],
+                Price : data['response']['books'][bookIndex]['Price'],
+                AvailableCopies : data['response']['books'][bookIndex]['Inventory'],
+                InCartCopies : 0
+            };
+            booklist.push(
+                formatted_book_data  
+            ) ;
         }
         
         // console.log(booklist);
-
-        fetch('/api/cart/2', {
-            method: 'GET'/*,
+        var auth_token = cookies.getCookie('auth_token')
+        fetch("/api/cart/2", {
+            method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-            }*/
+                'Authorization': 'Bearer ' + auth_token
+            }
         }).then(res => res.json())
         .then(response => {
             // console.log('Success:', JSON.stringify(response));

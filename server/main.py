@@ -202,6 +202,7 @@ def get_token_auth_header():
     """Obtains the access token from the Authorization Header
     """
     auth = request.headers.get("Authorization", None)
+    print (request.headers)
     if not auth:
         raise AuthError({"code": "authorization_header_missing",
                         "description":
@@ -247,6 +248,7 @@ def requires_auth(f):
         print ("Enter requires_auth  ")
         #validate email-id and access_token 
         token = get_token_auth_header() #get access token 
+        print ("Token recieved : " + token)
         customerEmail = find_customer_email(db, token)
         if(customerEmail is None) :
             print ("Exit requires_auth : Error : customer email not found")
