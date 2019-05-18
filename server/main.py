@@ -3,7 +3,7 @@
   
 import datetime
 import pytz
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect
 import pymongo  
 from pymongo import MongoClient
 from server.dbscripts.list_books import *
@@ -158,6 +158,25 @@ def encodeJsonResponse(reply, statuscode):
     """
     return jsonify({ "status" : statuscode, "response" : reply});
 
+@app.route('/logout', methods=['GET'])
+def logout():
+    redirect_to_index = redirect('/')
+    response = app.make_response(redirect_to_index )  
+    response.set_cookie('auth_token',value='', expires=0)
+    ## TODO Clear all cookies here. 
+    return response
+
+@app.route('/cookie', methods=['GET'])
+def create_cookie():
+    redirect_to_index = redirect('/')
+    response = app.make_response(redirect_to_index)  
+    restrictTo = request.host
+    if (restrictTo == "localhost"):
+        restrictTo= ''
+    # TODO change value to setup the Auth token and move this to loginsuccess handler
+    response.set_cookie('auth_token',value='Nabin', domain=None)
+    return response
+
 @app.route('/api', methods=['GET'])
 def help():
     """
@@ -235,6 +254,7 @@ def loginSuccess():
             }
         }
 
+        
         return encodeJsonResponse(response, ReturnCodes.SUCCESS);
     except Exception as e:
         print ('Failed : '+ str(e))
