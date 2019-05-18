@@ -1,3 +1,4 @@
+import * as cookies from '/static/scripts/cookies.js';
 'use strict';
 
 // When the customer press check out button , the  cart entries in his cart 
@@ -24,12 +25,14 @@ class PlaceOrder extends React.Component {
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         //console.log("Cart updated ");
         var customerInfo = {"CustomerId" : 2} ; // TODO Remove HARD CODED Customer ID
-    
+        var auth_token = cookies.getCookie('auth_token');
+
         fetch('/api/placeorder', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + auth_token
             }, 
             body: JSON.stringify(customerInfo)
 
@@ -86,11 +89,14 @@ class CancelOrder extends React.Component {
         // console.log("object = " + this);
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         //console.log("Cart updated ");
+        var auth_token = cookies.getCookie('auth_token');
+
         fetch('/api/deletecart', {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + auth_token
             }, 
             body: JSON.stringify(customerInfo)
 
@@ -159,7 +165,15 @@ class CartEntriesData extends React.Component{
     componentDidMount() {
         this.setState({books: []});
         console.log("Cart: going to call fetch The response from server was : ");
-        fetch("/api/cart/2").then(serverresponse => {
+        var auth_token = cookies.getCookie('auth_token');
+        fetch("/api/cart/2", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + auth_token
+            }, 
+        }).then(serverresponse => {
           console.log(serverresponse);
           return serverresponse.json();
         }).then (data => {
