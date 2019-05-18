@@ -172,9 +172,9 @@ def create_cookie():
     response = app.make_response(redirect_to_index)  
     restrictTo = request.host
     if (restrictTo == "localhost"):
-        restrictTo= ''
+        restrictTo= None
     # TODO change value to setup the Auth token and move this to loginsuccess handler
-    response.set_cookie('auth_token',value='Nabin', domain=None)
+    response.set_cookie('auth_token',value='Nabin', domain=restrictTo)
     return response
 
 @app.route('/api', methods=['GET'])
