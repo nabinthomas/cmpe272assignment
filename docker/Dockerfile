@@ -23,6 +23,7 @@ RUN apt-get install -y mongodb mongodb-server mongo-tools
 RUN pip3 install flask
 RUN pip3 install pytz
 RUN pip3 install python-jose
+RUN pip3 install six
 # pymongo  for connecting to mongodb
 RUN pip3 install pymongo
 # For unit tests. TODO: Keep this only for unit tests

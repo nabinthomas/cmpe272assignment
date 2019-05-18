@@ -12,6 +12,9 @@ from server.dbscripts.fulfill_order import *
 from server.dbscripts.add_to_cart import *
 import sys
 import http.client
+from jose import jwt
+from six.moves.urllib.request import urlopen
+import json
 
 ## Create the App
 app = Flask(__name__)
@@ -181,8 +184,10 @@ def loginSuccess():
     open in browser: https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=http://localhost/api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123
     then login. and then this will be called with code and state as params. 
     """
-
-    response = {}
+    print ("Enter /api/loginsuccess");
+    app.logger.info("Enter /api/loginsuccess")
+    
+    response = {};
     payload = request.args;
     print ("Client login request: [", payload, "]")
 
@@ -215,13 +220,21 @@ def loginSuccess():
         data = res.read()
 
         print(data.decode("utf-8"))
+        data_str = (str(data.decode("utf-8").replace('"',"'")))
+        data_json = json.loads(data.decode("utf-8"))
+
+        jsonurl = urlopen("https://"+ "nthomas.auth0.com" +"/.well-known/jwks.json")
+        jwks = json.loads(jsonurl.read().decode("utf8"))
 
         response = {
             "Received" : {
                 "code" : code,
-                "state" : state
+                "state" : state,
+                "token_data" : data_json,
+                "jwks" : jwks # This should be removed once everything is working. 
             }
         }
+
         return encodeJsonResponse(response, ReturnCodes.SUCCESS);
     except Exception as e:
         print ('Failed : '+ str(e))
