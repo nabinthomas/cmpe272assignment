@@ -76,10 +76,18 @@ def mainPage():
     """ Handle request for default page. 
     """
     now = datetime.datetime.now(pytz.timezone('US/Pacific'));
+    
+    loggedinUser='Guest'
+
+    # TODO: Validate the auth_token and Get the Users full name from the session information. 
+    if (request.cookies.get('auth_token') is not None):
+        loggedinUser = request.cookies.get('userFullName')
+
 
     return render_template('default.html', 
 			serverTime=now, 
 			pageWelcomeMessage="Welcome aMAZE.com Online Book Store", 
+            userFullName=loggedinUser,
 			pageTitle="aMAZE.com Online Book Store",
             teamMembers=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
 
@@ -163,6 +171,7 @@ def logout():
     redirect_to_index = redirect('/')
     response = app.make_response(redirect_to_index )  
     response.set_cookie('auth_token',value='', expires=0)
+    response.set_cookie('userFullName',value='', expires=0)
     ## TODO Clear all cookies here. 
     return response
 
@@ -175,6 +184,7 @@ def create_cookie():
         restrictTo= None
     # TODO change value to setup the Auth token and move this to loginsuccess handler
     response.set_cookie('auth_token',value='Nabin', domain=restrictTo)
+    response.set_cookie('userFullName',value='Nabin Thomas', domain=restrictTo)
     return response
 
 @app.route('/api', methods=['GET'])

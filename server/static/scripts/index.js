@@ -1,8 +1,8 @@
 'use strict';
 
-const e = React.createElement;
+const createElement = React.createElement;
 
-class EnterWebsiteButton extends React.Component {
+class RestAPITestButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
@@ -41,7 +41,7 @@ class EnterWebsiteButton extends React.Component {
           this.setState({needs_ui_update:true}); 
         })
   
-        return e(
+        return createElement(
           'div', 
           {
              onClick: () => this.setState({ clicked: false }), 
@@ -54,21 +54,21 @@ class EnterWebsiteButton extends React.Component {
         // update UI with new results and reset flag
         this.state.needs_ui_update = false;
          // e is same as React.createElement as defined earlier
-        return e("div", {style:{borderStyle:"solid"}}, 
-                e("pre", {
+        return createElement("div", {style:{borderStyle:"solid"}}, 
+                createElement("pre", {
                   align: "left" 
                 }, this.state.messagefromserver), 
-                e("button", {
+                createElement("button", {
                     onClick: () => this.setState({ clicked: false }),
                     align: "center" 
                   }, " Close "), 
-                  e('a', {
+                  createElement('a', {
                       href: "http://localhost/mongo"
                     }, "Mongo"));
       }
     }
     
-    return e(
+    return createElement(
       'button',
       { onClick: () => this.setState({ clicked: true }) },
       'Open'
@@ -76,5 +76,62 @@ class EnterWebsiteButton extends React.Component {
   }
 }
 
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+class EnterWebsiteLink extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      logged_in: false, 
+    };
+  }
+
+
+  componentDidMount() {
+    // TODO: Validate Cookie
+    // console.log("Cookie read " + getCookie('auth_token'))
+    if (getCookie('auth_token') != ""){
+      this.setState({ logged_in: true });
+    }
+  }
+  render() {
+    if (this.state.logged_in) {
+      return createElement(
+        'a',
+        { 
+          href:"/books"
+        },
+        'Shop for Books'
+      );
+    }
+    else {
+      return createElement(
+        'a',
+        { 
+          href:"/cookie"
+        },
+        'Login'
+      );
+    }
+  }
+}
+
+// const domContainer = document.querySelector('#enter_website_button_container');
+// ReactDOM.render(createElement(RestAPITestButton), domContainer);
+
 const domContainer = document.querySelector('#enter_website_button_container');
-// ReactDOM.render(e(EnterWebsiteButton), domContainer);
+ReactDOM.render(createElement(EnterWebsiteLink), domContainer);
