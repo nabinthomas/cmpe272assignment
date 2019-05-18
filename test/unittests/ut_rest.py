@@ -41,6 +41,9 @@ class RESTTests(unittest.TestCase):
         self.db.orders.insert_one({"OrderID": 33, "CustomerId": 2, "Items": [{"BookId": "978-1503215677", "qty": 30, "SellingPrice": 24.0}], "Shipping": {"Address": "100 W Tasman Dr, San Jose, 95134", "Status": "InProgress", "Provider": "Fedex", "Type": "2 day shipping", "ShippingDate": "4/12/2019", "DeliveryDate": "4/14/2019 "}, "PaymentType": "Cash On Delivery"})
         self.db.orders.insert_one({"OrderID": 44, "CustomerId": 2, "Items": [{"BookId": "978-1503215677", "qty": 300, "SellingPrice": 24.0}], "Shipping": {"Address": "100 W Tasman Dr, San Jose, 95134", "Status": "InProgress", "Provider": "Fedex", "Type": "2 day shipping", "ShippingDate": "4/12/2019", "DeliveryDate": "4/14/2019 "}, "PaymentType": "Cash On Delivery"})
        
+        # Create a dummy customer and session for that 
+        self.db.customers.insert_one({ "customerId" : 1, "email" : "nabin.thomas@gmail.com", "name" : "Nabin Thomas", "accessToken" : "DUMMY_TEST_TOCKEN_NABIN" })
+        self.db.customers.insert_one({ "customerId" : 2, "email" : "ginto100@gmail.com", "name" : "Ginto George", "accessToken" : "DUMMY_TEST_TOCKEN_GINTO" })
         self.app = main.app.test_client()
         main.db = self.db
         main.mongo_client = self.mongo_client
@@ -70,7 +73,7 @@ class RESTTests(unittest.TestCase):
         """
         Test REST API /api/book/
         """
-        resp = self.app.get('/api/book')
+        resp = self.app.get('/api/book', headers={'Authorization': 'Bearer DUMMY_TEST_TOCKEN_GINTO'})
         reply_from_server = json.loads(resp.data)
         print (reply_from_server)
         self.assertEqual(reply_from_server['status'], main.ReturnCodes.ERROR_INVALID_PARAM)
@@ -85,7 +88,7 @@ class RESTTests(unittest.TestCase):
         """
         Test REST API /api/book/<isbn13>
         """
-        resp = self.app.get('/api/book/123-1234567890')
+        resp = self.app.get('/api/book/123-1234567890', headers={'Authorization': 'Bearer DUMMY_TEST_TOCKEN_GINTO'})
         reply_from_server = json.loads(resp.data)
         print (reply_from_server)
         self.assertEqual(reply_from_server['status'], main.ReturnCodes.SUCCESS)
@@ -101,7 +104,7 @@ class RESTTests(unittest.TestCase):
         """
         Test REST API /api/books>
         """
-        resp = self.app.get('/api/books')
+        resp = self.app.get('/api/books', headers={'Authorization': 'Bearer DUMMY_TEST_TOCKEN_GINTO'})
 
         reply_from_server = json.loads(resp.data)
         print("----------------------GET api/books response----------------------------")
@@ -126,7 +129,7 @@ class RESTTests(unittest.TestCase):
         """
         print("------------------test_api_fulfill_order enter--------------------------------")
        
-        resp = self.app.put('/api/fulfillorder/33')
+        resp = self.app.put('/api/fulfillorder/33', headers={'Authorization': 'Bearer DUMMY_TEST_TOCKEN_GINTO'})
         reply_from_server = json.loads(resp.data)
         print (reply_from_server)
         self.assertEqual(reply_from_server['status'], main.ReturnCodes.SUCCESS)
@@ -140,7 +143,7 @@ class RESTTests(unittest.TestCase):
         """
         print("------------------test_api_fulfill_order_fail enter--------------------------------")
        
-        resp = self.app.put('/api/fulfillorder/987')
+        resp = self.app.put('/api/fulfillorder/987', headers={'Authorization': 'Bearer DUMMY_TEST_TOCKEN_GINTO'})
         reply_from_server = json.loads(resp.data)
         print (reply_from_server)
         self.assertEqual(reply_from_server['status'], main.ReturnCodes.ERROR_OBJECT_NOT_FOUND)
@@ -153,7 +156,7 @@ class RESTTests(unittest.TestCase):
         Test REST API /api/neworder
         """
         new_order = {"CustomerId" : 2, "Items" : [ {"BookId": "978-1503215678", "qty" : 1} ] }
-        response = self.app.post('/api/neworder', data = json.dumps(new_order), content_type='application/json')
+        response = self.app.post('/api/neworder', data = json.dumps(new_order), content_type='application/json', headers={'Authorization': 'Bearer DUMMY_TEST_TOCKEN_GINTO'})
         print ("Response status ", response)
         resp_from_server = json.loads(response.data)
         print ("Response data ", resp_from_server)
