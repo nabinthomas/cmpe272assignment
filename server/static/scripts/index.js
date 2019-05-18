@@ -122,7 +122,7 @@ class EnterWebsiteLink extends React.Component {
       return createElement(
         'a',
         { 
-          href:"/cookie"
+          href:"https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=http://localhost/api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123"
         },
         'Login'
       );

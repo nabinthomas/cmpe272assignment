@@ -169,15 +169,6 @@ def encodeJsonResponse(reply, statuscode):
     """
     return jsonify({ "status" : statuscode, "response" : reply});
 
-@app.route('/logout', methods=['GET'])
-def logout():
-    redirect_to_index = redirect('/')
-    response = app.make_response(redirect_to_index )  
-    response.set_cookie('auth_token',value='', expires=0)
-    response.set_cookie('userFullName',value='', expires=0)
-    ## TODO Clear all cookies here. 
-    return response
-
 @app.route('/cookie', methods=['GET'])
 def create_cookie():
     redirect_to_index = redirect('/')
@@ -330,6 +321,19 @@ def get_id_token_payload(token):
                                 " token."}, 401)
     
 
+@app.route('/logout', methods=['GET'])
+def page_logout():
+    rendered_page = render_template('logout.html', 
+                LogoutMessage="You have been Logged out sucessfully",
+                ExtraDetails=''
+			);
+    response = app.make_response(rendered_page )  
+    response.set_cookie('auth_token', value='', expires=0)
+    response.set_cookie('userFullName', value='', expires=0)
+    response.set_cookie('userEmailId', value='', expires=0)
+    response.set_cookie('customerId', value='', expires=0)
+    ## TODO Clear all cookies here. 
+    return response
 
 @app.route('/api/loginsuccess', methods=['GET'])
 def loginSuccess():
@@ -343,7 +347,7 @@ def loginSuccess():
     print ("Enter /api/loginsuccess");
     app.logger.info("Enter /api/loginsuccess")
     
-    response = {};
+    loginStatus = ReturnCodes.ERROR_AUTHENTICATE;
     payload = request.args;
     print ("Client login request: [", payload, "]")
 
@@ -381,29 +385,43 @@ def loginSuccess():
         try:
             id_token_payload = get_id_token_payload(data["id_token"]) 
             print("id_token_payload got  ")
+            print("id_token_payload got" + json.dumps(id_token_payload) )
+            customerEmail = id_token_payload ['email']
+            customerName = id_token_payload['name']
+            accessToken = data["access_token"]
+            print("calling update_customer_session_data")
+            update_customer_session_data(db, customerEmail, customerName, accessToken)
+            print("calling Done update_customer_session_data")
+            extraData = {
+                "Received" : {
+                    "code" : code,
+                    "state" : state
+                },
+                "access_token" : data["access_token"]
+            }
+            loginStatus = ReturnCodes.SUCCESS;
         except Exception as e:
             print ('get_id_token_payload Failed : '+ str(e))
-            return encodeJsonResponse(response, ReturnCodes.ERROR_AUTHENTICATE);
-        print("id_token_payload got" + json.dumps(id_token_payload) )
-        customerEmail = id_token_payload ['email']
-        customerName = id_token_payload['name']
-        accessToken = data["access_token"]
-        print("calling update_customer_session_data")
-        update_customer_session_data(db, customerEmail, customerName, accessToken)
-        print("calling Done update_customer_session_data")
-        response = {
-            "Received" : {
-                "code" : code,
-                "state" : state
-            },
-            "access_token" : data["access_token"]
-        }
-
-        
-        return encodeJsonResponse(response, ReturnCodes.SUCCESS);
+            loginStatus = ReturnCodes.ERROR_AUTHENTICATE;
+        loginStatus = ReturnCodes.SUCCESS;
     except Exception as e:
         print ('Failed : '+ str(e))
-        return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM);
+        loginStatus = ReturnCodes.ERROR_AUTHENTICATE;
+
+    if (loginStatus == ReturnCodes.SUCCESS):
+        redirect_to_index = redirect('/')
+        response = app.make_response(redirect_to_index)  
+        restrictTo = request.host
+        if (restrictTo == "localhost"):
+            restrictTo= None
+        # TODO change value to setup the Auth token and move this to loginsuccess handler
+        response.set_cookie('auth_token',value=extraData['access_token'], domain=restrictTo)
+        response.set_cookie('userFullName',value=customerName, domain=restrictTo)
+        return response
+    else:
+        redirect_to_index = redirect('/logout')
+        response = app.make_response(redirect_to_index)  
+        return response
 
 
 @app.route('/api/neworder', methods=['POST'])
