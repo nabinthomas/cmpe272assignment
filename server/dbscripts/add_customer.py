@@ -3,6 +3,57 @@ import pymongo
 import bson
 from bson.objectid import ObjectId
 
+
+
+def find_customer_email(db, accessToken):
+    '''
+    Find the customer email id 
+    param db - reference to the db ob
+    param accessToken - Access Token 
+    returns en=mail id when success 
+    {} on fail  {"email" : "nabin.thomas@gmail.com", "name" : "Nabin Thomas" }
+    '''
+     
+    # Created or Switched to collection name: customers 
+    customer_collection = db['customers'] 
+    dbReturn = customer_collection.find_one ({'accessToken': accessToken}) 
+    if (dbReturn is None) :
+        print ("find_customer_email fail")
+        return None
+    else :
+        print(dbReturn)
+        return dbReturn["email"]
+
+
+
+def update_customer_session_data(db, customerEmail, customerName, accessToken):
+    '''
+    Update session data for customer
+    param db - reference to the db ob
+    param customerEmail - Customer Email 
+    param customerName - Customer Name 
+    param accessToken - Access Token 
+        {"email" : "nabin.thomas@gmail.com", "name" : "Nabin Thomas" }
+    return 0 when successful, -1 when failed. 
+    '''
+    print("update_customer_session_data " + customerEmail +" "+ customerName+" " + accessToken )
+    # Created or Switched to collection name: customers 
+    customer_collection = db['customers'] 
+    dbReturn = customer_collection.find_one_and_update({'email':customerEmail,'name':customerName},
+                                                        {'$set': {'accessToken': accessToken}},
+                                                        return_document=pymongo.ReturnDocument.AFTER) 
+    if dbReturn is None:
+        customerInfo = {"email" : customerEmail, "name" : customerName }
+        add_new_customer(db, customerInfo)
+        dbReturn = customer_collection.find_one_and_update({'email':customerEmail,'name':customerName},
+                                                        {'$set': {'accessToken': accessToken}},
+                                                        return_document=pymongo.ReturnDocument.AFTER) 
+
+    upserted_record = customer_collection.find_one({'email':customerEmail,'name':customerName}) 
+    print(upserted_record)
+
+    return upserted_record
+
 def add_new_customer(db, customerInfo):
     '''
     Adds a new Customer
@@ -23,7 +74,6 @@ def add_new_customer(db, customerInfo):
         
     
     collection.create_index( [("email", pymongo.ASCENDING) ], unique = True )
-    
     customerInfo["customerId"] = ObjectId();
     
     try:

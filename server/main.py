@@ -1,6 +1,6 @@
 """ @package Main entry point for Web server.
 """
-  
+import json
 import datetime
 import pytz
 from flask import Flask, render_template, jsonify, request
@@ -12,12 +12,18 @@ from server.dbscripts.fulfill_order import *
 from server.dbscripts.add_to_cart import *
 import sys
 import http.client
+from jose import jwt
+from functools import wraps
+from six.moves.urllib.request import urlopen
 
 ## Create the App
 app = Flask(__name__)
 db = None;
 mongo_client = None;
-
+AUTH0_DOMAIN = "nthomas.auth0.com"
+ALGORITHMS = ["RS256"]
+API_IDENTIFIER = "http://0.0.0.0:3010/api/private"
+token = ""
 '''
 @app.route('/mongo')
 def mongo():
@@ -172,6 +178,130 @@ def deleteUser():
     """
     return encodeJsonResponse({}, ReturnCodes.ERROR_NOT_IMPLEMENTED);
 
+def get_token_auth_header():
+    """Obtains the access token from the Authorization Header
+    """
+    auth = request.headers.get("Authorization", None)
+    if not auth:
+        raise AuthError({"code": "authorization_header_missing",
+                        "description":
+                            "Authorization header is expected"}, 401)
+
+    parts = auth.split()
+
+    if parts[0].lower() != "bearer":
+        raise AuthError({"code": "invalid_header",
+                        "description":
+                            "Authorization header must start with"
+                            " Bearer"}, 401)
+    elif len(parts) == 1:
+        raise AuthError({"code": "invalid_header",
+                        "description": "Token not found"}, 401)
+    elif len(parts) > 2:
+        raise AuthError({"code": "invalid_header",
+                        "description":
+                            "Authorization header must be"
+                            " Bearer token"}, 401)
+
+    token = parts[1]
+    return token
+
+class AuthError(Exception):
+    def __init__(self, error, status_code):
+        self.error = error
+        self.status_code = status_code
+
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
+
+
+def requires_auth(f):
+    """Determines if the access token is valid
+    """
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        print ("Enter requires_auth  ")
+        #validate email-id and access_token 
+        token = get_token_auth_header() #get access token 
+        customerEmail = find_customer_email(db, token)
+        if(customerEmail is None) :
+            print ("Exit requires_auth : Error : customer email not found")
+            raise AuthError({"code": "invalid_header",
+                        "description": "Invalid header. "
+                        "Incorrect Access Token"}, 401) 
+        return f(*args, **kwargs)
+    return decorated
+
+def get_id_token_payload(token):
+    """Determines if the access token is valid
+    """
+     
+    print ("Enter get_id_token_payload")
+ 
+    print ("requires_auth token = " + token )
+    jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
+    jwks = json.loads(jsonurl.read().decode("utf8"))
+    print ("jwks" + jsonurl.read().decode("utf8"))
+
+    try:
+        unverified_header = jwt.get_unverified_header(token)
+    except jwt.JWTError:
+        raise AuthError({"code": "invalid_header",
+                        "description":
+                        "Invalid header. "
+                        "Use an RS256 signed JWT Access Token"}, 401)
+    if unverified_header["alg"] == "HS256":
+        raise AuthError({"code": "invalid_header HS",
+                        "description":
+                        "Invalid header. "
+                        "Use an HS S256 signed JWT Access Token"}, 401)
+    rsa_key = {}
+    for key in jwks["keys"]:
+        if key["kid"] == unverified_header["kid"]:
+            rsa_key = {
+                "kty": key["kty"],
+                "kid": key["kid"],
+                "use": key["use"],
+                "n": key["n"],
+                "e": key["e"]
+            }
+    print("rsa_key =", rsa_key)
+    if rsa_key:
+        try:
+            payload = jwt.decode(
+                token,
+                rsa_key,
+                algorithms=ALGORITHMS,
+                audience="QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG",
+                issuer="https://"+AUTH0_DOMAIN+"/"
+                
+            )
+
+            print( "payload :" , json.dumps(payload, indent=2))
+            #return json.dumps(payload, indent=2)
+            return  payload 
+        except jwt.ExpiredSignatureError:
+            raise AuthError({"code": "token_expired",
+                            "description": "token is expired"}, 401)
+        except jwt.JWTClaimsError as e:
+            print(e)
+            #print(API_IDENTIFIER)
+            raise AuthError({"code": "invalid_claims",
+                            "description":
+                                "incorrect claims,"
+                                " please check the audience and issuer"}, 401)
+        except Exception:
+            raise AuthError({"code": "invalid_header",
+                            "description":
+                                "Unable to parse authentication"
+                                " token."}, 401)
+    
+
+
 @app.route('/api/loginsuccess', methods=['GET'])
 def loginSuccess():
     """
@@ -199,12 +329,13 @@ def loginSuccess():
         CLIENT_ID = 'QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG'
         CLIENT_SECRET = 'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ' 
         AUTHORIZATION_CODE = code
+        #AUTH0_DOMAIN = "nthomas.auth0.com"
         payload = 'grant_type=authorization_code&client_id=' + CLIENT_ID + \
                     '&client_secret=' + CLIENT_SECRET + \
                     '&code=' + AUTHORIZATION_CODE + \
                     '&redirect_uri=http://localhost/api/loginsuccess'
 
-        fullurl = "https://nthomas.auth0.com/oauth/token" + payload
+        fullurl = "https://" + AUTH0_DOMAIN + "/oauth/token" + payload
         print (fullurl)
 
         headers = { 'content-type': 'application/x-www-form-urlencoded' }
@@ -212,15 +343,29 @@ def loginSuccess():
         conn.request("POST", "/oauth/token", payload, headers)
 
         res = conn.getresponse()
-        data = res.read()
-
-        print(data.decode("utf-8"))
-
+        datareceived = res.read()
+        print("Data is = " , datareceived.decode("utf-8"))
+        data = json.loads(datareceived.decode("utf-8"))
+        print("Data was = " , datareceived.decode("utf-8"))
+        try:
+            id_token_payload = get_id_token_payload(data["id_token"]) 
+            print("id_token_payload got  ")
+        except Exception as e:
+            print ('get_id_token_payload Failed : '+ str(e))
+            return encodeJsonResponse(response, ReturnCodes.ERROR_AUTHENTICATE);
+        print("id_token_payload got" + json.dumps(id_token_payload) )
+        customerEmail = id_token_payload ['email']
+        customerName = id_token_payload['name']
+        accessToken = data["access_token"]
+        print("calling update_customer_session_data")
+        update_customer_session_data(db, customerEmail, customerName, accessToken)
+        print("calling Done update_customer_session_data")
         response = {
             "Received" : {
                 "code" : code,
                 "state" : state
-            }
+            },
+            "access_token" : data["access_token"]
         }
         return encodeJsonResponse(response, ReturnCodes.SUCCESS);
     except Exception as e:
@@ -289,11 +434,14 @@ def fulfillorder_orderid(orderid):
     return encodeJsonResponse({"Status" : status }, returnCode);
 
 @app.route('/api/books', methods=['GET'])
+@requires_auth
 def books():
     """
     Handle API to request details of all books
     eg: curl -XGET http://localhost/api/books
     """
+    print( "Entering  books")
+
     response = {}
     books,total_book_count,page_count = get_all_books(db, 0, 0)
     if books is None:
@@ -310,6 +458,7 @@ def books():
     return encodeJsonResponse(response, returnCode)
 
 @app.route('/api/book', methods=['GET'])
+@requires_auth
 def book_default():
     """
     Handle and error out case when book detail is requested without a book isbn number
@@ -320,6 +469,7 @@ def book_default():
 
 
 @app.route('/api/book/<string:isbn13>', methods=['GET'])
+@requires_auth
 def book_isbn(isbn13):
     """
     Get the details about a book. 
@@ -339,22 +489,9 @@ def book_isbn(isbn13):
         returnCode = ReturnCodes.SUCCESS
     return encodeJsonResponse(response, returnCode);
 
-'''
-def is_valid_json(func):
-    def wrapper():
-        print("Something is happening before the function is X called.")
-        response = {}
-        if request == None :
-            print("Returning ERROR_INVALID_PARAM.")
-            raise Exception("Both x and y have to be positive")
-        else :
-            print(" request is not non.  .", str(request))
-            #return encodeJsonResponse(response, ReturnCodes.ERROR_INVALID_PARAM);
-        return func()
-    return wrapper
-'''
+
 @app.route('/api/addtocart', methods=['POST'])
-#@is_valid_json
+@requires_auth
 def addToCart():
     """
     API To add book to cart
@@ -380,6 +517,7 @@ def addToCart():
     return encodeJsonResponse(response, returnCode);
 
 @app.route('/api/deletecart', methods=['DELETE'])
+@requires_auth
 def deleteCart():
     """
     API To delete user's cart
@@ -406,6 +544,7 @@ def deleteCart():
     return encodeJsonResponse(response, returnCode);
 
 @app.route('/api/placeorder', methods=['POST'])
+@requires_auth
 def placeOrder():
     """
     API To place order from customer cart
@@ -449,6 +588,7 @@ def placeOrder():
     return encodeJsonResponse(response, returnCode);
 
 @app.route('/api/cart/<int:customerId>', methods=['GET'])
+@requires_auth
 def customer_cart(customerId):
     """
     Get the details about a customer's cart. 
