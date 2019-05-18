@@ -4,19 +4,24 @@ import bson
 from bson.objectid import ObjectId
 
 
+def find_customer_with_token(db, accessToken):
+    """
+    Find a customer record who owns the accessToken supplied
+    returns the customer record when successful, or None when not found
+    """
+    customer_collection = db['customers'] 
+    dbReturn = customer_collection.find_one ({'accessToken': accessToken}) 
+    return dbReturn
 
 def find_customer_email(db, accessToken):
     '''
     Find the customer email id 
     param db - reference to the db ob
     param accessToken - Access Token 
-    returns en=mail id when success 
-    {} on fail  {"email" : "nabin.thomas@gmail.com", "name" : "Nabin Thomas" }
+    returns email id when success, None on failure
     '''
-     
-    # Created or Switched to collection name: customers 
-    customer_collection = db['customers'] 
-    dbReturn = customer_collection.find_one ({'accessToken': accessToken}) 
+    dbReturn = find_customer_with_token(db, accessToken)
+
     if (dbReturn is None) :
         print ("find_customer_email fail")
         return None
