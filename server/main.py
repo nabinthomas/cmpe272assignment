@@ -335,6 +335,20 @@ def page_logout():
     ## TODO Clear all cookies here. 
     return response
 
+@app.route('/loginfailed/<string:errorCode>', methods=['GET'])
+def page_loginFailed(errorCode):
+    rendered_page = render_template('logout.html', 
+            LogoutMessage="Login Failed !!!",
+            ExtraDetails=errorCode
+        );
+    response = app.make_response(rendered_page )  
+    response.set_cookie('auth_token', value='', expires=0)
+    response.set_cookie('userFullName', value='', expires=0)
+    response.set_cookie('userEmailId', value='', expires=0)
+    response.set_cookie('customerId', value='', expires=0)
+    ## TODO Clear all cookies here. 
+    return response
+
 @app.route('/api/loginsuccess', methods=['GET'])
 def loginSuccess():
     """
@@ -344,8 +358,12 @@ def loginSuccess():
     open in browser: https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=http://localhost/api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123
     then login. and then this will be called with code and state as params. 
     """
+    
     print ("Enter /api/loginsuccess");
     app.logger.info("Enter /api/loginsuccess")
+    customerEmail = ''
+    customerName = ''
+    accessToken = ''
     
     loginStatus = ReturnCodes.ERROR_AUTHENTICATE;
     payload = request.args;
@@ -419,7 +437,8 @@ def loginSuccess():
         response.set_cookie('userFullName',value=customerName, domain=restrictTo)
         return response
     else:
-        redirect_to_index = redirect('/logout')
+        redirect_url = '/loginfailed/' + loginStatus
+        redirect_to_index = redirect(redirect_url)
         response = app.make_response(redirect_to_index)  
         return response
 
