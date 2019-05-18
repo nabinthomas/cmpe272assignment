@@ -3,7 +3,7 @@
 import json
 import datetime
 import pytz
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect
 import pymongo  
 from pymongo import MongoClient
 from server.dbscripts.list_books import *
@@ -79,10 +79,18 @@ def mainPage():
     """ Handle request for default page. 
     """
     now = datetime.datetime.now(pytz.timezone('US/Pacific'));
+    
+    loggedinUser='Guest'
+
+    # TODO: Validate the auth_token and Get the Users full name from the session information. 
+    if (request.cookies.get('auth_token') is not None):
+        loggedinUser = request.cookies.get('userFullName')
+
 
     return render_template('default.html', 
 			serverTime=now, 
 			pageWelcomeMessage="Welcome aMAZE.com Online Book Store", 
+            userFullName=loggedinUser,
 			pageTitle="aMAZE.com Online Book Store",
             teamMembers=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
 
@@ -160,6 +168,27 @@ def encodeJsonResponse(reply, statuscode):
     @param statuscode -> one of the values from ReturnCodes, for the status of the operation. 
     """
     return jsonify({ "status" : statuscode, "response" : reply});
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    redirect_to_index = redirect('/')
+    response = app.make_response(redirect_to_index )  
+    response.set_cookie('auth_token',value='', expires=0)
+    response.set_cookie('userFullName',value='', expires=0)
+    ## TODO Clear all cookies here. 
+    return response
+
+@app.route('/cookie', methods=['GET'])
+def create_cookie():
+    redirect_to_index = redirect('/')
+    response = app.make_response(redirect_to_index)  
+    restrictTo = request.host
+    if (restrictTo == "localhost"):
+        restrictTo= None
+    # TODO change value to setup the Auth token and move this to loginsuccess handler
+    response.set_cookie('auth_token',value='Nabin', domain=restrictTo)
+    response.set_cookie('userFullName',value='Nabin Thomas', domain=restrictTo)
+    return response
 
 @app.route('/api', methods=['GET'])
 def help():
@@ -311,8 +340,10 @@ def loginSuccess():
     open in browser: https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=http://localhost/api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123
     then login. and then this will be called with code and state as params. 
     """
-
-    response = {}
+    print ("Enter /api/loginsuccess");
+    app.logger.info("Enter /api/loginsuccess")
+    
+    response = {};
     payload = request.args;
     print ("Client login request: [", payload, "]")
 
@@ -367,6 +398,8 @@ def loginSuccess():
             },
             "access_token" : data["access_token"]
         }
+
+        
         return encodeJsonResponse(response, ReturnCodes.SUCCESS);
     except Exception as e:
         print ('Failed : '+ str(e))
