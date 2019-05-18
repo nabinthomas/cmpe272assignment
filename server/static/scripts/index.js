@@ -1,3 +1,5 @@
+import * as cookies from '/static/scripts/cookies.js';
+
 'use strict';
 
 const createElement = React.createElement;
@@ -76,22 +78,6 @@ class RestAPITestButton extends React.Component {
   }
 }
 
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i <ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
-
 class EnterWebsiteLink extends React.Component {
   constructor(props) {
     super(props);
@@ -104,7 +90,7 @@ class EnterWebsiteLink extends React.Component {
   componentDidMount() {
     // TODO: Validate Cookie
     // console.log("Cookie read " + getCookie('auth_token'))
-    if (getCookie('auth_token') != ""){
+    if (cookies.getCookie('auth_token') != ""){
       this.setState({ logged_in: true });
     }
   }
