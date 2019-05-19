@@ -57,44 +57,58 @@
             text-align: center;
         }
     </style>
-  </head>
-  <body>
-        <table  class=cart_table align="center">
-            <thead class=cart_header> 
-                <th align="left" width=50%>
-                    <a href="/">aMAZE.com </a> > Cart
-                </th>
-                <th align="right" id="logout_button" width=50%>
-                        
-                </th>
-            </thead>
-        </table>
-        <table  class=cart_table align="center">
-            <thead class=cart_header id=cart_list_heading> 
-                <th align="center">
-                    Loading your Shopping Cart
-                </th>
-            </thead>
-            <tbody class=cart_list id=cart_list_data> 
-                <td colspan="3" class=count_cell> Your Cart is Empty </td>
-            </tbody>
-        </table>
-        <table  class=cart_table align="center" id=action_list>
-            <thead class=cart_header>  
-                <th class=button_cell id=cancel_order_button>
-                    Cancel Order
-                </th>
-                <th class=button_cell id=place_order_button>
-                    Place Order
-                </th>
-                <tbody>
-                    <td class=button_cell colspan=3>
-                        <div id=statusmessage>
+    </head>
+    <body>
+        <table  align="center">
+            <tr>
+                <td>
+                    <table  align="center">
+                        <thead > 
+                            <th align="left" width=50%>
+                                    <img style="float: left; margin: 0px 15px 0px 0px;" src="/static/favicon.png" width="20" height="20" /><a href="/">aMAZE.com </a> > Cart
+                            </th>
+                            <th align="right" id="logout_button" width=50%>
+                                    
+                            </th>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table  class=cart_table align="center">
+                        <thead class=cart_header id=cart_list_heading> 
+                            <th align="center">
+                                Loading your Shopping Cart
+                            </th>
+                        </thead>
+                        <tbody class=cart_list id=cart_list_data> 
+                            <td colspan="3" class=count_cell> Your Cart is Empty </td>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table  class=cart_table align="center" id=action_list>
+                        <thead class=cart_header>  
+                            <th class=button_cell id=cancel_order_button>
+                                Cancel Order
+                            </th>
+                            <th class=button_cell id=place_order_button>
+                                Place Order
+                            </th>
+                            <tbody>
+                                <td class=button_cell colspan=3>
+                                    <div id=statusmessage>
 
-                        </div>
-                    </td>
-                </tbody>
-            </thead>
+                                    </div>
+                                </td>
+                            </tbody>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
         </table>
     
         <!-- BEGIN REACT IMPORTS -->
@@ -105,4 +119,5 @@
         <script type="module"  src="/static/scripts/logout.js"></script>
         <script type="module"  src="/static/scripts/autohomepage.js"></script>
         <!-- END REACT IMPORTS -->
-  </body>
+     </body>
+</html>
