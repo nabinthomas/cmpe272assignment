@@ -31,7 +31,7 @@ def find_customer_email(db, accessToken):
 
 
 
-def update_customer_session_data(db, customerEmail, customerName, accessToken):
+def update_customer_session_data(db, customerEmail, customerName, customerPicture, accessToken):
     '''
     Update session data for customer
     param db - reference to the db ob
@@ -45,13 +45,13 @@ def update_customer_session_data(db, customerEmail, customerName, accessToken):
     # Created or Switched to collection name: customers 
     customer_collection = db['customers'] 
     dbReturn = customer_collection.find_one_and_update({'email':customerEmail,'name':customerName},
-                                                        {'$set': {'accessToken': accessToken}},
+                                                        {'$set': {'accessToken': accessToken, 'picture':customerPicture}},
                                                         return_document=pymongo.ReturnDocument.AFTER) 
     if dbReturn is None:
         customerInfo = {"email" : customerEmail, "name" : customerName }
         add_new_customer(db, customerInfo)
         dbReturn = customer_collection.find_one_and_update({'email':customerEmail,'name':customerName},
-                                                        {'$set': {'accessToken': accessToken}},
+                                                        {'$set': {'accessToken': accessToken, 'picture':customerPicture}},
                                                         return_document=pymongo.ReturnDocument.AFTER) 
 
     upserted_record = customer_collection.find_one({'email':customerEmail,'name':customerName}) 

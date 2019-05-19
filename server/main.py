@@ -322,6 +322,7 @@ def page_logout():
     response.set_cookie('userFullName', value='', expires=0)
     response.set_cookie('userEmailId', value='', expires=0)
     response.set_cookie('customerId', value='', expires=0)
+    response.set_cookie('userPicture', value='', expires=0)
     ## TODO Clear all cookies here. 
     return response
 
@@ -336,6 +337,7 @@ def page_loginFailed(errorCode):
     response.set_cookie('userFullName', value='', expires=0)
     response.set_cookie('userEmailId', value='', expires=0)
     response.set_cookie('customerId', value='', expires=0)
+    response.set_cookie('userPicture', value='', expires=0)
     ## TODO Clear all cookies here. 
     return response
 
@@ -396,9 +398,10 @@ def loginSuccess():
             print("id_token_payload got" + json.dumps(id_token_payload) )
             customerEmail = id_token_payload ['email']
             customerName = id_token_payload['name']
+            customerPicture = id_token_payload['picture']
             accessToken = data["access_token"]
             print("calling update_customer_session_data")
-            update_customer_session_data(db, customerEmail, customerName, accessToken)
+            update_customer_session_data(db, customerEmail, customerName, customerPicture, accessToken)
             print("calling Done update_customer_session_data")
             extraData = {
                 "Received" : {
@@ -432,6 +435,7 @@ def loginSuccess():
         response.set_cookie('userFullName',value=customer['name'], domain=restrictTo)
         response.set_cookie('customerId',value=str(customer['customerId']), domain=restrictTo)
         response.set_cookie('userEmailId',value=str(customer['email']), domain=restrictTo)
+        response.set_cookie('userPicture',value=customer['picture'], domain=restrictTo)
         return response
     else:
         redirect_url = '/loginfailed/' + loginStatus

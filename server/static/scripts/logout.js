@@ -38,8 +38,54 @@ class LogoutLink extends React.Component {
     }
   }
   
+  class ProfilePicture extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { 
+        hasPicture: false, 
+      };
+    }
+  
+  
+    componentDidMount() {
+      // TODO: Validate Cookie
+      // console.log("Cookie read " + getCookie('auth_token'))
+      if (cookies.getCookie('userPicture') != ""){
+        this.setState({ hasPicture: true });
+      }
+      else {
+        this.setState({ hasPicture: false });
+      }
+    }
+    render() {
+      if (this.state.hasPicture) {
+        var pictureUrl = cookies.getCookie('userPicture');
+        
+        return createElement(
+          'img',
+          { 
+            style: {
+              float : 'right',
+              margin: '15px 15px 15px 15px'
+            },
+            src : pictureUrl,
+            width : "24",
+            height : "24"
+          }
+        );
+      }
+      else {
+          return createElement('div');
+      }
+    }
+  }
   // const domContainer = document.querySelector('#enter_website_button_container');
   // ReactDOM.render(createElement(RestAPITestButton), domContainer);
   
-  const domContainer = document.querySelector('#logout_button');
-  ReactDOM.render(createElement(LogoutLink), domContainer);
+  const logout = document.querySelector('#logout_button');
+  if (logout)
+    ReactDOM.render(createElement(LogoutLink), logout);
+
+  const profilePic = document.querySelector('#profilePic');
+  if (profilePic)
+    ReactDOM.render(createElement(ProfilePicture), profilePic);
