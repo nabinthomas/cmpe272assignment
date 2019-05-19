@@ -24,8 +24,10 @@ class PlaceOrder extends React.Component {
         // console.log("object = " + this);
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         //console.log("Cart updated ");
-        var customerInfo = {"CustomerId" : 2} ; // TODO Remove HARD CODED Customer ID
+        
         var auth_token = cookies.getCookie('auth_token');
+        var customerId = cookies.getCookie('customerId');
+        var customerInfo = {"CustomerId" : customerId}; 
 
         fetch('/api/placeorder', {
             method: 'POST',
@@ -82,7 +84,7 @@ class CancelOrder extends React.Component {
         document.getElementById('CancelOrder').disabled = true;
         
 
-        var customerInfo = {"CustomerId" : 2} ; // TODO Remove HARD CODED Customer ID
+        
         // '/api/neworder' , DELETE 
         // console.log("Button Clicked" + JSON.stringify(buttonId));
         // console.log("state = " + JSON.stringify(this.state));
@@ -90,7 +92,8 @@ class CancelOrder extends React.Component {
         //console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
         //console.log("Cart updated ");
         var auth_token = cookies.getCookie('auth_token');
-
+        var customerId = cookies.getCookie('customerId');
+        var customerInfo = {"CustomerId" : customerId} ; 
         fetch('/api/deletecart', {
             method: 'DELETE',
             headers: {
@@ -166,7 +169,9 @@ class CartEntriesData extends React.Component{
         this.setState({books: []});
         console.log("Cart: going to call fetch The response from server was : ");
         var auth_token = cookies.getCookie('auth_token');
-        fetch("/api/cart/2", {
+        var customerId = cookies.getCookie('customerId');
+
+        fetch("/api/cart/" + customerId, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
