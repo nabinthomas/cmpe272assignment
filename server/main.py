@@ -332,7 +332,7 @@ def page_loginFailed(errorCode):
             LogoutMessage="Login Failed !!!",
             ExtraDetails=errorCode
         );
-    response = app.make_response(rendered_page )  
+    response = app.make_response(rendered_page)  
     response.set_cookie('auth_token', value='', expires=0)
     response.set_cookie('userFullName', value='', expires=0)
     response.set_cookie('userEmailId', value='', expires=0)
