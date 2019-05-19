@@ -429,14 +429,21 @@ def loginSuccess():
         loginStatus = ReturnCodes.ERROR_AUTHENTICATE;
 
     if (loginStatus == ReturnCodes.SUCCESS):
+        customer = find_customer_with_token(db, accessToken)
+        if customer is None: 
+            loginStatus = ReturnCodes.ERROR_AUTHENTICATE
+
+    if (loginStatus == ReturnCodes.SUCCESS):
         redirect_to_index = redirect('/')
         response = app.make_response(redirect_to_index)  
         restrictTo = request.host
         if (restrictTo == "localhost"):
             restrictTo= None
-        # TODO change value to setup the Auth token and move this to loginsuccess handler
-        response.set_cookie('auth_token',value=extraData['access_token'], domain=restrictTo)
-        response.set_cookie('userFullName',value=customerName, domain=restrictTo)
+        
+        response.set_cookie('auth_token',value=accessToken, domain=restrictTo)
+        response.set_cookie('userFullName',value=customer['name'], domain=restrictTo)
+        response.set_cookie('customerId',value=str(customer['customerId']), domain=restrictTo)
+        response.set_cookie('userEmailId',value=str(customer['email']), domain=restrictTo)
         return response
     else:
         redirect_url = '/loginfailed/' + loginStatus
