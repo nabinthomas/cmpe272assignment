@@ -22,12 +22,14 @@ class LogoutLink extends React.Component {
     }
     render() {
       if (this.state.logged_in) {
+        var signoutString = 'Sign out ' + cookies.getCookie('userFullName') + '(' + cookies.getCookie('userEmailId') + ')';
+        signoutString = 'Sign out';
         return createElement(
           'a',
           { 
             href : '/logout'
           },
-          'Sign out ' + cookies.getCookie('userFullName') + '(' + cookies.getCookie('userEmailId') + ')'
+          signoutString
         );
       }
       else {
