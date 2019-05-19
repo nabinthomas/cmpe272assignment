@@ -169,18 +169,6 @@ def encodeJsonResponse(reply, statuscode):
     """
     return jsonify({ "status" : statuscode, "response" : reply});
 
-@app.route('/cookie', methods=['GET'])
-def create_cookie():
-    redirect_to_index = redirect('/')
-    response = app.make_response(redirect_to_index)  
-    restrictTo = request.host
-    if (restrictTo == "localhost"):
-        restrictTo= None
-    # TODO change value to setup the Auth token and move this to loginsuccess handler
-    response.set_cookie('auth_token',value='Nabin', domain=restrictTo)
-    response.set_cookie('userFullName',value='Nabin Thomas', domain=restrictTo)
-    return response
-
 @app.route('/api', methods=['GET'])
 def help():
     """
