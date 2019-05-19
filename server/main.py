@@ -666,7 +666,7 @@ def placeOrder():
             
     return encodeJsonResponse(response, returnCode);
 
-@app.route('/api/cart/<int:customerId>', methods=['GET'])
+@app.route('/api/cart/<string:customerId>', methods=['GET'])
 @requires_auth
 def customer_cart(customerId):
     """

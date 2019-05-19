@@ -19,8 +19,9 @@ class AddToCartButton extends React.Component {
         // console.log("state = " + JSON.stringify(this.state));
         // console.log("object = " + this);
         // console.log("Adding to Cart, Book with ISBN = " + this.state.isbn13);
+        var customerId = cookies.getCookie('customerId');
         var order = {
-            CustomerId : 2,  // TODO Use the right Customer ID
+            CustomerId : customerId,  // TODO Use the right Customer ID
             Items : {
                 BookId: this.state.isbn13, 
                 qty : 1
@@ -142,7 +143,9 @@ class BookListData extends React.Component{
         
         // console.log(booklist);
         var auth_token = cookies.getCookie('auth_token')
-        fetch("/api/cart/2", {
+        var customerId = cookies.getCookie('customerId');
+
+        fetch("/api/cart/" + customerId, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',

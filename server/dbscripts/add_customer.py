@@ -79,7 +79,7 @@ def add_new_customer(db, customerInfo):
         
     
     collection.create_index( [("email", pymongo.ASCENDING) ], unique = True )
-    customerInfo["customerId"] = ObjectId();
+    customerInfo["customerId"] = str(ObjectId());
     
     try:
         dbReturn = collection.insert_one(customerInfo)
