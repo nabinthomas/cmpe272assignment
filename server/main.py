@@ -309,7 +309,18 @@ def get_id_token_payload(token):
                             "description":
                                 "Unable to parse authentication"
                                 " token."}, 401)
-    
+
+def clear_all_cookies(response):
+    """
+    Helper function to clear Cookies set by this application. 
+    Add Any additional cookies if set anywhere else to the end of the list
+    """
+    response.set_cookie('auth_token', value='', expires=0)
+    response.set_cookie('userFullName', value='', expires=0)
+    response.set_cookie('userEmailId', value='', expires=0)
+    response.set_cookie('customerId', value='', expires=0)
+    response.set_cookie('userPicture', value='', expires=0)
+    return response
 
 @app.route('/logout', methods=['GET'])
 def page_logout():
@@ -318,12 +329,7 @@ def page_logout():
                 ExtraDetails=''
 			);
     response = app.make_response(rendered_page )  
-    response.set_cookie('auth_token', value='', expires=0)
-    response.set_cookie('userFullName', value='', expires=0)
-    response.set_cookie('userEmailId', value='', expires=0)
-    response.set_cookie('customerId', value='', expires=0)
-    response.set_cookie('userPicture', value='', expires=0)
-    ## TODO Clear all cookies here. 
+    response = clear_all_cookies(response)
     return response
 
 @app.route('/loginfailed/<string:errorCode>', methods=['GET'])
@@ -333,12 +339,7 @@ def page_loginFailed(errorCode):
             ExtraDetails=errorCode
         );
     response = app.make_response(rendered_page)  
-    response.set_cookie('auth_token', value='', expires=0)
-    response.set_cookie('userFullName', value='', expires=0)
-    response.set_cookie('userEmailId', value='', expires=0)
-    response.set_cookie('customerId', value='', expires=0)
-    response.set_cookie('userPicture', value='', expires=0)
-    ## TODO Clear all cookies here. 
+    response = clear_all_cookies(response)
     return response
 
 @app.route('/api/loginsuccess', methods=['GET'])
