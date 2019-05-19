@@ -29,8 +29,11 @@ Team members:
 	* Docker hub image: amazeteam/cmpe272assignment:5.0
 	* Github tag 5.0
 6. Assginment 6 - In Progress
-	* Docker hub image: amazeteam/cmpe272assignment:6.0
-	* Github tag 6.0
+	* Docker hub image: amazeteam/cmpe272assignment:6.0 (To be created)
+	* Github tag 6.0 (To be created)
+7. Assginment 8 - In Progress
+	* Docker hub image: amazeteam/cmpe272assignment:7.0 (To be created)
+	* Github tag 6.0 (To be created)
 
 ## Build instructions
 1. Install git and Sync code to your local machine. (to ```<gitroot>```)
