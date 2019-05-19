@@ -28,9 +28,9 @@ Team members:
 5. Assginment 5 - Submitted
 	* Docker hub image: amazeteam/cmpe272assignment:5.0
 	* Github tag 5.0
-6. Assginment 6 - In Progress
-	* Docker hub image: amazeteam/cmpe272assignment:6.0 (To be created)
-	* Github tag 6.0 (To be created)
+6. Assginment 6 - Ready to submit
+	* Docker hub image: amazeteam/cmpe272assignment:6.0 
+	* Github tag 6.0 
 7. Assginment 8 - In Progress
 	* Docker hub image: amazeteam/cmpe272assignment:7.0 (To be created)
 	* Github tag 6.0 (To be created)
