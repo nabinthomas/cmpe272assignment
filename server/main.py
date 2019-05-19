@@ -89,7 +89,7 @@ def mainPage():
 
     return render_template('default.html', 
 			serverTime=now, 
-			pageWelcomeMessage="Welcome aMAZE.com Online Book Store", 
+			pageWelcomeMessage="Welcome to aMAZE.com Online Book Store", 
             userFullName=loggedinUser,
 			pageTitle="aMAZE.com Online Book Store",
             teamMembers=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
