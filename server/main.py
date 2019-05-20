@@ -23,6 +23,9 @@ mongo_client = None;
 AUTH0_DOMAIN = "nthomas.auth0.com"
 ALGORITHMS = ["RS256"]
 API_IDENTIFIER = "http://0.0.0.0:3010/api/private"
+CLIENT_ID = 'QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG'
+CLIENT_SECRET = 'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ' 
+
 token = ""
 '''
 @app.route('/mongo')
@@ -372,8 +375,6 @@ def loginSuccess():
 
         #payload = "{\"code\":str(code),\"client_id\":\"QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG\",\"client_secret\":\"aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ\",\"audience\":\"http://localhost/login\",\"grant_type\":\"client_credentials\"}"
         #payload = "grant_type=authorization_code&client_id=%24%7Baccount.clientId%7D&client_secret=YOUR_CLIENT_SECRET&code=YOUR_AUTHORIZATION_CODE&redirect_ui=https%3A%2F%2F%24%7Baccount.callback%7D"
-        CLIENT_ID = 'QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG'
-        CLIENT_SECRET = 'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ' 
         AUTHORIZATION_CODE = code
         #AUTH0_DOMAIN = "nthomas.auth0.com"
         payload = 'grant_type=authorization_code&client_id=' + CLIENT_ID + \
