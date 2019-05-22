@@ -23,6 +23,7 @@ jobs:
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
         - docker build -t amazeteam/cmpe272assignment:$TAG -f docker/Dockerfile .
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
         - docker push amazeteam/cmpe272assignment:$TAG
         - docker logout
 
