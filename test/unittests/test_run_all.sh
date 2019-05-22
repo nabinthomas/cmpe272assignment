@@ -4,9 +4,9 @@
 service mongodb start
 ut_dir=/root/test/unittests
 
+export FLASK_ENV=development
 export SERVER_CONFIG=/root/app/server/config/settings.cfg
 
-#cd ${ut_dir}
 #Test import scripts
 bash ${ut_dir}/test_import_books.sh
 if [ "$?" -ne 0 ]

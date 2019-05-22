@@ -14,6 +14,7 @@ jobs:
     - stage: docker_image_unit_test
       script: 
         - docker --version
+        - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
         - docker run --rm amazeteam/cmpe272assignment unittest
 
@@ -21,9 +22,9 @@ jobs:
       script: 
         - docker --version
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+        - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
         - docker build -t amazeteam/cmpe272assignment:$TAG -f docker/Dockerfile .
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
         - docker push amazeteam/cmpe272assignment:$TAG
         - docker logout
 
