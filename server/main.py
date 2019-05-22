@@ -15,19 +15,20 @@ import http.client
 from jose import jwt
 from functools import wraps
 from six.moves.urllib.request import urlopen
-import os
+
 
 ## Create the App
 app = Flask(__name__)
 db = None;
 mongo_client = None;
+app.config.from_envvar('SERVER_CONFIG');
 
 AUTH0_DOMAIN = "nthomas.auth0.com"
 ALGORITHMS = ["RS256"]
 API_IDENTIFIER = "http://0.0.0.0:3010/api/private"
 CLIENT_ID = 'QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG'
-CLIENT_SECRET = 'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ' 
-# CLIENT_SECRET = os.environ['CLIENT_SECRET']
+#CLIENT_SECRET = 'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ' 
+CLIENT_SECRET = app.config['CLIENT_SECRET']
 
 token = ""
 '''
@@ -333,7 +334,8 @@ def page_logout():
     accessToken = request.cookies.get('auth_token')
     if (accessToken is not None):
         customer = find_customer_with_token(db, accessToken)
-        update_customer_session_data(db, customer['email'], customer['name'], '', '')
+        if (customer is not None):
+            update_customer_session_data(db, customer['email'], customer['name'], '', '')
 
     rendered_page = render_template('logout.html', 
                 LogoutMessage="You have been Logged out sucessfully",

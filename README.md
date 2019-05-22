@@ -41,7 +41,7 @@ Team members:
 3. Build docker image
 ```bash
     cd <gitroot>/ 
-    docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
+    export AUTHO_CLIENT_SECRET="'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ'""; echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET"; docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
 ```
 ## Modifying files with Git branches
 1. Create clone of the repository.	
@@ -87,7 +87,8 @@ Team members:
 5. Kill the current server and rebuild/restart. 
 ```bash
 	cd <gitroot>/
-	docker kill `docker ps |grep amaze |cut -f 1 -d ' '`; docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile . ; docker run --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server:/root/app/server -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   -it amazeteam/cmpe272assignment
+	TODO : The client secret below will be changed. 
+	export AUTHO_CLIENT_SECRET="'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ'""; echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET" >> server/config/settings.cfg ;docker kill `docker ps |grep amaze |cut -f 1 -d ' '`; docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile . ; docker run --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server:/root/app/server -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   -it amazeteam/cmpe272assignment 
 ```
 **Note**: _The database dir is kept outside the docker image to make sure the data is persistent across docker runs. For testing, a different database directory may be used to avoid corrupting real data._ 
 ## To push the docker image to docker hub
