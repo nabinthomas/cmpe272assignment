@@ -9,8 +9,10 @@ def find_customer_with_token(db, accessToken):
     Find a customer record who owns the accessToken supplied
     returns the customer record when successful, or None when not found
     """
-    customer_collection = db['customers'] 
-    dbReturn = customer_collection.find_one ({'accessToken': accessToken}) 
+    dbReturn = None
+    if (accessToken != ''):
+        customer_collection = db['customers'] 
+        dbReturn = customer_collection.find_one ({'accessToken': accessToken}) 
     return dbReturn
 
 def find_customer_email(db, accessToken):
@@ -44,14 +46,18 @@ def update_customer_session_data(db, customerEmail, customerName, customerPictur
     print("update_customer_session_data " + customerEmail +" "+ customerName+" " + accessToken )
     # Created or Switched to collection name: customers 
     customer_collection = db['customers'] 
+    if ((accessToken == '') or (accessToken is None)):
+        operation = '$unset'
+    else:
+        operation = '$set'
     dbReturn = customer_collection.find_one_and_update({'email':customerEmail,'name':customerName},
-                                                        {'$set': {'accessToken': accessToken, 'picture':customerPicture}},
+                                                        {operation: {'accessToken': accessToken, 'picture':customerPicture}},
                                                         return_document=pymongo.ReturnDocument.AFTER) 
     if dbReturn is None:
         customerInfo = {"email" : customerEmail, "name" : customerName }
         add_new_customer(db, customerInfo)
         dbReturn = customer_collection.find_one_and_update({'email':customerEmail,'name':customerName},
-                                                        {'$set': {'accessToken': accessToken, 'picture':customerPicture}},
+                                                        {operation: {'accessToken': accessToken, 'picture':customerPicture}},
                                                         return_document=pymongo.ReturnDocument.AFTER) 
 
     upserted_record = customer_collection.find_one({'email':customerEmail,'name':customerName}) 

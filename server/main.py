@@ -327,12 +327,18 @@ def clear_all_cookies(response):
 
 @app.route('/logout', methods=['GET'])
 def page_logout():
+    accessToken = request.cookies.get('auth_token')
+    if (accessToken is not None):
+        customer = find_customer_with_token(db, accessToken)
+        update_customer_session_data(db, customer['email'], customer['name'], '', '')
+
     rendered_page = render_template('logout.html', 
                 LogoutMessage="You have been Logged out sucessfully",
                 ExtraDetails=''
 			);
     response = app.make_response(rendered_page )  
     response = clear_all_cookies(response)
+
     return response
 
 @app.route('/loginfailed/<string:errorCode>', methods=['GET'])
