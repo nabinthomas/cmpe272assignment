@@ -28,9 +28,10 @@ RUN pip3 install six
 RUN pip3 install pymongo
 # For unit tests. TODO: Keep this only for unit tests
 RUN pip3 install mongomock
-
+RUN pip3 install pyopenssl
 #Expose ports
 EXPOSE 80/tcp
+EXPOSE 443/tcp
 
 #COPY The app folders. 
 COPY server /root/app/server
