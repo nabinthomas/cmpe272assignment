@@ -39,6 +39,5 @@ mongoimport -d test --drop ./test/unittests/data/customers.json
 #This should be started at the end
 export FLASK_ENV=development
 export SERVER_CONFIG=/root/app/server/config/settings.cfg
-export CLIENT_SECRET="aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ"
 PYTHONPATH=/root/app/ python3 app/server/main.py  mongodb://localhost/test & bash
 
