@@ -14,7 +14,6 @@ jobs:
     - stage: docker_image_unit_test
       script: 
         - docker --version
-        - mkdir server
         - mkdir server/config
         - touch server/config/settings.cfg
         - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
@@ -25,7 +24,6 @@ jobs:
       script: 
         - docker --version
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-        - mkdir server
         - mkdir server/config
         - touch server/config/settings.cfg
         - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
