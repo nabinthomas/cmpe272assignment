@@ -25,7 +25,7 @@ app.config.from_envvar('SERVER_CONFIG');
 
 AUTH0_DOMAIN = "nthomas.auth0.com"
 ALGORITHMS = ["RS256"]
-API_IDENTIFIER = "http://0.0.0.0:3010/api/private"
+API_IDENTIFIER = "https://0.0.0.0:3010/api/private"
 CLIENT_ID = 'QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG'
 #CLIENT_SECRET = 'aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ' 
 CLIENT_SECRET = app.config['CLIENT_SECRET']
@@ -180,7 +180,7 @@ def encodeJsonResponse(reply, statuscode):
 def help():
     """
     Default API handler. Returns the API documentation
-    eg:  curl -XGET http://localhost/api
+    eg:  curl -XGET https://localhost/api
     """
     return encodeJsonResponse(api_help_message, ReturnCodes.SUCCESS);
 
@@ -189,7 +189,7 @@ def deleteUser():
     """
     API Handler for deleting a user. 
     This will not be implemented and is just a placeholder as an example in case we need this later.
-    eg: curl -XDELETE -H 'Content-Type: application/json' http://localhost/api/deleteuser
+    eg: curl -XDELETE -H 'Content-Type: application/json' https://localhost/api/deleteuser
     """
     return encodeJsonResponse({}, ReturnCodes.ERROR_NOT_IMPLEMENTED);
 
@@ -384,7 +384,7 @@ def loginSuccess():
 
         conn = http.client.HTTPSConnection("nthomas.auth0.com")
 
-        #payload = "{\"code\":str(code),\"client_id\":\"QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG\",\"client_secret\":\"aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ\",\"audience\":\"http://localhost/login\",\"grant_type\":\"client_credentials\"}"
+        #payload = "{\"code\":str(code),\"client_id\":\"QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG\",\"client_secret\":\"aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ\",\"audience\":\"https://localhost/login\",\"grant_type\":\"client_credentials\"}"
         #payload = "grant_type=authorization_code&client_id=%24%7Baccount.clientId%7D&client_secret=YOUR_CLIENT_SECRET&code=YOUR_AUTHORIZATION_CODE&redirect_ui=https%3A%2F%2F%24%7Baccount.callback%7D"
 
         payload = 'grant_type=authorization_code&client_id=' + CLIENT_ID + \
@@ -461,7 +461,7 @@ def newOrder():
     """
     API To create a new order
     TODO Document the payload format and process it
-    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/neworder -d '{"CustomerId" : 2, "Items" : [ {"BookId": "978-1503215678", "qty" : 1} ] }'
+    eg: curl -XPOST -H 'Content-Type: application/json' https://localhost/api/neworder -d '{"CustomerId" : 2, "Items" : [ {"BookId": "978-1503215678", "qty" : 1} ] }'
     """
     response = {}
     payload = request.json;
@@ -498,7 +498,7 @@ def fulfillorder_orderid(orderid):
     API To update an order
     @param orderid -> ID of the order to modify
     TODO Document the payload format and process it
-    eg: curl -XPUT -H 'Content-Type: application/json' http://localhost/api/fulfillorder/1234 -d '{"book" : "12314", "copies" : 3}'
+    eg: curl -XPUT -H 'Content-Type: application/json' https://localhost/api/fulfillorder/1234 -d '{"book" : "12314", "copies" : 3}'
     """
     #make sure the oder id is an integer.
     try:
@@ -521,7 +521,7 @@ def fulfillorder_orderid(orderid):
 def books():
     """
     Handle API to request details of all books
-    eg: curl -XGET http://localhost/api/books
+    eg: curl -XGET https://localhost/api/books
     """
     print( "Entering  books")
 
@@ -545,7 +545,7 @@ def books():
 def book_default():
     """
     Handle and error out case when book detail is requested without a book isbn number
-    eg: curl -XGET http://localhost/api/book
+    eg: curl -XGET https://localhost/api/book
     """
     return encodeJsonResponse({}, ReturnCodes.ERROR_INVALID_PARAM)
 
@@ -558,8 +558,8 @@ def book_isbn(isbn13):
     Get the details about a book. 
     @param - isbn13 - ISBN 13 value as a string for the book.
     TODO get real data from the database
-    curl -XGET http://localhost/api/book/13455
-    curl -XGET http://localhost/api/book/978-1503215680
+    curl -XGET https://localhost/api/book/13455
+    curl -XGET https://localhost/api/book/978-1503215680
     """
     book = get_bookdata(db, isbn13)
     response = {"requested_book": isbn13}
@@ -579,7 +579,7 @@ def addToCart():
     """
     API To add book to cart
     TODO Document the payload format and process it
-    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/addtocart -d '{"CustomerId" : 2, "Items" : {"BookId": "978-1503215678", "qty" : 1} }'
+    eg: curl -XPOST -H 'Content-Type: application/json' https://localhost/api/addtocart -d '{"CustomerId" : 2, "Items" : {"BookId": "978-1503215678", "qty" : 1} }'
     """
     print("Inside  addToCart  .")
     response = {}
@@ -605,7 +605,7 @@ def deleteCart():
     """
     API To delete user's cart
     TODO Document the payload format and process it
-    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/deletecart -d '{"CustomerId" : 2} }'
+    eg: curl -XPOST -H 'Content-Type: application/json' https://localhost/api/deletecart -d '{"CustomerId" : 2} }'
     """
     response = {}
 
@@ -632,7 +632,7 @@ def placeOrder():
     """
     API To place order from customer cart
     TODO Document the payload format and process it
-    eg: curl -XPOST -H 'Content-Type: application/json' http://localhost/api/placeorder -d '{"CustomerId" : 2} }'
+    eg: curl -XPOST -H 'Content-Type: application/json' https://localhost/api/placeorder -d '{"CustomerId" : 2} }'
     """
     response = {}
     try:
@@ -677,7 +677,7 @@ def customer_cart(customerId):
     Get the details about a customer's cart. 
     @param - customerId
     TODO get real data from the database
-    curl -XGET http://localhost/api/cart/2
+    curl -XGET https://localhost/api/cart/2
     """
     cart = get_cart(db, customerId)
     response = {"requested_cart": customerId}
