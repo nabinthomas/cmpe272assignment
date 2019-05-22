@@ -357,7 +357,7 @@ def loginSuccess():
     API To pass successful user auth from auth0. 
     This gets the response "code" from the auth0 server and issue a redirect to locahost/api/loginsuccess
 
-    open in browser: https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=http://localhost/api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123
+    open in browser: https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=https://localhost/api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123
     then login. and then this will be called with code and state as params. 
     """
     
@@ -381,12 +381,11 @@ def loginSuccess():
 
         #payload = "{\"code\":str(code),\"client_id\":\"QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG\",\"client_secret\":\"aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ\",\"audience\":\"http://localhost/login\",\"grant_type\":\"client_credentials\"}"
         #payload = "grant_type=authorization_code&client_id=%24%7Baccount.clientId%7D&client_secret=YOUR_CLIENT_SECRET&code=YOUR_AUTHORIZATION_CODE&redirect_ui=https%3A%2F%2F%24%7Baccount.callback%7D"
-        AUTHORIZATION_CODE = code
-        #AUTH0_DOMAIN = "nthomas.auth0.com"
+
         payload = 'grant_type=authorization_code&client_id=' + CLIENT_ID + \
                     '&client_secret=' + CLIENT_SECRET + \
-                    '&code=' + AUTHORIZATION_CODE + \
-                    '&redirect_uri=http://localhost/api/loginsuccess'
+                    '&code=' + code + \
+                    '&redirect_uri=https://localhost/api/loginsuccess'
 
         fullurl = "https://" + AUTH0_DOMAIN + "/oauth/token" + payload
         print (fullurl)
