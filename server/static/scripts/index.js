@@ -105,10 +105,11 @@ class EnterWebsiteLink extends React.Component {
       );
     }
     else {
+      var host_base_url = cookies.getCookie('base_url');
       return createElement(
         'a',
         { 
-          href:"https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri=https://localhost/api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123"
+          href:"https://nthomas.auth0.com/authorize?response_type=code&client_id=QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG&redirect_uri="+ host_base_url + "api/loginsuccess&scope=openid%20profile%20email&state=xyzABC123"
         },
         'Login'
       );

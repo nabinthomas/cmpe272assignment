@@ -89,17 +89,21 @@ def mainPage():
     
     loggedinUser='Guest'
 
+    print ("Base url with port",request.host_url)
+
     # TODO: Validate the auth_token and Get the Users full name from the session information. 
     if (request.cookies.get('auth_token') is not None):
         loggedinUser = request.cookies.get('userFullName')
 
-
-    return render_template('default.html', 
-			serverTime=now, 
-			pageWelcomeMessage="Welcome to aMAZE.com Online Book Store", 
-            userFullName=loggedinUser,
-			pageTitle="aMAZE.com Online Book Store",
-            teamMembers=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
+    rendered_page = render_template('default.html', 
+			            serverTime=now, 
+			            pageWelcomeMessage="Welcome to aMAZE.com Online Book Store", 
+                        userFullName=loggedinUser,
+			            pageTitle="aMAZE.com Online Book Store",
+                        teamMembers=["Binu Jose", "Ginto George", "Nabin Thomas", "Sandeep Panakkal"]);
+    response = app.make_response(rendered_page);
+    response.set_cookie('base_url', request.host_url);
+    return response;
 
 @app.route('/books')
 def page_books():
@@ -386,11 +390,14 @@ def loginSuccess():
 
         #payload = "{\"code\":str(code),\"client_id\":\"QN3TAKTeDu4U4i6tfVI2JCs7hXSxdePG\",\"client_secret\":\"aDoe0md20-pFTGP6_XmoazFiUZdYN1Ze5CwxX21qDl1U_MaYbasmuJ4fjb7fDNlZ\",\"audience\":\"https://localhost/login\",\"grant_type\":\"client_credentials\"}"
         #payload = "grant_type=authorization_code&client_id=%24%7Baccount.clientId%7D&client_secret=YOUR_CLIENT_SECRET&code=YOUR_AUTHORIZATION_CODE&redirect_ui=https%3A%2F%2F%24%7Baccount.callback%7D"
-
+    
+        host_base_url = request.base_url
+        print ("Host Base URL Was : " + host_base_url);
+    
         payload = 'grant_type=authorization_code&client_id=' + CLIENT_ID + \
                     '&client_secret=' + CLIENT_SECRET + \
                     '&code=' + code + \
-                    '&redirect_uri=https://localhost/api/loginsuccess'
+                    '&redirect_uri=' + host_base_url 
 
         fullurl = "https://" + AUTH0_DOMAIN + "/oauth/token" + payload
         print (fullurl)
