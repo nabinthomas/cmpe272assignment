@@ -1,9 +1,7 @@
 .DS_Store
 .vscode
 .vscode/*
-<<<<<<< HEAD
 __pycache__
 */__pycache__/*
-=======
 __pycache__/*
->>>>>>> 65eba4b2ee8059de2df1263fe1dcd0c8934be714
+server/config/settings.cfg
