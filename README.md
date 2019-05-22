@@ -76,17 +76,17 @@ Team members:
 2. Run the server with local files.
 ```bash
         cd <gitroot>/ 
-        docker run --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server:/root/app/server -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   amazeteam/cmpe272assignment
+        docker run -it  --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server:/root/app/server -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   amazeteam/cmpe272assignment
 ```
 3. Run the server with prepackaged application files. 
 ```bash
         cd <gitroot>/ 
-        docker run --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
+        docker run -it --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
 ```
 4. Run the unit tests
 ```bash
         cd <gitroot>/ 
-        docker run --rm amazeteam/cmpe272assignment unittest
+        docker run  --rm amazeteam/cmpe272assignment unittest
 ```
 5. Kill the current server and rebuild/restart. 
 ```bash
