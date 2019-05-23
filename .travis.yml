@@ -19,7 +19,7 @@ jobs:
         - echo "CLIENT_SECRET=''" >  server/config/settings.cfg
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
         - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" > server/config/settings.cfg
-        - docker run --rm amazeteam/cmpe272assignment -v `pwd`/server/config:/root/app/server/config  unittest
+        - docker run --rm -v `pwd`/server/config:/root/app/server/config  amazeteam/cmpe272assignment unittest
 
     - stage: docker_image_tag_and_push
       script: 
