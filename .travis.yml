@@ -16,9 +16,9 @@ jobs:
         - docker --version
         - mkdir server/config
         - touch server/config/settings.cfg
-        - echo "CLIENT_SECRET=''" >> server/config/settings.cfg
+        - echo "CLIENT_SECRET=''" >  server/config/settings.cfg
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
-        - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
+        - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" > server/config/settings.cfg
         - docker run --rm amazeteam/cmpe272assignment -v `pwd`/server/config:/root/app/server/config  unittest
 
     - stage: docker_image_tag_and_push
@@ -27,7 +27,7 @@ jobs:
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
         - mkdir server/config
         - touch server/config/settings.cfg
-        - echo "CLIENT_SECRET=''" >> server/config/settings.cfg
+        - echo "CLIENT_SECRET=''" > server/config/settings.cfg
         - docker build -t amazeteam/cmpe272assignment:$TAG -f docker/Dockerfile .
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker push amazeteam/cmpe272assignment:$TAG
@@ -35,7 +35,7 @@ jobs:
 
     - stage: do_unit_test_from_docker_hub_image
       script:
-        - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
+        - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" > server/config/settings.cfg
         - docker run --rm -v `pwd`/server/config:/root/app/server/config amazeteam/cmpe272assignment  unittest
 
 

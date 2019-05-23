@@ -11,7 +11,7 @@ echo `pwd`
 
 if [ "$#" -ne 0 ]; then
     command=$1
-    
+
     #echo "Option was $1"
     case $command in
         "unittest")
@@ -24,7 +24,7 @@ if [ "$#" -ne 0 ]; then
             /bin/bash setup/startservers.sh
         ;;
         *)
-            echo "Unknown option Exiting"
+            echo "Unknown option [$command] Exiting"
             exit -1
         ;;
     esac
