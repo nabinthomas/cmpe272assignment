@@ -35,6 +35,10 @@ jobs:
 
     - stage: do_unit_test_from_docker_hub_image
       script:
+        - docker --version
+        - mkdir server
+        - mkdir server/config
+        - touch server/config/settings.cfg
         - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" > server/config/settings.cfg
         - docker run --rm -v `pwd`/server/config:/root/app/server/config amazeteam/cmpe272assignment  unittest
 
