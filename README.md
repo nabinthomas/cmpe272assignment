@@ -41,8 +41,7 @@ Team members:
 3. Build docker image
 ```bash
     cd <gitroot>/ 
-    export AUTHO_CLIENT_SECRET="'YOURCLIENTSECRETKEY'"; #Replace YOURCLIENTSECRETKEY with the client secret from auth0
-	mkdir -p server/config
+    mkdir -p server/config
     echo "CLIENT_SECRET=''" > server/config/settings.cfg ;
     docker kill `docker ps |grep amaze |cut -f 1 -d ' '`;
     docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile . ;
@@ -73,35 +72,44 @@ Team members:
 ```bash
     cd <gitroot>/ 
 	export AUTHO_CLIENT_SECRET="'YOURCLIENTSECRETKEY'"; #Replace YOURCLIENTSECRETKEY with the client secret from auth0
-    docker run -it --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment "$AUTHO_CLIENT_SECRET" bash
+	mkdir -p server/config
+		echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET" > server/config/settings.cfg ;
+    docker run -it --rm -p 80:80/tcp -p 443:443/tcp  -v `pwd`/server/config:/root/app/server/config  -v `pwd`/../database:/data/db amazeteam/cmpe272assignment bash
 ```
 2. Run the server with local files.
 ```bash
         cd <gitroot>/ 
 		export AUTHO_CLIENT_SECRET="'YOURCLIENTSECRETKEY'"; #Replace YOURCLIENTSECRETKEY with the client secret from auth0
-        docker run -it  --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server:/root/app/server -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   amazeteam/cmpe272assignment "$AUTHO_CLIENT_SECRET"
+		mkdir -p server/config
+		echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET" > server/config/settings.cfg ;
+        docker run -it  --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server:/root/app/server -v `pwd`/server/config:/root/app/server/config -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   amazeteam/cmpe272assignment
 ```
 3. Run the server with prepackaged application files. 
 ```bash
         cd <gitroot>/ 
 		export AUTHO_CLIENT_SECRET="'YOURCLIENTSECRETKEY'"; #Replace YOURCLIENTSECRETKEY with the client secret from auth0
-        docker run -it --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/../database:/data/db amazeteam/cmpe272assignment "$AUTHO_CLIENT_SECRET"
+		mkdir -p server/config
+		echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET" > server/config/settings.cfg ;
+        docker run -it --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server/config:/root/app/server/config -v `pwd`/../database:/data/db amazeteam/cmpe272assignment
 ```
 4. Run the unit tests
 ```bash
         cd <gitroot>/ 
 		export AUTHO_CLIENT_SECRET="'YOURCLIENTSECRETKEY'"; #Replace YOURCLIENTSECRETKEY with the client secret from auth0
-        docker run  --rm amazeteam/cmpe272assignment  "$AUTHO_CLIENT_SECRET" unittest
+		mkdir -p server/config
+		echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET" > server/config/settings.cfg 
+        docker run  --rm  -v `pwd`/server/config:/root/app/server/config  amazeteam/cmpe272assignmentunittest
 ```
 5. Kill the current server and rebuild/restart. 
 ```bash
     cd <gitroot>/
     export AUTHO_CLIENT_SECRET="'YOURCLIENTSECRETKEY'"; #Replace YOURCLIENTSECRETKEY with the client secret from auth0
 	mkdir -p server/config
-    docker kill `docker ps |grep amaze |cut -f 1 -d ' '`;
-    docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile . ;
-    docker run --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server:/root/app/server -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   -it amazeteam/cmpe272assignment "$AUTHO_CLIENT_SECRET"
-	rm -rf server/config/settings.cfg ;
+	echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET" > server/config/settings.cfg ;
+	docker kill `docker ps |grep amaze |cut -f 1 -d ' '`;
+	docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile . ;
+	docker run --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server:/root/app/server -v `pwd`/server/config:/root/app/server/config -v `pwd`/../database:/data/db -v `pwd`/setup:/root/setup -v `pwd`/test:/root/test   -it amazeteam/cmpe272assignment
+	rm server/config/settings.cfg
  ```
 **Note**: _The database dir is kept outside the docker image to make sure the data is persistent across docker runs. For testing, a different database directory may be used to avoid corrupting real data._ 
 ## To push the docker image to docker hub
