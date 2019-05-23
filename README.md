@@ -123,12 +123,18 @@ docker push amazeteam/cmpe272assignment
 ### To run the latest version from dockerhub
 ```bash
 sudo service docker start
-nohup sudo docker run --rm -p 80:80/tcp -p 443:443/tcp amazeteam/cmpe272assignment
+export AUTHO_CLIENT_SECRET="'YOURCLIENTSECRETKEY'"; #Replace YOURCLIENTSECRETKEY with the client secret from auth0
+mkdir -p server/config
+echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET" > server/config/settings.cfg ;
+nohup sudo docker run --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server/config:/root/app/server/config  amazeteam/cmpe272assignment
 ```
 ### To run a specific version from dockerhub
 ```bash
 sudo service docker start
-nohup sudo docker run --rm -p 80:80/tcp -p 443:443/tcp amazeteam/cmpe272assignment:version
+export AUTHO_CLIENT_SECRET="'YOURCLIENTSECRETKEY'"; #Replace YOURCLIENTSECRETKEY with the client secret from auth0
+mkdir -p server/config
+echo "CLIENT_SECRET=$AUTHO_CLIENT_SECRET" > server/config/settings.cfg ;
+nohup sudo docker run --rm -p 80:80/tcp -p 443:443/tcp -v `pwd`/server/config:/root/app/server/config  amazeteam/cmpe272assignment:version
 ```
 **Note**: _Replace **version** with the right tag to run._
 # Git Cheatsheat
