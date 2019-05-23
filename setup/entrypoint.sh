@@ -12,6 +12,7 @@ echo `pwd`
 if [ "$#" -eq 2 ]; then
     command=$2
     CLIENT_SECRET=$1
+    echo "CLIENT SECRET IS [$CLIENT_SECRET]"
     mkdir -p /root/app/server/config/
     echo "CLIENT_SECRET=$CLIENT_SECRET" >> /root/app/server/config/settings.cfg
 
