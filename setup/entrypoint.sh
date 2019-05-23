@@ -9,8 +9,11 @@
 echo `pwd`
 #echo "$#"
 
-if [ "$#" -ne 0 ]; then
-    command=$1
+if [ "$#" -eq 2 ]; then
+    command=$2
+    CLIENT_SECRET=$1
+    mkdir -p /root/app/server/config/
+    echo "CLIENT_SECRET=$CLIENT_SECRET" >> /root/app/server/config/settings.cfg
 
     #echo "Option was $1"
     case $command in
@@ -29,7 +32,8 @@ if [ "$#" -ne 0 ]; then
         ;;
     esac
 else
-    # Default is to start the servers
-    setup/startservers.sh
+    echo "Usage: docker run .....params.... <auth0clientsecret> startserver "
+    echo "OR"
+    echo "Usage: docker run .....params.... <auth0clientsecret> unittest"
 fi
 
