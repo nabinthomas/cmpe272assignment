@@ -18,7 +18,7 @@ jobs:
         - touch server/config/settings.cfg
         # - echo "CLIENT_SECRET='$AUTHO_CLIENT_SECRET'" >> server/config/settings.cfg
         - docker build -t amazeteam/cmpe272assignment -f docker/Dockerfile .
-        - docker run --rm amazeteam/cmpe272assignment  "$AUTHO_CLIENT_SECRET" unittest
+        - docker run --rm amazeteam/cmpe272assignment  '$AUTHO_CLIENT_SECRET' unittest
 
     - stage: docker_image_tag_and_push
       script: 
