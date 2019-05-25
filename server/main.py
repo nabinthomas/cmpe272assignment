@@ -325,11 +325,15 @@ def clear_all_cookies(response):
     Helper function to clear Cookies set by this application. 
     Add Any additional cookies if set anywhere else to the end of the list
     """
-    response.set_cookie('auth_token', value='', expires=0)
-    response.set_cookie('userFullName', value='', expires=0)
-    response.set_cookie('userEmailId', value='', expires=0)
-    response.set_cookie('customerId', value='', expires=0)
-    response.set_cookie('userPicture', value='', expires=0)
+    restrictTo = request.host
+    if (restrictTo == "localhost"):
+        restrictTo= None
+        
+    response.set_cookie('auth_token', value='', expires=0, domain=restrictTo)
+    response.set_cookie('userFullName', value='', expires=0, domain=restrictTo)
+    response.set_cookie('userEmailId', value='', expires=0, domain=restrictTo)
+    response.set_cookie('customerId', value='', expires=0, domain=restrictTo)
+    response.set_cookie('userPicture', value='', expires=0, domain=restrictTo)
     return response
 
 @app.route('/logout', methods=['GET'])
