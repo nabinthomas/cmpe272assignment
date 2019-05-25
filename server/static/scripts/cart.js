@@ -51,10 +51,32 @@ class PlaceOrder extends React.Component {
             */
            if (replyFromServer['status'] == "Success")
            {
-                document.getElementById('statusmessage').innerText = "Order# (" + replyFromServer['response']['order_request']['OrderID'] +") Placed Successfully (Redirecting to homepage in 5 seconds)";
-                setTimeout(function () {
-                    window.location.replace("/");
-                }, 5000);
+                // console.log ("orderID = " + replyFromServer['response']['order_request']['OrderID'])
+                fetch('/api/fulfillorder/' + replyFromServer['response']['order_request']['OrderID'], {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + auth_token
+                    }
+        
+                }).then(fulfillmentReply => fulfillmentReply.json())
+                .then(messagefromserver => {
+                    
+                    console.log('fulfillmentData:', JSON.stringify(messagefromserver));
+                    if (messagefromserver['status'] == "Success") {                    
+                        document.getElementById('statusmessage').innerText = "Order# (" + replyFromServer['response']['order_request']['OrderID'] +") Placed and Processed Successfully (Redirecting to homepage in 5 seconds)";
+                        setTimeout(function () {
+                            window.location.replace("/");
+                        }, 5000);
+                    }
+                    else {                    
+                        document.getElementById('statusmessage').innerText = "Order# (" + replyFromServer['response']['order_request']['OrderID'] +") Placed Successfully, but will be processed when we receive enough inventory";
+                        setTimeout(function () {
+                            window.location.replace("/");
+                        }, 10000);
+                    }
+                })
            }
            else {
                 document.getElementById('statusmessage').innerText = "Failed to Place the order !! Reason: " + replyFromServer['response']['Reason'];

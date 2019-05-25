@@ -100,9 +100,9 @@ if __name__ == "__main__":
     mongodb_uri = "mongodb://localhost/test"
     mongoClient = pymongo.MongoClient(mongodb_uri)
     db = mongoClient.get_database()
-    import_books_inventory(db);
-    orderId = add_one_temp_order(db) ;
-    
+    # import_books_inventory(db);
+    # orderId = add_one_temp_order(db) ;
+    orderId = sys.argv[1]
     order = db.orders.find_one({ "OrderID" : { "$eq": orderId }  })
     print("Before Order update order:   ", str(order) , "\n\n\n\r" );
 

@@ -54,7 +54,7 @@ def create_new_order(db, orderId, customerId, book_order_list, shipping_details,
     if (orderId == 0):
         print ("Order ID Was 0 .. Fixing it")
         inserted_record = orders_coll.find_one_and_update({'_id':dbReturn.inserted_id}, 
-            {"$set": {'OrderID': dbReturn.inserted_id, 'Shipping': { 'Status' : 'InProgress'}}}, return_document=ReturnDocument.AFTER)
+            {"$set": {'OrderID': str(dbReturn.inserted_id), 'Shipping': { 'Status' : 'InProgress'}}}, return_document=ReturnDocument.AFTER)
     print ("Inserted Order record = ", str(inserted_record))
     return inserted_record
 

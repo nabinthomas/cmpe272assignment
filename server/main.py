@@ -512,7 +512,7 @@ def fulfillorder_orderid(orderid):
     """
     #make sure the oder id is an integer.
     try:
-        OrderId= int (orderid)
+        OrderId= str(orderid)
     except:
         return encodeJsonResponse({}, ReturnCodes.ERROR_INVALID_PARAM)
 
